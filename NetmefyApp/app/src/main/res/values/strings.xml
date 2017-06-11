@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">Netmefy</string>
+
+
+    <string name="error_login">Cuenva inválida</string>
+
+    <string name="prompt_email">ID Cliente</string>
+    <string name="prompt_password">Contraseña </string>
+    <string name="action_sign_in">Ingresar</string>
+
+    <string name="login_ingresando">Ingresando ...</string>
+
+    <string name="title_activity_cliente">ClienteActivity</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
+
+</resources>
