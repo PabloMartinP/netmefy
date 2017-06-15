@@ -40,9 +40,7 @@ public class MainActivity extends AppCompatActivity {
         lvLikes = (ListView) findViewById(R.id.lv_likes);
 
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(
-                this,
-                android.R.layout.simple_list_item_1,
-                likesNames );
+                this, android.R.layout.simple_list_item_1, likesNames );
 
         lvLikes.setAdapter(arrayAdapter);
         logout = (Button)findViewById(R.id.logout);
