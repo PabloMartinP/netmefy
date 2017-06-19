@@ -49,6 +49,12 @@ public class UserIdActivity extends AppCompatActivity {
         etUserId.setEnabled(false);
         btSendUserId.setVisibility(View.GONE);
         pbUserId.setVisibility(View.VISIBLE);
+        sendUserIdToISP();
+
+
+    }
+
+    private void sendUserIdToISP() {
         String url = "https://www.reddit.com/.json" ;//+ etUserId.getText().toString();
         RequestQueue queue = Volley.newRequestQueue(this);
         JsonObjectRequest jsObjRequest = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
@@ -60,6 +66,7 @@ public class UserIdActivity extends AppCompatActivity {
                     Boolean isFirstLogin = true; //TODO: remove this and confirm the line before this one.
                     Intent userPass = new Intent(UserIdActivity.this,UserPassActivity.class);
                     userPass.putExtra("isFirstLogin",isFirstLogin);
+                    userPass.putExtra("userId",etUserId.getText());
                     startActivity(userPass);
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -77,8 +84,6 @@ public class UserIdActivity extends AppCompatActivity {
             }
         });
         queue.add(jsObjRequest);
-
-
     }
 
 
