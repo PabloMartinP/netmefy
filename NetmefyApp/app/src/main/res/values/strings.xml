@@ -2,12 +2,21 @@
     <string name="app_name">Netmefy</string>
     <string name="slogan">Configurar tu red nunca fue tan facil</string>
 
-    <string name="error_login">Cuenva inválida</string>
+    <string name="error_login">El cliente no existe.</string>
+    <string name="insert_client_number">Ingresar número de cliente:</string>
+    <string name="create_password">Crear Contraseña:</string>
+    <string name="insert_password">Ingrese su Contraseña:</string>
+    <string name="repeat_password">Repetir Contraseña:</string>
+    <string name="error_creating_password">La contraseña no coincide</string>
+    <string name="error_password">La contraseña invalida.</string>
+    <string name="accept">Aceptar</string>
+    <string name="signin">Ingresar</string>
+
+    <string name="setup_question">Cómo calificaría su intalación?</string>
 
     <string name="facebook_app_id">225322157975093</string>
     <string name="fb_login_protocol_scheme">fb225322157975093</string>
 
-    <string name="prompt_email">email@ejemplo.com</string>
     <string name="prompt_password">Contraseña </string>
     <string name="action_sign_in">Ingresar</string>
 

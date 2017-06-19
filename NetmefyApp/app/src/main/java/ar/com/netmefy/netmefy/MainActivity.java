@@ -16,6 +16,7 @@ import com.facebook.login.LoginManager;
 import java.util.ArrayList;
 
 import ar.com.netmefy.netmefy.services.DownloadImage;
+import ar.com.netmefy.netmefy.login.LoginActivity;
 
 public class MainActivity extends AppCompatActivity {
 
