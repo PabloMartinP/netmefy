@@ -24,6 +24,7 @@ import java.io.IOException;
 
 import ar.com.netmefy.netmefy.MainActivity;
 import ar.com.netmefy.netmefy.R;
+import ar.com.netmefy.netmefy.services.login.Session;
 
 public class UserIdActivity extends AppCompatActivity {
 
@@ -31,6 +32,7 @@ public class UserIdActivity extends AppCompatActivity {
     private TextView tvErrorUserId;
     private Button btSendUserId;
     private ProgressBar pbUserId;
+    private Session session;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +42,7 @@ public class UserIdActivity extends AppCompatActivity {
         tvErrorUserId = (TextView) findViewById(R.id.tv_error_user_id);
         btSendUserId = (Button) findViewById(R.id.bt_send_id);
         pbUserId = (ProgressBar) findViewById(R.id.pb_user_id);
+        session = new Session(getApplicationContext());
     }
 
 
@@ -63,9 +66,10 @@ public class UserIdActivity extends AppCompatActivity {
                 try {
                     //Boolean isFirstLogin = Boolean.valueOf(response.getString("isFirstLogin"));
                     String kind = response.getString("kind");
-                    Boolean isFirstLogin = true; //TODO: remove this and confirm the line before this one.
+                    //Boolean isFirstLogin = true; //TODO: remove this and confirm the line before this one.
                     Intent userPass = new Intent(UserIdActivity.this,UserPassActivity.class);
-                    userPass.putExtra("isFirstLogin",isFirstLogin);
+                    session.setUserId(etUserId.getText().toString());
+                    //userPass.putExtra("isFirstLogin",isFirstLogin);
                     userPass.putExtra("userId",etUserId.getText());
                     startActivity(userPass);
                 } catch (JSONException e) {

@@ -63,16 +63,8 @@ public class LoginActivity extends AppCompatActivity {
                     public void onCompleted(JSONObject object, GraphResponse response) {
                         Log.e(TAG,object.toString());
                         Log.e(TAG,response.toString());
-
-                        try {
-                            getInfoFromUser(object);
-                            callMainActivity();
-                            finish();
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        } catch (MalformedURLException e) {
-                            e.printStackTrace();
-                        }
+                        callMainActivity();
+                        finish();
                     }
                 });
                 Bundle parameters = new Bundle();
@@ -98,36 +90,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private void callMainActivity() {
         Intent main = new Intent(LoginActivity.this,MainActivity.class);
-        main.putExtra("name",firstName);
-        main.putExtra("surname",lastName);
-        main.putExtra("imageUrl",profilePicture.toString());
-        main.putStringArrayListExtra("likesNames", likesNames);
         startActivity(main);
-    }
-
-    private void getInfoFromUser(JSONObject object) throws JSONException, MalformedURLException {
-        userId = object.getString("id");
-        profilePicture = new URL("https://graph.facebook.com/" + userId + "/picture?width=500&height=500");
-        if(object.has("first_name"))
-            firstName = object.getString("first_name");
-        if(object.has("last_name"))
-            lastName = object.getString("last_name");
-        if (object.has("email"))
-            email = object.getString("email");
-        if (object.has("birthday"))
-            birthday = object.getString("birthday");
-        if (object.has("gender"))
-            gender = object.getString("gender");
-        if (object.has("likes")) {
-            likes = (JSONObject)object.get("likes");
-            likesNamesJson = (JSONArray)likes.get("data");
-            likesNames = new ArrayList<String>();
-            for(int i = 0; i < likesNamesJson.length(); i++){
-                likesNames.add(((JSONObject)likesNamesJson.get(i)).getString("name"));
-            }
-            paging = (JSONObject)likes.get("paging");
-            next = paging.getString("next");
-        }
     }
 
     @Override

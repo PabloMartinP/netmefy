@@ -44,10 +44,10 @@ public class UserPassActivity extends AppCompatActivity {
         btSendPassword = (Button) findViewById(R.id.bt_send_password);
         etPassword = (EditText) findViewById(R.id.et_password);
         pbPasword = (ProgressBar) findViewById(R.id.pb_password);
-        if (isFirstLogin){
+        /*if (isFirstLogin){
             tvRepeatPass.setVisibility(View.VISIBLE);
             etRepeatPassword.setVisibility(View.VISIBLE);
-        }
+        }*/
     }
 
     public void sendPass(View view){
@@ -57,7 +57,7 @@ public class UserPassActivity extends AppCompatActivity {
         etRepeatPassword.setEnabled(false);
         btSendPassword.setEnabled(false);
         btSendPassword.setVisibility(View.GONE);
-        if (isFirstLogin){
+        /*if (isFirstLogin){
             if(etPassword.getText().toString().equalsIgnoreCase(etRepeatPassword.getText().toString())){
                 sendNewPasswordIdToISP();
             }else {
@@ -69,9 +69,9 @@ public class UserPassActivity extends AppCompatActivity {
                 btSendPassword.setEnabled(true);
                 btSendPassword.setVisibility(View.VISIBLE);
             }
-        }else {
+        }else {*/
             sendPasswordIdToISP();
-        }
+        //}
     }
 
     private void sendPasswordIdToISP() {
