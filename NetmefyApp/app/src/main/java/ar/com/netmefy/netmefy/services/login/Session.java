@@ -16,13 +16,13 @@ public class Session {
         prefs = PreferenceManager.getDefaultSharedPreferences(cntx);
     }
 
-    public void setUsename(String usename) {
-        prefs.edit().putString("usename", usename).apply();
+    public void setUserType(String userType) {
+        prefs.edit().putString("userType", userType).apply();
     }
 
-    public String getUsename() {
-        String usename = prefs.getString("usename","");
-        return usename;
+    public String getUserType() {
+        String userType = prefs.getString("userType","");
+        return userType;
     }
 
     public void setUserId(String userId) {

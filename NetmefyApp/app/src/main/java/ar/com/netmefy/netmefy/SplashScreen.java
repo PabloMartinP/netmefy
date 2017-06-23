@@ -11,6 +11,7 @@ import com.facebook.Profile;
 import ar.com.netmefy.netmefy.login.LoginActivity;
 import ar.com.netmefy.netmefy.login.UserIdActivity;
 import ar.com.netmefy.netmefy.services.login.Session;
+import ar.com.netmefy.netmefy.tecnico.TecnicoActivity;
 
 public class SplashScreen extends Activity {
 
@@ -47,12 +48,23 @@ public class SplashScreen extends Activity {
 
                     }
                 }, 2000);
-            }else{
+            }else if (session.getUserType().equalsIgnoreCase("user")){
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
                         //Intent intent = new Intent(SplashScreen.this, MainActivity.class);
                         Intent intent = new Intent(SplashScreen.this, LoginActivity.class);
+                        startActivity(intent);
+                        finish();
+
+                    }
+                }, 2000);
+            }else{
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        //Intent intent = new Intent(SplashScreen.this, MainActivity.class);
+                        Intent intent = new Intent(SplashScreen.this, TecnicoActivity.class);
                         startActivity(intent);
                         finish();
 

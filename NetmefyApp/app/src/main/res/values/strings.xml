@@ -32,5 +32,6 @@
     <string name="urlLikesFromId">/isp/likesFromId</string>
     <string name="urlRate">/isp/rate/</string>
     <string name="urlLogin">/isp/login/</string>
+    <string name="tech_user">Técnico</string>
 
 </resources>

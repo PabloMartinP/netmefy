@@ -70,6 +70,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 session.setUserId("");
+                session.setUserType("");
                 LoginManager.getInstance().logOut();
                 Intent login = new Intent(MainActivity.this, UserIdActivity.class);
                 startActivity(login);

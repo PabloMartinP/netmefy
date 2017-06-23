@@ -25,6 +25,7 @@ import java.io.IOException;
 import ar.com.netmefy.netmefy.MainActivity;
 import ar.com.netmefy.netmefy.R;
 import ar.com.netmefy.netmefy.services.login.Session;
+import ar.com.netmefy.netmefy.tecnico.TecnicoActivity;
 
 public class UserIdActivity extends AppCompatActivity {
 
@@ -68,6 +69,7 @@ public class UserIdActivity extends AppCompatActivity {
                     //String kind = response.getString("kind");
                     String typeOfUser = response.getString("typeOfUser");
                     String supportNumber = response.getString("supportNumber");
+                    session.setUserType(typeOfUser);
                     if(typeOfUser.equalsIgnoreCase("user")){
                         redirectToUser(supportNumber);
                     }else{
@@ -93,6 +95,9 @@ public class UserIdActivity extends AppCompatActivity {
     }
 
     private void redirectToTech() {
+        session.setUserId(etUserId.getText().toString());
+        Intent userPass = new Intent(UserIdActivity.this,TecnicoActivity.class);
+        startActivity(userPass);
     }
 
     private void redirectToUser(String supportNumber) {
