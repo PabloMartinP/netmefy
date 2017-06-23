@@ -1,6 +1,7 @@
 package ar.com.netmefy.netmefy;
 
 import android.content.Intent;
+import android.content.res.Resources;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -150,7 +151,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void sendLikes(ArrayList<String> likesNames) throws JSONException {
-        String url = "http://10.0.2.2:3001/isp/likesFromId";//+ etUserId.getText().toString();
+        String url = getResources().getString(R.string.baseUrl)+getResources().getString(R.string.urlLikesFromId);
         RequestQueue queue = Volley.newRequestQueue(this);
         JSONObject requestToSend = new JSONObject();
         requestToSend.put("userId",session.getUserId());

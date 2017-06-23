@@ -59,7 +59,7 @@ public class UserIdActivity extends AppCompatActivity {
     }
 
     private void sendUserIdToISP() {
-        String url = "http://10.0.2.2:3001/isp/login/" + etUserId.getText().toString() + "/" + etPassword.getText().toString();//+ etUserId.getText().toString();
+        String url = getResources().getString(R.string.baseUrl) + getResources().getString(R.string.urlLogin) + etUserId.getText().toString() + "/" + etPassword.getText().toString();
         RequestQueue queue = Volley.newRequestQueue(this);
         JsonObjectRequest jsObjRequest = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
             @Override
@@ -96,7 +96,7 @@ public class UserIdActivity extends AppCompatActivity {
     }
 
     private void redirectToUser(String supportNumber) {
-        if (supportNumber != null){
+        if (!supportNumber.isEmpty()){
             Intent userPass = new Intent(UserIdActivity.this,RateSupportActivity.class);
             session.setUserId(etUserId.getText().toString());
             userPass.putExtra("userId",etUserId.getText());

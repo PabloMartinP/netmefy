@@ -48,7 +48,7 @@ public class RateSupportActivity extends AppCompatActivity {
     }
 
     private void sendRate() {
-        String url = "http://10.0.2.2:3001/isp/rate/" + supportNumber + "/" + rbRateSupport.getRating() ;
+        String url = getResources().getString(R.string.baseUrl) + getResources().getString(R.string.urlRate) + supportNumber + "/" + rbRateSupport.getRating() ;
         RequestQueue queue = Volley.newRequestQueue(this);
         JsonObjectRequest jsObjRequest = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
             @Override
