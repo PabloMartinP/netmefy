@@ -8,8 +8,15 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 import com.facebook.AccessToken;
 import com.facebook.FacebookSdk;
 import com.facebook.GraphRequest;
@@ -31,11 +38,12 @@ import ar.com.netmefy.netmefy.services.login.Session;
 
 public class MainActivity extends AppCompatActivity {
 
-    private TextView nameView;
+    private TextView nameView, likesRecived, likesNotRecived;
     private Button logout;
     private ListView lvLikes;
+    private ProgressBar progressBar2;
     JSONArray jsonLikes;
-    JSONObject jsonNext;
+    String jsonNext;
     ArrayList<String> likesNames;
     private Session session;
 
@@ -48,6 +56,9 @@ public class MainActivity extends AppCompatActivity {
         Profile userFacebook = Profile.getCurrentProfile();
         session = new Session(getApplicationContext());
         nameView = (TextView)findViewById(R.id.nameAndSurname);
+        likesRecived = (TextView)findViewById(R.id.tv_likes_recived);
+        likesNotRecived = (TextView)findViewById(R.id.tv_likes_not_recived);
+        progressBar2 = (ProgressBar)findViewById(R.id.progressBar2);
         lvLikes = (ListView) findViewById(R.id.lv_likes);
         likesNames = new ArrayList<>();
         callFacebookForLikes(userFacebook);
@@ -86,7 +97,8 @@ public class MainActivity extends AppCompatActivity {
                         /* handle the result */
                         try {
                             jsonLikes = response.getJSONObject().getJSONArray("data");
-                            addUserLikes(jsonLikes);
+                            jsonNext = response.getJSONObject().getJSONObject("paging").getString("next");
+                            addUserLikes(jsonLikes, jsonNext);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -95,14 +107,83 @@ public class MainActivity extends AppCompatActivity {
         ).executeAsync();
     }
 
-    private void addUserLikes(JSONArray jsonLikes) throws JSONException {
+    private void addUserLikes(JSONArray jsonLikes, String jsonNext) throws JSONException {
         for(int i = 0; i < jsonLikes.length(); i++){
             likesNames.add(((JSONObject)jsonLikes.get(i)).getString("name").toString());
         }
-        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(
-                this, android.R.layout.simple_list_item_1, likesNames );
+        if(!jsonNext.isEmpty()){
+            searchNextLikes(jsonNext);
+        }else {
+            sendLikes(likesNames);
+            ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(
+                    this, android.R.layout.simple_list_item_1, likesNames);
 
-        lvLikes.setAdapter(arrayAdapter);
+            lvLikes.setAdapter(arrayAdapter);
+        }
+    }
+
+    private void searchNextLikes(String jsonNext) {
+        String url = jsonNext;
+        RequestQueue queue = Volley.newRequestQueue(this);
+        JsonObjectRequest jsObjRequest = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                try {
+                    if(response.getJSONArray("data").length()>0) {
+                        addUserLikes(response.getJSONArray("data"), response.getJSONObject("paging").getString("next"));
+                    }else{
+                        addUserLikes(response.getJSONArray("data"), "");
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.getNetworkTimeMs();
+            }
+        });
+        queue.add(jsObjRequest);
+
+    }
+
+    private void sendLikes(ArrayList<String> likesNames) throws JSONException {
+        String url = "http://10.0.2.2:3001/isp/likesFromId";//+ etUserId.getText().toString();
+        RequestQueue queue = Volley.newRequestQueue(this);
+        JSONObject requestToSend = new JSONObject();
+        requestToSend.put("userId",session.getUserId());
+        requestToSend.put("likesFromUser",likesNames);
+        JsonObjectRequest jsObjRequest = new JsonObjectRequest(Request.Method.POST, url, requestToSend, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                try {
+                    progressBar2.setVisibility(View.GONE);
+                    //String kind = response.getString("kind");
+                    String status = response.getString("status");
+                    if (status.equalsIgnoreCase("ok")){
+                        likesNotRecived.setVisibility(View.GONE);
+                        likesRecived.setVisibility(View.VISIBLE);
+                    }else{
+                        likesRecived.setVisibility(View.GONE);
+                        likesNotRecived.setVisibility(View.VISIBLE);
+                    }
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                progressBar2.setVisibility(View.GONE);
+                likesRecived.setVisibility(View.GONE);
+                likesNotRecived.setVisibility(View.VISIBLE);
+            }
+        });
+        queue.add(jsObjRequest);
     }
 
 

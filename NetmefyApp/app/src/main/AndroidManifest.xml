@@ -55,7 +55,6 @@
             android:value="@string/facebook_app_id" />
 
         <activity android:name=".login.UserIdActivity" />
-        <activity android:name=".login.UserPassActivity" />
         <activity android:name=".login.RateSupportActivity"></activity>
     </application>
 

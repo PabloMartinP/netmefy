@@ -25,7 +25,7 @@ public class RateSupportActivity extends AppCompatActivity {
     Button btSendRateSupport;
     RatingBar rbRateSupport;
     ProgressBar pbRate;
-    String userId;
+    String userId, supportNumber;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +33,7 @@ public class RateSupportActivity extends AppCompatActivity {
         setContentView(R.layout.activity_rate_support);
         Bundle inBundle = getIntent().getExtras();
         userId =  inBundle.get("userId").toString();
+        supportNumber =  inBundle.get("supportNumber").toString();
         rbRateSupport = (RatingBar) findViewById(R.id.rb_rate_support);
         btSendRateSupport = (Button) findViewById(R.id.bt_send_rate_suport);
         pbRate = (ProgressBar) findViewById(R.id.pb_rate);
@@ -47,21 +48,15 @@ public class RateSupportActivity extends AppCompatActivity {
     }
 
     private void sendRate() {
-        String url = "https://www.reddit.com/.json" ;//TODO: enviar rate y userId
+        String url = "http://10.0.2.2:3001/isp/rate/" + supportNumber + "/" + rbRateSupport.getRating() ;
         RequestQueue queue = Volley.newRequestQueue(this);
         JsonObjectRequest jsObjRequest = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                try {
-                    //Boolean isFirstLogin = Boolean.valueOf(response.getString("isFirstLogin"));
-                    String kind = response.getString("kind");
-                    Boolean isFirstLogin = true; //TODO: remove this and confirm the line before this one.
-                    Intent login = new Intent(RateSupportActivity.this,LoginActivity.class);
-                    login.putExtra("userId",userId);
-                    startActivity(login);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+
+                Intent login = new Intent(RateSupportActivity.this,LoginActivity.class);
+                login.putExtra("userId",userId);
+                startActivity(login);
 
             }
         }, new Response.ErrorListener() {

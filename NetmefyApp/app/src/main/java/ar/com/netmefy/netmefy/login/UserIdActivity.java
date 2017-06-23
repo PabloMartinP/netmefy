@@ -28,8 +28,8 @@ import ar.com.netmefy.netmefy.services.login.Session;
 
 public class UserIdActivity extends AppCompatActivity {
 
-    private EditText etUserId;
-    private TextView tvErrorUserId;
+    private EditText etUserId, etPassword;
+    private TextView tvErrorDni;
     private Button btSendUserId;
     private ProgressBar pbUserId;
     private Session session;
@@ -39,7 +39,8 @@ public class UserIdActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_id);
         etUserId = (EditText) findViewById(R.id.et_user_id);
-        tvErrorUserId = (TextView) findViewById(R.id.tv_error_user_id);
+        etPassword = (EditText) findViewById(R.id.et_password);
+        tvErrorDni = (TextView) findViewById(R.id.tv_error_dni);
         btSendUserId = (Button) findViewById(R.id.bt_send_id);
         pbUserId = (ProgressBar) findViewById(R.id.pb_user_id);
         session = new Session(getApplicationContext());
@@ -47,9 +48,9 @@ public class UserIdActivity extends AppCompatActivity {
 
 
     public void sendUserId (View view){
-        tvErrorUserId.setVisibility(View.GONE);
-        tvErrorUserId.setText("");
+        tvErrorDni.setVisibility(View.GONE);
         etUserId.setEnabled(false);
+        etPassword.setEnabled(false);
         btSendUserId.setVisibility(View.GONE);
         pbUserId.setVisibility(View.VISIBLE);
         sendUserIdToISP();
@@ -58,20 +59,21 @@ public class UserIdActivity extends AppCompatActivity {
     }
 
     private void sendUserIdToISP() {
-        String url = "https://www.reddit.com/.json" ;//+ etUserId.getText().toString();
+        String url = "http://10.0.2.2:3001/isp/login/" + etUserId.getText().toString() + "/" + etPassword.getText().toString();//+ etUserId.getText().toString();
         RequestQueue queue = Volley.newRequestQueue(this);
         JsonObjectRequest jsObjRequest = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 try {
-                    //Boolean isFirstLogin = Boolean.valueOf(response.getString("isFirstLogin"));
-                    String kind = response.getString("kind");
-                    //Boolean isFirstLogin = true; //TODO: remove this and confirm the line before this one.
-                    Intent userPass = new Intent(UserIdActivity.this,UserPassActivity.class);
-                    session.setUserId(etUserId.getText().toString());
-                    //userPass.putExtra("isFirstLogin",isFirstLogin);
-                    userPass.putExtra("userId",etUserId.getText());
-                    startActivity(userPass);
+                    //String kind = response.getString("kind");
+                    String typeOfUser = response.getString("typeOfUser");
+                    String supportNumber = response.getString("supportNumber");
+                    if(typeOfUser.equalsIgnoreCase("user")){
+                        redirectToUser(supportNumber);
+                    }else{
+                        redirectToTech();
+                    }
+
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -80,14 +82,32 @@ public class UserIdActivity extends AppCompatActivity {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                tvErrorUserId.setVisibility(View.VISIBLE);
-                tvErrorUserId.setText(R.string.error_login);
+                tvErrorDni.setVisibility(View.VISIBLE);
                 etUserId.setEnabled(true);
+                etPassword.setEnabled(true);
                 btSendUserId.setVisibility(View.VISIBLE);
                 pbUserId.setVisibility(View.GONE);
             }
         });
         queue.add(jsObjRequest);
+    }
+
+    private void redirectToTech() {
+    }
+
+    private void redirectToUser(String supportNumber) {
+        if (supportNumber != null){
+            Intent userPass = new Intent(UserIdActivity.this,RateSupportActivity.class);
+            session.setUserId(etUserId.getText().toString());
+            userPass.putExtra("userId",etUserId.getText());
+            userPass.putExtra("supportNumber",supportNumber);
+            startActivity(userPass);
+        }else{
+            Intent userPass = new Intent(UserIdActivity.this, LoginActivity.class);
+            session.setUserId(etUserId.getText().toString());
+            userPass.putExtra("userId",etUserId.getText());
+            startActivity(userPass);
+        }
     }
 
 
