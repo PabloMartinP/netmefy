@@ -24,6 +24,7 @@ import java.io.IOException;
 
 import ar.com.netmefy.netmefy.MainActivity;
 import ar.com.netmefy.netmefy.R;
+import ar.com.netmefy.netmefy.router.activities.TPLinkTestsActivity;
 import ar.com.netmefy.netmefy.services.login.Session;
 import ar.com.netmefy.netmefy.tecnico.TecnicoActivity;
 
@@ -113,6 +114,12 @@ public class UserIdActivity extends AppCompatActivity {
             userPass.putExtra("userId",etUserId.getText());
             startActivity(userPass);
         }
+    }
+
+    public void goToTPLinkTests(View view){
+        Intent intent = new Intent(UserIdActivity.this, TPLinkTestsActivity.class);
+        startActivity(intent);
+        finish();
     }
 
 
