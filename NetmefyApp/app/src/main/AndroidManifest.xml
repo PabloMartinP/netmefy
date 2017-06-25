@@ -60,7 +60,10 @@
 
         <activity android:name=".login.UserIdActivity" />
         <activity android:name=".login.RateSupportActivity" />
-        <activity android:name=".router.activities.TPLinkTestsActivity"></activity>
+        <activity android:name=".router.activities.TPLinkTestsActivity" />
+        <activity android:name=".router.activities.RestartActivity" />
+        <activity android:name=".router.activities.DevicesConnectedActivity" />
+        <activity android:name=".router.activities.ChangeWifiActivity"></activity>
     </application>
 
 </manifest>

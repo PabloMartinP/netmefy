@@ -363,14 +363,23 @@ public class TPLink extends Router {
     }
 
     @Override
-    public void listDevicesConnected(Response.Listener listener, Response.ErrorListener errorListener ) {
+    public void listDevicesConnected(final Response.Listener listener, Response.ErrorListener errorListener ) {
 
         StringRequestRouter stringRequest = new StringRequestRouter(Request.Method.GET,
                 TPLinkConstants.URL_LIST_CONNECTED,
                 TPLinkConstants.URL_LIST_CONNECTED_REFERRER,
-                listener, errorListener);
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        String result = response.toString();
+                        ResponseTPLink.setListDevices(result);
+
+                        listener.onResponse(ResponseTPLink.getListDevices());
+
+                    }
+                },
+                errorListener);
 
         execute(stringRequest);
-
     }
 }
