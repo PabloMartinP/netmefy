@@ -2,22 +2,35 @@ package ar.com.netmefy.netmefy.router.tplink.TLWR941ND;
 
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.net.NetworkInfo;
 import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
+import android.os.Build;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import ar.com.netmefy.netmefy.router.ConfigWifi;
+import ar.com.netmefy.netmefy.router.Device;
 import ar.com.netmefy.netmefy.router.RequestQueueSingleton;
 import ar.com.netmefy.netmefy.router.Router;
 
+
+final class Constantsok {
+
+    public static String NETWROK_ADDITIONAL_SECURITY_TKIP = "tkip";
+    public static String NETWROK_ADDITIONAL_SECURITY_AES = "aes";
+    public static String NETWROK_ADDITIONAL_SECURITY_WEP = "wep";
+    public static String NETWROK_ADDITIONAL_SECURITY_NONE = "";
+    public static String BACKSLASH = "\\";
+}
 
 /**
  * Created by fiok on 24/06/2017.
@@ -84,47 +97,55 @@ public class TPLink extends Router {
 
     @Override
     public void restartAndWaitUntilConnected(final Response.Listener listener, final Response.ErrorListener errorListener) {
-        restart(new Response.Listener() {
-            @Override
-            public void onResponse(Object response) {
 
-                Timer timer = new Timer();
-                timer.schedule(new TimerTask()
-                {
-                    int i = 0;
+        getWifiSsid(new Response.Listener<String>() {
+            @Override
+            public void onResponse(String ssid) {
+                final String ssidtoconnect = ssid;
+                restart(new Response.Listener() {
                     @Override
-                    public void run()
-                    {
-                        i++;
-                        Context context = _context;
-                        String info = "";
-                        String ssidtoconnect = "NETMEFYOK";
+                    public void onResponse(Object response) {
 
-                        if (tryConnectToNetwork(ssidtoconnect)){
-                            String actualSsid = getWifiName();
-                            if (actualSsid.equalsIgnoreCase(ssidtoconnect)){
+                        Timer timer = new Timer();
+                        timer.schedule(new TimerTask()
+                        {
+                            int i = 0;
+                            @Override
+                            public void run()
+                            {
+                                i++;
+                                Context context = _context;
+                                String info = "";
 
-                                info = "ok" +Integer.toString(i);
+                                if (tryConnectToNetwork(ssidtoconnect)){
+                                    String actualSsid = getWifiName();
+                                    if (actualSsid.equalsIgnoreCase(ssidtoconnect)){
 
-                                listener.onResponse((Object) info);
-                                this.cancel();
-                            }else{
-                                info = ""+Integer.toString(i);;
+                                        info = "ok" +Integer.toString(i);
+
+                                        listener.onResponse((Object) info);
+                                        this.cancel();
+                                    }else{
+                                        info = ""+Integer.toString(i);;
+                                    }
+                                }else{
+                                    info = ""+Integer.toString(i);;
+                                }
+
+
                             }
-                        }else{
-                            info = ""+Integer.toString(i);;
-                        }
-
-
+                        }, 30000, 5000);
                     }
-                }, 30000, 5000);
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        errorListener.onErrorResponse(error);
+                    }
+                });
+
             }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                errorListener.onErrorResponse(error);
-            }
-        });
+        }, errorListener);
+
     }
 
     @Override
@@ -175,9 +196,96 @@ public class TPLink extends Router {
         execute(stringRequest);
     }
 
+    @Override
+    public void saveWifiChanges(ConfigWifi configWifi ) {
+        addWifiConfig(configWifi.getSsid(), configWifi.getPassword(),"wpa2", Constantsok.NETWROK_ADDITIONAL_SECURITY_AES );
+
+
+    }
+
+    public void addWifiConfig(String ssid,String password,String securityParam,String securityDetailParam) {
+          /*String NETWROK_ADDITIONAL_SECURITY_TKIP = "tkip";
+          String NETWROK_ADDITIONAL_SECURITY_AES = "aes";
+          String NETWROK_ADDITIONAL_SECURITY_WEP = "wep";
+          String NETWROK_ADDITIONAL_SECURITY_NONE = "";
+          String BACKSLASH = "\\";*/
+
+        if (ssid == null) {
+            throw new IllegalArgumentException(
+                    "Required parameters can not be NULL #");
+        }
+
+        String wifiName = ssid;
+        WifiConfiguration conf = new WifiConfiguration();
+        // On devices with version Kitkat and below, We need to send SSID name
+        // with double quotes. On devices with version Lollipop, We need to send
+        // SSID name without double quotes
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            conf.SSID = wifiName;
+        } else {
+            conf.SSID = Constantsok.BACKSLASH + wifiName + Constantsok.BACKSLASH;
+        }
+        String security = securityParam;
+        if (security.equalsIgnoreCase("WEP")) {
+            conf.wepKeys[0] = password;
+            conf.wepTxKeyIndex = 0;
+            conf.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.NONE);
+            conf.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.WEP40);
+        } else if (security.equalsIgnoreCase("NONE")) {
+            conf.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.NONE);
+        } else if ("WPA"
+                .equalsIgnoreCase(security)
+                || "WPA2"
+                .equalsIgnoreCase(security)
+                || "WPA/WPA2 PSK"
+                .equalsIgnoreCase(security)) {
+            // appropriate ciper is need to set according to security type used,
+            // ifcase of not added it will not be able to connect
+            conf.preSharedKey = Constantsok.BACKSLASH + password + Constantsok.BACKSLASH;
+            conf.allowedProtocols.set(WifiConfiguration.Protocol.RSN);
+            conf.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.WPA_PSK);
+            conf.status = WifiConfiguration.Status.ENABLED;
+            conf.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.TKIP);
+            conf.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.CCMP);
+            conf.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.WPA_PSK);
+            conf.allowedPairwiseCiphers.set(WifiConfiguration.PairwiseCipher.TKIP);
+            conf.allowedPairwiseCiphers.set(WifiConfiguration.PairwiseCipher.CCMP);
+            conf.allowedProtocols.set(WifiConfiguration.Protocol.RSN);
+            conf.allowedProtocols.set(WifiConfiguration.Protocol.WPA);
+        }
+        String securityDetails = securityDetailParam;
+        if (securityDetails.equalsIgnoreCase(Constantsok.NETWROK_ADDITIONAL_SECURITY_TKIP)) {
+            conf.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.TKIP);
+            conf.allowedPairwiseCiphers.set(WifiConfiguration.PairwiseCipher.TKIP);
+        } else if (securityDetails.equalsIgnoreCase(Constantsok.NETWROK_ADDITIONAL_SECURITY_AES)) {
+            conf.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.CCMP);
+            conf.allowedPairwiseCiphers.set(WifiConfiguration.PairwiseCipher.CCMP);
+        } else if (securityDetails.equalsIgnoreCase(Constantsok.NETWROK_ADDITIONAL_SECURITY_WEP)) {
+            conf.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.WEP104);
+            conf.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.WEP40);
+        } else if (securityDetails.equalsIgnoreCase(Constantsok.NETWROK_ADDITIONAL_SECURITY_NONE)) {
+            conf.allowedPairwiseCiphers.set(WifiConfiguration.PairwiseCipher.NONE);
+        }
+        WifiManager wifiManager = (WifiManager) _context.getSystemService(Context.WIFI_SERVICE);
+
+        int newNetworkId = wifiManager.addNetwork(conf);
+        wifiManager.enableNetwork(newNetworkId, true);
+        wifiManager.saveConfiguration();
+        wifiManager.setWifiEnabled(true);
+    }
 
     @Override
-    public void setConfigWifiAndRestart(ConfigWifi configWifi, final Response.Listener listener, final Response.ErrorListener errorListener) {
+    public void setConfigWifiAndRestart(final ConfigWifi configWifi, final Response.Listener listener, final Response.ErrorListener errorListener) {
+        saveWifiChanges(configWifi);
+
+        setConfigWifi(configWifi,
+                new Response.Listener() {
+                    @Override
+                    public void onResponse(Object response) {
+
+                        restartAndWaitUntilConnected(listener, errorListener);
+                    }
+                }, errorListener);
         /*
         setConfigWifi(configWifi,
                 new Response.Listener() {
@@ -241,7 +349,7 @@ public class TPLink extends Router {
     }
 
     @Override
-    public void getWifiSsid(final Response.Listener listener, final Response.ErrorListener errorListener){
+    public void getWifiSsid(final Response.Listener<String> listener, final Response.ErrorListener errorListener){
         StringRequestRouter stringRequest = new StringRequestRouter(Request.Method.GET,
                 TPLinkConstants.URL_WIFI_GET_SSID,
                 TPLinkConstants.URL_WIFI_GET_SSID_REFERRER,
@@ -363,7 +471,7 @@ public class TPLink extends Router {
     }
 
     @Override
-    public void listDevicesConnected(final Response.Listener listener, Response.ErrorListener errorListener ) {
+    public void listDevicesConnected(final Response.Listener<List<Device>> listener, Response.ErrorListener errorListener ) {
 
         StringRequestRouter stringRequest = new StringRequestRouter(Request.Method.GET,
                 TPLinkConstants.URL_LIST_CONNECTED,
