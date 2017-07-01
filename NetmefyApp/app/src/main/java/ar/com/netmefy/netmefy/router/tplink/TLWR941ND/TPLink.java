@@ -2,7 +2,6 @@ package ar.com.netmefy.netmefy.router.tplink.TLWR941ND;
 
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.net.NetworkInfo;
 import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiInfo;
@@ -22,15 +21,15 @@ import ar.com.netmefy.netmefy.router.Device;
 import ar.com.netmefy.netmefy.router.RequestQueueSingleton;
 import ar.com.netmefy.netmefy.router.Router;
 
-
+/*
 final class Constantsok {
 
-    public static String NETWROK_ADDITIONAL_SECURITY_TKIP = "tkip";
-    public static String NETWROK_ADDITIONAL_SECURITY_AES = "aes";
-    public static String NETWROK_ADDITIONAL_SECURITY_WEP = "wep";
-    public static String NETWROK_ADDITIONAL_SECURITY_NONE = "";
-    public static String BACKSLASH = "\\";
-}
+    public static String NETWORK_ADDITIONAL_SECURITY_TKIP = "tkip";
+    public static String NETWORK_ADDITIONAL_SECURITY_AES = "aes";
+    public static String NETWORK_ADDITIONAL_SECURITY_WEP = "wep";
+    public static String NETWORK_ADDITIONAL_SECURITY_NONE = "";
+    public static String BACKSLASH = "\"";
+}*/
 
 /**
  * Created by fiok on 24/06/2017.
@@ -97,10 +96,17 @@ public class TPLink extends Router {
 
     @Override
     public void restartAndWaitUntilConnected(final Response.Listener listener, final Response.ErrorListener errorListener) {
+        //antes de hacer el restart obtengo el ssid,
+        // para que al reconectar sepa a que ssid tengo que conectarme
+        //esto es porque los cells por default al perder conexion con un AP
+        //se conectan a otro que tenga configurado y este al alcance
+        final int DELAY_RESTART_SECS = 30;
+        final int DELAY_BETWEEN_INTENT_TO_RECONNCET_SECS = 5;
 
         getWifiSsid(new Response.Listener<String>() {
             @Override
             public void onResponse(String ssid) {
+
                 final String ssidtoconnect = ssid;
                 restart(new Response.Listener() {
                     @Override
@@ -134,7 +140,7 @@ public class TPLink extends Router {
 
 
                             }
-                        }, 30000, 5000);
+                        }, DELAY_RESTART_SECS*1000, DELAY_BETWEEN_INTENT_TO_RECONNCET_SECS*1000);
                     }
                 }, new Response.ErrorListener() {
                     @Override
@@ -198,18 +204,12 @@ public class TPLink extends Router {
 
     @Override
     public void saveWifiChanges(ConfigWifi configWifi ) {
-        addWifiConfig(configWifi.getSsid(), configWifi.getPassword(),"wpa2", Constantsok.NETWROK_ADDITIONAL_SECURITY_AES );
+        addWifiConfig(configWifi.getSsid(), configWifi.getPassword(),"wpa2", TPLinkConstants.NETWORK_ADDITIONAL_SECURITY_AES);
 
 
     }
 
     public void addWifiConfig(String ssid,String password,String securityParam,String securityDetailParam) {
-          /*String NETWROK_ADDITIONAL_SECURITY_TKIP = "tkip";
-          String NETWROK_ADDITIONAL_SECURITY_AES = "aes";
-          String NETWROK_ADDITIONAL_SECURITY_WEP = "wep";
-          String NETWROK_ADDITIONAL_SECURITY_NONE = "";
-          String BACKSLASH = "\\";*/
-
         if (ssid == null) {
             throw new IllegalArgumentException(
                     "Required parameters can not be NULL #");
@@ -223,7 +223,7 @@ public class TPLink extends Router {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             conf.SSID = wifiName;
         } else {
-            conf.SSID = Constantsok.BACKSLASH + wifiName + Constantsok.BACKSLASH;
+            conf.SSID = TPLinkConstants.BACKSLASH + wifiName + TPLinkConstants.BACKSLASH;
         }
         String security = securityParam;
         if (security.equalsIgnoreCase("WEP")) {
@@ -241,7 +241,7 @@ public class TPLink extends Router {
                 .equalsIgnoreCase(security)) {
             // appropriate ciper is need to set according to security type used,
             // ifcase of not added it will not be able to connect
-            conf.preSharedKey = Constantsok.BACKSLASH + password + Constantsok.BACKSLASH;
+            conf.preSharedKey = TPLinkConstants.BACKSLASH + password + TPLinkConstants.BACKSLASH;
             conf.allowedProtocols.set(WifiConfiguration.Protocol.RSN);
             conf.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.WPA_PSK);
             conf.status = WifiConfiguration.Status.ENABLED;
@@ -254,24 +254,26 @@ public class TPLink extends Router {
             conf.allowedProtocols.set(WifiConfiguration.Protocol.WPA);
         }
         String securityDetails = securityDetailParam;
-        if (securityDetails.equalsIgnoreCase(Constantsok.NETWROK_ADDITIONAL_SECURITY_TKIP)) {
+        if (securityDetails.equalsIgnoreCase(TPLinkConstants.NETWORK_ADDITIONAL_SECURITY_TKIP)) {
             conf.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.TKIP);
             conf.allowedPairwiseCiphers.set(WifiConfiguration.PairwiseCipher.TKIP);
-        } else if (securityDetails.equalsIgnoreCase(Constantsok.NETWROK_ADDITIONAL_SECURITY_AES)) {
+        } else if (securityDetails.equalsIgnoreCase(TPLinkConstants.NETWORK_ADDITIONAL_SECURITY_AES)) {
             conf.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.CCMP);
             conf.allowedPairwiseCiphers.set(WifiConfiguration.PairwiseCipher.CCMP);
-        } else if (securityDetails.equalsIgnoreCase(Constantsok.NETWROK_ADDITIONAL_SECURITY_WEP)) {
+        } else if (securityDetails.equalsIgnoreCase(TPLinkConstants.NETWORK_ADDITIONAL_SECURITY_WEP)) {
             conf.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.WEP104);
             conf.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.WEP40);
-        } else if (securityDetails.equalsIgnoreCase(Constantsok.NETWROK_ADDITIONAL_SECURITY_NONE)) {
+        } else if (securityDetails.equalsIgnoreCase(TPLinkConstants.NETWORK_ADDITIONAL_SECURITY_NONE)) {
             conf.allowedPairwiseCiphers.set(WifiConfiguration.PairwiseCipher.NONE);
         }
         WifiManager wifiManager = (WifiManager) _context.getSystemService(Context.WIFI_SERVICE);
 
         int newNetworkId = wifiManager.addNetwork(conf);
-        wifiManager.enableNetwork(newNetworkId, true);
+
+        //TODO: Deberia chequar si devuelve -1 que lance una excepcion
+        //wifiManager.enableNetwork(newNetworkId, true);
         wifiManager.saveConfiguration();
-        wifiManager.setWifiEnabled(true);
+        //wifiManager.setWifiEnabled(true);
     }
 
     @Override

@@ -27,4 +27,9 @@ public  final class TPLinkConstants {
     final static String URL_WIFI_SET_PASSWORD_REFERRER = "http://192.168.0.1/userRpm/WlanSecurityRpm.htm";
 
 
+    final static String NETWORK_ADDITIONAL_SECURITY_TKIP = "tkip";
+    final static String NETWORK_ADDITIONAL_SECURITY_AES = "aes";
+    final static String NETWORK_ADDITIONAL_SECURITY_WEP = "wep";
+    final static String NETWORK_ADDITIONAL_SECURITY_NONE = "";
+    final static String BACKSLASH = "\"";
 }
