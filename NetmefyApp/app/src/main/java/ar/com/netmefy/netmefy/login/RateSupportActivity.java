@@ -57,6 +57,7 @@ public class RateSupportActivity extends AppCompatActivity {
                 Intent login = new Intent(RateSupportActivity.this,LoginActivity.class);
                 login.putExtra("userId",userId);
                 startActivity(login);
+                finish();
 
             }
         }, new Response.ErrorListener() {

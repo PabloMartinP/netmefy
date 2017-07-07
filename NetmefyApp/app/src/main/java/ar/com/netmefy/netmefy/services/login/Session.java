@@ -33,4 +33,30 @@ public class Session {
         String userId = prefs.getString("userId","");
         return userId;
     }
+
+    public void setUserName(String userName) {
+        prefs.edit().putString("userName", userName).apply();
+    }
+
+    public String getUserName() {
+        String userName = prefs.getString("userName","");
+        return userName;
+    }
+
+    public void setEmail(String email) {
+        prefs.edit().putString("email", email).apply();
+    }
+
+    public String getEmail() {
+        String email = prefs.getString("email","");
+        return email;
+    }
+    public void setLoginWay(String loginWay) {
+        prefs.edit().putString("loginWay", loginWay).apply();
+    }
+
+    public String getLoginWay() {
+        String loginWay = prefs.getString("loginWay","");
+        return loginWay;
+    }
 }

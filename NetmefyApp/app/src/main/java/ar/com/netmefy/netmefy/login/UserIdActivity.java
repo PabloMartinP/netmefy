@@ -108,11 +108,13 @@ public class UserIdActivity extends AppCompatActivity {
             userPass.putExtra("userId",etUserId.getText());
             userPass.putExtra("supportNumber",supportNumber);
             startActivity(userPass);
+            finish();
         }else{
             Intent userPass = new Intent(UserIdActivity.this, LoginActivity.class);
             session.setUserId(etUserId.getText().toString());
             userPass.putExtra("userId",etUserId.getText());
             startActivity(userPass);
+            finish();
         }
     }
 

@@ -7,6 +7,10 @@ import android.os.Bundle;
 
 import com.facebook.FacebookSdk;
 import com.facebook.Profile;
+import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.SignInButton;
+import com.google.android.gms.common.api.GoogleApiClient;
 
 import ar.com.netmefy.netmefy.login.LoginActivity;
 import ar.com.netmefy.netmefy.login.UserIdActivity;
@@ -16,6 +20,9 @@ import ar.com.netmefy.netmefy.tecnico.TecnicoActivity;
 public class SplashScreen extends Activity {
 
     private Session session;
+    private GoogleApiClient mGoogleApiClient;
+    private static final String TAGGOOGLE = "SignInActivity";
+    private static final int RC_SIGN_IN = 9001;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,53 +31,35 @@ public class SplashScreen extends Activity {
         session = new Session(getApplicationContext());
 
 
-        if(session.getUserId().isEmpty()) {
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    //Intent intent = new Intent(SplashScreen.this, MainActivity.class);
-                    Intent intent = new Intent(SplashScreen.this, UserIdActivity.class);
-                    startActivity(intent);
-                    finish();
 
-                }
-            }, 2000);
+        if(session.getUserId().isEmpty()) {
+            //no se registro con nada o esta totalmente deslogeado
+            goToActivity(UserIdActivity.class);
         } else{
             FacebookSdk.sdkInitialize(getApplicationContext());
             if(Profile.getCurrentProfile() != null) {
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        //Intent intent = new Intent(SplashScreen.this, MainActivity.class);
-                        Intent intent = new Intent(SplashScreen.this, MainActivity.class);
-                        startActivity(intent);
-                        finish();
-
-                    }
-                }, 2000);
+                //se logeo antes con facebook
+                goToActivity(MainActivity.class);
             }else if (session.getUserType().equalsIgnoreCase("user")){
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        //Intent intent = new Intent(SplashScreen.this, MainActivity.class);
-                        Intent intent = new Intent(SplashScreen.this, LoginActivity.class);
-                        startActivity(intent);
-                        finish();
-
-                    }
-                }, 2000);
+                //es usuario
+                goToActivity(LoginActivity.class);
             }else{
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        //Intent intent = new Intent(SplashScreen.this, MainActivity.class);
-                        Intent intent = new Intent(SplashScreen.this, TecnicoActivity.class);
-                        startActivity(intent);
-                        finish();
-
-                    }
-                }, 2000);
+                //es tecnico
+                goToActivity(TecnicoActivity.class);
             }
         }
+    }
+
+    private void goToActivity(final Class aClass) {
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                //Intent intent = new Intent(SplashScreen.this, MainActivity.class);
+                Intent intent = new Intent(SplashScreen.this, aClass);
+                startActivity(intent);
+                finish();
+
+            }
+        }, 2000);
     }
 }

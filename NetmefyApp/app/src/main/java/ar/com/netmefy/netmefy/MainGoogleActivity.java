@@ -1,10 +1,11 @@
 package ar.com.netmefy.netmefy;
 
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -16,14 +17,13 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
-import com.facebook.AccessToken;
-import com.facebook.FacebookSdk;
-import com.facebook.GraphRequest;
-import com.facebook.GraphResponse;
-import com.facebook.HttpMethod;
-import com.facebook.Profile;
-import com.facebook.login.LoginManager;
-import org.json.JSONArray;
+import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Status;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -32,35 +32,43 @@ import java.util.ArrayList;
 import ar.com.netmefy.netmefy.login.UserIdActivity;
 import ar.com.netmefy.netmefy.services.login.Session;
 
-public class MainActivity extends AppCompatActivity {
+public class MainGoogleActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
 
     private TextView nameView, likesRecived, likesNotRecived;
     private Button logout;
     private ListView lvLikes;
     private ProgressBar progressBar2;
-    JSONArray jsonLikes;
-    String jsonNext;
     ArrayList<String> likesNames;
     private Session session;
+    private GoogleApiClient mGoogleApiClient;
+    private static final String TAGGOOGLE = "SignInActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        FacebookSdk.sdkInitialize(getApplicationContext());
-        Profile userFacebook = Profile.getCurrentProfile();
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestEmail()
+                .build();
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .enableAutoManage(this, this)
+                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
+                .build();
+
 
         session = new Session(getApplicationContext());
-        session.setUserName(userFacebook.getName());
-        session.setLoginWay("Facebook");
         nameView = (TextView)findViewById(R.id.nameAndSurname);
         likesRecived = (TextView)findViewById(R.id.tv_likes_recived);
         likesNotRecived = (TextView)findViewById(R.id.tv_likes_not_recived);
         progressBar2 = (ProgressBar)findViewById(R.id.progressBar2);
         lvLikes = (ListView) findViewById(R.id.lv_likes);
         likesNames = new ArrayList<>();
-        callFacebookForLikes(userFacebook);
-        String nameToShow = session.getUserName();
+        String nameToShow =session.getUserName();
+        try {
+            sendLikes(new ArrayList<String>());
+        } catch (JSONException e) {
+                e.printStackTrace();
+        }
 
         nameView.setText(nameToShow);
         logout = (Button)findViewById(R.id.logout);
@@ -72,75 +80,19 @@ public class MainActivity extends AppCompatActivity {
                 session.setEmail("");
                 session.setUserName("");
                 session.setLoginWay("");
-                LoginManager.getInstance().logOut();
-                Intent login = new Intent(MainActivity.this, UserIdActivity.class);
-                startActivity(login);
-                finish();
+                Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(
+                        new ResultCallback<Status>() {
+                            @Override
+                            public void onResult(Status status) {
+                                Log.d("google", "onResult: " + status);
+                                Intent login = new Intent(MainGoogleActivity.this, UserIdActivity.class);
+                                startActivity(login);
+                                finish();
+                            }
+                        });
+
             }
         });
-    }
-
-    private void callFacebookForLikes(Profile userFacebook) {
-        new GraphRequest(
-                AccessToken.getCurrentAccessToken(),
-                "/"+userFacebook.getId()+"/likes?limit=500",
-                null,
-                HttpMethod.GET,
-                new GraphRequest.Callback() {
-                    public void onCompleted(GraphResponse response) {
-                        /* handle the result */
-                        try {
-                            jsonLikes = response.getJSONObject().getJSONArray("data");
-                            jsonNext = response.getJSONObject().getJSONObject("paging").getString("next");
-                            addUserLikes(jsonLikes, jsonNext);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }
-        ).executeAsync();
-    }
-
-    private void addUserLikes(JSONArray jsonLikes, String jsonNext) throws JSONException {
-        for(int i = 0; i < jsonLikes.length(); i++){
-            likesNames.add(((JSONObject)jsonLikes.get(i)).getString("name").toString());
-        }
-        if(!jsonNext.isEmpty()){
-            searchNextLikes(jsonNext);
-        }else {
-            sendLikes(likesNames);
-            ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(
-                    this, android.R.layout.simple_list_item_1, likesNames);
-
-            lvLikes.setAdapter(arrayAdapter);
-        }
-    }
-
-    private void searchNextLikes(String jsonNext) {
-        String url = jsonNext;
-        RequestQueue queue = Volley.newRequestQueue(this);
-        JsonObjectRequest jsObjRequest = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject response) {
-                try {
-                    if(response.getJSONArray("data").length()>0) {
-                        addUserLikes(response.getJSONArray("data"), response.getJSONObject("paging").getString("next"));
-                    }else{
-                        addUserLikes(response.getJSONArray("data"), "");
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                error.getNetworkTimeMs();
-            }
-        });
-        queue.add(jsObjRequest);
-
     }
 
     private void sendLikes(ArrayList<String> likesNames) throws JSONException {
@@ -184,4 +136,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+        Log.d(TAGGOOGLE, "onConnectionFailed:" + connectionResult);
+    }
 }
