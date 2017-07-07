@@ -98,16 +98,13 @@ public class LoginActivity extends AppCompatActivity implements
                     public void onCompleted(JSONObject object, GraphResponse response) {
                         Log.e(TAG,object.toString());
                         Log.e(TAG,response.toString());
-                        String personName = "";
-                        String email = "" ;
-                            callMainActivity(null, null, "Facebook");
-                            finish();
+                        callMainActivity(null, null, "Facebook");
+                        finish();
 
                     }
                 });
                 Bundle parameters = new Bundle();
-                parameters.putString("fields", "id, first_name, last_name, email, birthday, gender , location, likes");
-                parameters.putString("limit","400");
+                parameters.putString("fields", "id, first_name, last_name, email, birthday, gender , location");
                 request.setParameters(parameters);
                 request.executeAsync();
             }

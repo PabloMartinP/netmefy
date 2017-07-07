@@ -14,8 +14,12 @@
         android:layout_height="wrap_content"
         android:text="Tipo Router"
         android:textSize="30sp"
-        tools:layout_editor_absoluteY="53dp"
-        tools:layout_editor_absoluteX="16dp" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="8dp"
+        android:layout_marginRight="8dp"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginLeft="8dp"
+        app:layout_constraintLeft_toLeftOf="parent" />
 
     <Button
         android:id="@+id/btn"
@@ -23,27 +27,37 @@
         android:layout_height="wrap_content"
         android:onClick="restart"
         android:text="restart"
-        tools:layout_editor_absoluteY="89dp"
-        tools:layout_editor_absoluteX="8dp" />
+        android:layout_marginRight="8dp"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginLeft="8dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginTop="8dp"
+        app:layout_constraintTop_toBottomOf="@+id/tvTypeRouter"
+        app:layout_constraintHorizontal_bias="0.0" />
 
     <Button
         android:id="@+id/btnChangeWifi"
         android:layout_width="368dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="61dp"
+        android:layout_marginTop="8dp"
         android:onClick="changeWifi"
         android:text="Change wifi"
         app:layout_constraintTop_toBottomOf="@+id/btn"
-        tools:layout_editor_absoluteX="8dp" />
+        android:layout_marginLeft="8dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginRight="8dp"
+        app:layout_constraintRight_toRightOf="parent" />
 
     <Button
         android:id="@+id/btnDevicesConnected"
         android:layout_width="368dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="13dp"
+        android:layout_marginTop="8dp"
         android:onClick="devicesConnected"
         android:text="Devices connected"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnChangeWifi" />
+        app:layout_constraintTop_toBottomOf="@+id/btnChangeWifi"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp" />
 </android.support.constraint.ConstraintLayout>

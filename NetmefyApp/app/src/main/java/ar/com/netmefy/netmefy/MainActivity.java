@@ -30,6 +30,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 import ar.com.netmefy.netmefy.login.UserIdActivity;
+import ar.com.netmefy.netmefy.router.activities.TPLinkTestsActivity;
 import ar.com.netmefy.netmefy.services.login.Session;
 
 public class MainActivity extends AppCompatActivity {
@@ -183,5 +184,9 @@ public class MainActivity extends AppCompatActivity {
         queue.add(jsObjRequest);
     }
 
+    public void goToTPLinkTests(View view){
+        Intent intent = new Intent(MainActivity.this, TPLinkTestsActivity.class);
+        startActivity(intent);
+    }
 
 }

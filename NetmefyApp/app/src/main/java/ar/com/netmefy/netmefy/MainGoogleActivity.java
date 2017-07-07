@@ -30,6 +30,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 import ar.com.netmefy.netmefy.login.UserIdActivity;
+import ar.com.netmefy.netmefy.router.activities.TPLinkTestsActivity;
 import ar.com.netmefy.netmefy.services.login.Session;
 
 public class MainGoogleActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
@@ -139,5 +140,10 @@ public class MainGoogleActivity extends AppCompatActivity implements GoogleApiCl
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
         Log.d(TAGGOOGLE, "onConnectionFailed:" + connectionResult);
+    }
+
+    public void goToTPLinkTests(View view){
+        Intent intent = new Intent(MainGoogleActivity.this, TPLinkTestsActivity.class);
+        startActivity(intent);
     }
 }

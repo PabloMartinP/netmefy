@@ -118,11 +118,5 @@ public class UserIdActivity extends AppCompatActivity {
         }
     }
 
-    public void goToTPLinkTests(View view){
-        Intent intent = new Intent(UserIdActivity.this, TPLinkTestsActivity.class);
-        startActivity(intent);
-        finish();
-    }
-
 
 }
