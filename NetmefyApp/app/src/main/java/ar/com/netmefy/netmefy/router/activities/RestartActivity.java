@@ -26,13 +26,14 @@ public class RestartActivity extends AppCompatActivity {
         btnrestart.setText("Restarteando ...");
 
         Router routerNucom  = new TPLink(this.getApplicationContext());
+        btnrestart.setText("Restarteado ...");
         routerNucom.restartAndWaitUntilConnected(new Response.Listener() {
             @Override
             public void onResponse(final Object response) {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        btnrestart.setText("Restarteado OK");
+                        btnrestart.setText(response.toString());
                     }
                 });
             }

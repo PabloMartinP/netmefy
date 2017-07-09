@@ -19,6 +19,7 @@ import java.util.TimerTask;
 import ar.com.netmefy.netmefy.router.ConfigWifi;
 import ar.com.netmefy.netmefy.router.Device;
 import ar.com.netmefy.netmefy.router.RequestQueueSingleton;
+import ar.com.netmefy.netmefy.router.RestartTry;
 import ar.com.netmefy.netmefy.router.Router;
 
 /*
@@ -36,33 +37,26 @@ final class Constantsok {
  */
 
 public class TPLink extends Router {
-
-
     public TPLink(Context context){
         _context = context;
         _queue = RequestQueueSingleton.getInstance(this._context).getRequestQueue();
 
     }
-
     @Override
     public void restart(final Response.Listener listener, final Response.ErrorListener errorListener) {
         StringRequestRouter sr = new StringRequestRouter(Request.Method.GET,
                 TPLinkConstants.URL_RESTART,
                 TPLinkConstants.URL_RESTART_REFERRER,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        listener.onResponse("ok");
+                listener,
+                errorListener);
 
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                errorListener.onErrorResponse(error);
-            }
-        });
         execute(sr);
     }
+
+
+    /*
+    * trae el ssid de la red conectada actualmente
+    * */
     public String getWifiName() {
         try {
             WifiManager manager = (WifiManager) _context.getSystemService(Context.WIFI_SERVICE);
@@ -81,6 +75,12 @@ public class TPLink extends Router {
             return "";
         }
     }
+
+    /*
+    * intenta conectar a un ssid especifico,
+    * si esta conectado a otra red la desconecta y se conecta a la ssid
+    * Importante: El SSID ya tienen que estar agregado a la lista de redes del android
+    * */
     private  boolean tryConnectToNetwork(String ssid){
         WifiManager wifiManager = (WifiManager)_context.getSystemService(Context.WIFI_SERVICE);
         for (WifiConfiguration network:wifiManager.getConfiguredNetworks()) {
@@ -100,7 +100,7 @@ public class TPLink extends Router {
         // para que al reconectar sepa a que ssid tengo que conectarme
         //esto es porque los cells por default al perder conexion con un AP
         //se conectan a otro que tenga configurado y este al alcance
-        final int DELAY_RESTART_SECS = 30;
+        final int DELAY_RESTART_SECS = 20;
         final int DELAY_BETWEEN_INTENT_TO_RECONNCET_SECS = 5;
 
         getWifiSsid(new Response.Listener<String>() {
@@ -111,7 +111,6 @@ public class TPLink extends Router {
                 restart(new Response.Listener() {
                     @Override
                     public void onResponse(Object response) {
-
                         Timer timer = new Timer();
                         timer.schedule(new TimerTask()
                         {
@@ -121,24 +120,27 @@ public class TPLink extends Router {
                             {
                                 i++;
                                 Context context = _context;
-                                String info = "";
-
+                                RestartTry restartTry;
                                 if (tryConnectToNetwork(ssidtoconnect)){
                                     String actualSsid = getWifiName();
                                     if (actualSsid.equalsIgnoreCase(ssidtoconnect)){
+                                        //info = "OOOok" +Integer.toString(i);
+                                        //restartTry.set_success(true);
+                                        restartTry  = new RestartTry(true, i, "");
+                                        tryConnectToNetwork(ssidtoconnect);
+                                        actualSsid = getWifiName();
 
-                                        info = "ok" +Integer.toString(i);
-
-                                        listener.onResponse((Object) info);
                                         this.cancel();
                                     }else{
-                                        info = ""+Integer.toString(i);;
+                                        //info = "NOO-"+Integer.toString(i);;
+                                        restartTry  = new RestartTry(false, i, "El ssid actual ["+actualSsid+"] no es igual al configurado ["+ssidtoconnect+"]");
                                     }
                                 }else{
-                                    info = ""+Integer.toString(i);;
+                                    //info = "HHHHH-"+Integer.toString(i);;
+                                    restartTry  = new RestartTry(false, i, "SSID ["+ssidtoconnect+"] no encontrado");
                                 }
 
-
+                                listener.onResponse((Object) restartTry);
                             }
                         }, DELAY_RESTART_SECS*1000, DELAY_BETWEEN_INTENT_TO_RECONNCET_SECS*1000);
                     }
@@ -472,6 +474,12 @@ public class TPLink extends Router {
         });
     }
 
+    /*
+    * ESTE TPLINK AL PARECER ACUMULA LA LISTA DE LOS DHCP,
+    * Y CUANDO SE DESCONECTA UNO NO LO LIMPIA DE LA LISTA,
+    * ASI QUE MUESTRA ALGUNOS DEVICES QUE YA SE DESCONECTARON
+    * POR AHORA LA SOLUCION SERIA RESTART
+    * */
     @Override
     public void listDevicesConnected(final Response.Listener<List<Device>> listener, Response.ErrorListener errorListener ) {
 

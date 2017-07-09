@@ -14,6 +14,7 @@ import com.google.android.gms.common.api.GoogleApiClient;
 
 import ar.com.netmefy.netmefy.login.LoginActivity;
 import ar.com.netmefy.netmefy.login.UserIdActivity;
+import ar.com.netmefy.netmefy.router.activities.TPLinkTestsActivity;
 import ar.com.netmefy.netmefy.services.login.Session;
 import ar.com.netmefy.netmefy.tecnico.TecnicoActivity;
 
@@ -30,6 +31,10 @@ public class SplashScreen extends Activity {
         setContentView(R.layout.activity_splash_screen);
         session = new Session(getApplicationContext());
 
+        /*
+        Intent intent = new Intent(SplashScreen.this, TPLinkTestsActivity.class);
+        startActivity(intent);
+        finish();*/
 
 
         if(session.getUserId().isEmpty()) {

@@ -11,6 +11,8 @@ import org.w3c.dom.Text;
 import ar.com.netmefy.netmefy.MainActivity;
 import ar.com.netmefy.netmefy.R;
 import ar.com.netmefy.netmefy.SplashScreen;
+import ar.com.netmefy.netmefy.router.Router;
+import ar.com.netmefy.netmefy.router.tplink.TLWR941ND.TPLink;
 
 public class TPLinkTestsActivity extends AppCompatActivity {
 
@@ -33,6 +35,11 @@ public class TPLinkTestsActivity extends AppCompatActivity {
     }
     public void changeWifi(View view){
         startActivity(new Intent(TPLinkTestsActivity.this, ChangeWifiActivity.class));
+    }
+
+    public void ConnectToSSID(View view){
+        //Router router = new TPLink(this.getApplicationContext());
+
     }
 
 

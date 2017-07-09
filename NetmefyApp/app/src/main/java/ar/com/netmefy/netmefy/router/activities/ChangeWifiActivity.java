@@ -17,6 +17,7 @@ import com.android.volley.VolleyError;
 
 import ar.com.netmefy.netmefy.R;
 import ar.com.netmefy.netmefy.router.ConfigWifi;
+import ar.com.netmefy.netmefy.router.RestartTry;
 import ar.com.netmefy.netmefy.router.Router;
 import ar.com.netmefy.netmefy.router.tplink.TLWR941ND.TPLink;
 
@@ -89,7 +90,7 @@ public class ChangeWifiActivity extends AppCompatActivity {
         String newSsid = etSsid.getText().toString();
         String newPassword = etPassword.getText().toString();
 
-        if(newPassword.length()<=8){
+        if(newPassword.length()<8){
             Toast.makeText(getApplicationContext(), "La pass debe ser mayor o igual a ocho!!!!!", Toast.LENGTH_LONG).show();
             return;
         }
@@ -102,28 +103,31 @@ public class ChangeWifiActivity extends AppCompatActivity {
         configWifi.setSsid(newSsid);
         configWifi.setPassword(newPassword);
 
+        btn.setText("Changing ...");
         router.setConfigWifiAndRestart(configWifi,
                 new Response.Listener() {
                     @Override
-                    public void onResponse(Object response) {
+                    public void onResponse(final Object response) {
 
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                etSsid.setText("SSID OK");
-                                etPassword.setText("PASSWORD OK");
+                                //etSsid.setText("SSID OK");
+                                //etPassword.setText("PASSWORD OK");
+                                btn.setText(response.toString());
                             }
                         });
 
                     }
                 }, new Response.ErrorListener() {
                     @Override
-                    public void onErrorResponse(VolleyError error) {
+                    public void onErrorResponse(final VolleyError error) {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                etSsid.setText("SSID NO OK");
-                                etPassword.setText("PASSWORD NO OK");
+                                //etSsid.setText("SSID NO OK");
+                                //etPassword.setText("PASSWORD NO OK");
+                                btn.setText(error.getMessage());
                             }
                         });
 
