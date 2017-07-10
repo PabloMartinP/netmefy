@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+import com.android.volley.toolbox.StringRequest;
 
 import java.util.List;
 
@@ -20,7 +21,7 @@ public abstract class Router {
     protected  Context _context;
     protected RequestQueue _queue ;
 
-    public void execute(StringRequestRouter stringRequest){
+    public void execute(StringRequest stringRequest){
         _queue.add(stringRequest);
 
     }

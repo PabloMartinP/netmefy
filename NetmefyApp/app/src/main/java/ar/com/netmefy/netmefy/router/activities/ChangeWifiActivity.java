@@ -19,6 +19,7 @@ import ar.com.netmefy.netmefy.R;
 import ar.com.netmefy.netmefy.router.ConfigWifi;
 import ar.com.netmefy.netmefy.router.RestartTry;
 import ar.com.netmefy.netmefy.router.Router;
+import ar.com.netmefy.netmefy.router.nucom.R5000UNv2.Nucom;
 import ar.com.netmefy.netmefy.router.tplink.TLWR941ND.TPLink;
 
 public class ChangeWifiActivity extends AppCompatActivity {
@@ -39,8 +40,11 @@ public class ChangeWifiActivity extends AppCompatActivity {
 
         btn.setEnabled(false);
 
-        router = new TPLink(this.getApplicationContext());
+        router = new Nucom(this.getApplicationContext());
 
+
+        /*
+        router = new TPLink(this.getApplicationContext());
         router.getConfigWifi(new Response.Listener<ConfigWifi>() {
             @Override
             public void onResponse(ConfigWifi configWifi) {
@@ -55,9 +59,9 @@ public class ChangeWifiActivity extends AppCompatActivity {
                 etSsid.setText("ERR!!!");
                 etPassword.setText("ERRR!!!");
             }
-        });
+        });*/
 
-        /*
+
         router.getWifiSsid(new Response.Listener<String>() {
                                @Override
                                public void onResponse(String ssid) {
@@ -70,7 +74,7 @@ public class ChangeWifiActivity extends AppCompatActivity {
                                }
                            }
         );
-
+/*
         router.getWifiPassword(new Response.Listener<String>() {
                                @Override
                                public void onResponse(String password) {
