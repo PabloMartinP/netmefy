@@ -14,6 +14,7 @@ import ar.com.netmefy.netmefy.router.RequestQueueSingleton;
 import ar.com.netmefy.netmefy.router.Router;
 import ar.com.netmefy.netmefy.router.tplink.TLWR941ND.StringRequestRouter;
 import ar.com.netmefy.netmefy.router.tplink.TLWR941ND.TPLinkConstants;
+import ar.com.netmefy.netmefy.services.Utils;
 
 /**
  * Created by fiok on 09/07/2017.
@@ -21,9 +22,11 @@ import ar.com.netmefy.netmefy.router.tplink.TLWR941ND.TPLinkConstants;
 
 public class Nucom extends Router {
 
+    boolean alreadyLogin;
     public Nucom(Context context){
         _context = context;
         _queue = RequestQueueSingleton.getInstance(this._context).getRequestQueue();
+        alreadyLogin = true;
 
     }
     @Override
@@ -64,25 +67,23 @@ public class Nucom extends Router {
             @Override
             public void onResponse(String response) {
                 final String URL_WIFI_GET_SSID = "http://192.168.1.1/wlcfg.html";
-                StringRequestRouterNucom stringRequest = new StringRequestRouterNucom(Request.Method.GET,
+                final String URL_WIFI_GET_SSID_REFERRER = "http://192.168.1.1/menu.html";
+                final StringRequestRouterNucom stringRequest = new StringRequestRouterNucom(Request.Method.GET,
                         URL_WIFI_GET_SSID,
-                        "", new Response.Listener<String>() {
+                        URL_WIFI_GET_SSID_REFERRER, new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
+                        String ssid = Utils.getTextBetween(response, "var ssid = '", "';", "Error ssid");
 
-                        /*HASTA ACA LLEGA BIEN, AHORA HAY QUE PARSEAR EL TEXTO PARA BUSCAR EL SSID*/
-                        response = response.toString();
-
+                        listener.onResponse(ssid);
                     }
                 }, new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-
+                        errorListener.onErrorResponse(error);
                     }
                 }
                 );
-
-                //_queue.add(stringRequest);
                 execute(stringRequest);
             }
         }, new Response.ErrorListener() {
@@ -97,7 +98,37 @@ public class Nucom extends Router {
     }
 
     @Override
-    public void getWifiPassword(Response.Listener<String> listener, Response.ErrorListener errorListener) {
+    public void getWifiPassword(final Response.Listener<String> listener, final Response.ErrorListener errorListener) {
+
+        login(new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                final String URL_WIFI_GET_PASSWORD = "http://192.168.1.1/wlsecurity.html";
+                final String URL_WIFI_GET_PASSWORD_REFERRER = "http://192.168.1.1/menu.html";
+
+                final StringRequestRouterNucom stringRequest = new StringRequestRouterNucom(Request.Method.GET,
+                        URL_WIFI_GET_PASSWORD,
+                        URL_WIFI_GET_PASSWORD_REFERRER, new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        String password = Utils.getTextBetween(response, "var wpaPskKey = '", "';", "Error password wifi");
+                        listener.onResponse(password);
+                    }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        errorListener.onErrorResponse(error);
+                    }
+                }
+                );
+                execute(stringRequest);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                errorListener.onErrorResponse(error);
+            }
+        });
 
     }
 

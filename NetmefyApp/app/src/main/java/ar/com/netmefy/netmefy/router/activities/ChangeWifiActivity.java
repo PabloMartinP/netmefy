@@ -62,6 +62,7 @@ public class ChangeWifiActivity extends AppCompatActivity {
         });*/
 
 
+
         router.getWifiSsid(new Response.Listener<String>() {
                                @Override
                                public void onResponse(String ssid) {
@@ -74,19 +75,22 @@ public class ChangeWifiActivity extends AppCompatActivity {
                                }
                            }
         );
-/*
+
+
         router.getWifiPassword(new Response.Listener<String>() {
-                               @Override
-                               public void onResponse(String password) {
-                                   etPassword.setText(password);
-                               }
-                           }, new Response.ErrorListener() {
-                               @Override
-                               public void onErrorResponse(VolleyError error) {
-                                   etPassword.setText("ERROR!!!");;
-                               }
-                           }
-        );*/
+                                   @Override
+                                       public void onResponse(String password) {
+                                           etPassword.setText(password);
+                                       }
+                                   }, new Response.ErrorListener() {
+                                       @Override
+                                       public void onErrorResponse(VolleyError error) {
+                                           etPassword.setText("ERROR!!!" + error.getMessage());;
+                                       }
+                                   }
+            );
+
+
     }
 
 
