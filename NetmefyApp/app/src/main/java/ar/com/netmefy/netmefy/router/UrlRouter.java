@@ -5,13 +5,42 @@ package ar.com.netmefy.netmefy.router;
  */
 
 public class UrlRouter {
+    private static String _urlRoot;
 
     private String _url;
     private String _referrer;
-    private static String _urlRoot;
-
     private String _htmlBefore;
     private String _htmlAfter;
+    private String _valueToReplace;
+
+    private String _textOnError;
+
+    public String get_textOnError() {
+        return _textOnError;
+    }
+
+    public void set_textOnError(String _textOnError) {
+        this._textOnError = _textOnError;
+    }
+
+    public String get_newValue() {
+        return _newValue;
+    }
+
+    public void set_newValue(String _newValue) {
+        this._newValue = _newValue;
+    }
+
+    private String _newValue;
+
+
+    public String get_valueToReplace() {
+        return _valueToReplace;
+    }
+
+    public void set_valueToReplace(String _valueToReplace) {
+        this._valueToReplace = _valueToReplace;
+    }
 
     public String get_htmlBefore() {
         return _htmlBefore;
@@ -34,22 +63,47 @@ public class UrlRouter {
     }
 
     public static UrlRouter create(String url, String referrer){
-        UrlRouter athis = new UrlRouter();
-        athis.set_url(url);
-        athis.set_referrer(referrer);
-        return athis;
-    }
-
-    public static UrlRouter createWithFinder(String url, String referrer, String htmlBefore, String htmlAfter){
         UrlRouter aThis = new UrlRouter();
         aThis.set_url(url);
         aThis.set_referrer(referrer);
-        aThis.set_htmlAfter(htmlAfter);
-        aThis.set_htmlBefore(htmlBefore);
         return aThis;
     }
+
+    public static UrlRouter createWithFinder(String url, String referrer, String htmlBefore, String htmlAfter, String textOnError){
+        UrlRouter aThis = UrlRouter.create(url, referrer);
+
+        aThis.set_htmlAfter(htmlAfter);
+        aThis.set_htmlBefore(htmlBefore);
+        aThis.set_textOnError(textOnError);
+        return aThis;
+    }
+    public static UrlRouter createWithFinderAndReplace(String url, String referrer, String htmlBefore, String htmlAfter, String textOnError, String valueToReplace){
+        UrlRouter aThis = UrlRouter.createWithFinder(url, referrer, htmlBefore, htmlAfter, textOnError);
+        aThis.set_valueToReplace(valueToReplace);
+        return aThis;
+    }
+
+    /*
+    * Usado para hacer un SET*/
+    public static UrlRouter createWithReplace(String url, String referrer, String valueToReplace){
+        UrlRouter aThis = UrlRouter.create(url, referrer);
+        aThis.set_valueToReplace(valueToReplace);
+        //aThis.set_newValue(newValue);
+        return aThis;
+    }
+
+    private  boolean needReplace(){
+        return _valueToReplace !=null && !_valueToReplace.isEmpty() && this._newValue!=null && !this._newValue.isEmpty();
+    }
+
     public String get_url() {
-        return _urlRoot.concat(_url);
+        if(!needReplace() )
+            return _urlRoot.concat(_url);
+        else{
+            String url;
+            url = _url.replace(this.get_valueToReplace(), this.get_newValue() );
+            return _urlRoot.concat(url);
+        }
     }
 
     public void set_url(String _url) {
@@ -65,4 +119,7 @@ public class UrlRouter {
     }
 
 
+    public void appendToUrl(String sessionKeyQueryString) {
+        set_url( _url.concat(sessionKeyQueryString));
+    }
 }

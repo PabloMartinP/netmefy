@@ -3,6 +3,7 @@ package ar.com.netmefy.netmefy.router.tplink.TLWR941ND;
 import android.util.Base64;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
 import com.android.volley.Response;
 
 import java.util.HashMap;
@@ -20,16 +21,17 @@ public class StringRequestRouter extends com.android.volley.toolbox.StringReques
     //private final Map<String, String> _params = null;
     private  final String _referrer;
 
-    public StringRequestRouter(int method, UrlRouter urlRouter,
+    public StringRequestRouter(UrlRouter urlRouter,
                                Response.Listener<String> listener,
                                Response.ErrorListener errorListener) {
-        super(method, urlRouter.get_url(), listener, errorListener);
+        super(Request.Method.GET, urlRouter.get_url(), listener, errorListener);
         _referrer = urlRouter.get_referrer();
     }
-    public StringRequestRouter(int method, String url, String referrer,
+
+    public StringRequestRouter( String url, String referrer,
                                Response.Listener<String> listener,
                                Response.ErrorListener errorListener) {
-        super(method, url, listener, errorListener);
+        super(Request.Method.GET, url, listener, errorListener);
         _referrer = referrer;
     }
 

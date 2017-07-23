@@ -2,6 +2,7 @@ package ar.com.netmefy.netmefy.router.nucom.R5000UNv2;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkResponse;
+import com.android.volley.Request;
 import com.android.volley.Response;
 
 import java.util.HashMap;
@@ -19,8 +20,8 @@ public class StringRequestRouterNucom extends com.android.volley.toolbox.StringR
     static Map<String, String> _params = null;
     static String _referrer;
     static String _cookies ;
-    public StringRequestRouterNucom(int method, UrlRouter urlRouter, Response.Listener<String> listener, Response.ErrorListener errorListener) {
-        super(method, urlRouter.get_url(), listener, errorListener);
+    public StringRequestRouterNucom( UrlRouter urlRouter, Response.Listener<String> listener, Response.ErrorListener errorListener) {
+        super(Request.Method.GET, urlRouter.get_url(), listener, errorListener);
         _referrer = urlRouter.get_referrer();
     }
 

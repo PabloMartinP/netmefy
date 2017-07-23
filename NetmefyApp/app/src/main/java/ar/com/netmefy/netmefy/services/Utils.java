@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ar.com.netmefy.netmefy.router.Device;
-import ar.com.netmefy.netmefy.router.tplink.TLWR941ND.ResponseTPLink;
 
 /**
  * Created by fiok on 16/07/2017.

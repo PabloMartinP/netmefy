@@ -1,6 +1,7 @@
 package ar.com.netmefy.netmefy.router.nucom.R5000UNv2;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -30,12 +31,11 @@ public class Nucom extends Router {
         _context = context;
         _queue = RequestQueueSingleton.getInstance(this._context).getRequestQueue();
         alreadyLogin = true;
-        //_routerConstants.InitNucom("http://192.168.0.1");
         _routerConstants = new RouterConstants(RouterConstants.eRouter.Nucom);
     }
     @Override
-    public StringRequest newStringRequest(int method, UrlRouter urlRouter, Response.Listener listener, Response.ErrorListener errorListener) {
-        return new StringRequestRouterNucom(method, urlRouter, listener, errorListener);
+    public StringRequest newStringRequest(UrlRouter urlRouter, Response.Listener listener, Response.ErrorListener errorListener) {
+        return new StringRequestRouterNucom(urlRouter, listener, errorListener);
     }
 
 
@@ -49,10 +49,9 @@ public class Nucom extends Router {
 
     }
 
-
-    private void login(final Response.Listener<String> listener,final Response.ErrorListener errorListener){
-        //final String URL_LOGIN = "http://192.168.1.1/login.cgi?username=admin&psd=taller";
-        StringRequestRouterNucom stringRequest = new StringRequestRouterNucom(Request.Method.GET,
+    @Override
+    protected void login(final Response.Listener<String> listener,final Response.ErrorListener errorListener){
+        StringRequestRouterNucom stringRequest = new StringRequestRouterNucom(
                 _routerConstants.get(eUrl.LOGIN),
                 new Response.Listener<String>() {
                     @Override
@@ -72,86 +71,78 @@ public class Nucom extends Router {
     }
 
     @Override
-    public void getWifiSsid(final Response.Listener<String> listener,final Response.ErrorListener errorListener) {
-
+    public void getConfigWifi(final Response.Listener listener, final Response.ErrorListener errorListener) {
         login(new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-
-                Nucom.super.getWifiSsid(listener, errorListener);
-                /*
-                final StringRequestRouterNucom stringRequest = new StringRequestRouterNucom(
-                        Request.Method.GET,
-                        _routerConstants.get(eUrl.WIFI_GET_SSID),
-                        new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        String ssid = Utils.getTextBetween(response, "var ssid = '", "';", "Error ssid");
-
-                        listener.onResponse(ssid);
-                    }
-                }, new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        errorListener.onErrorResponse(error);
-                    }
-                }
-                );
-                execute(stringRequest);
-                */
+                Nucom.super.getConfigWifi(listener, errorListener);
             }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                errorListener.onErrorResponse(error);
-            }
-        });
+        }, errorListener);
     }
 
     @Override
-    public void getWifiPassword(final Response.Listener listener, final Response.ErrorListener errorListener) {
+    public void setWifiSsid(final String newSsid, final Response.Listener listener, final Response.ErrorListener errorListener) {
 
-        login(new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                //final String URL_WIFI_GET_PASSWORD = "http://192.168.1.1/wlsecurity.html";
-                //final String URL_WIFI_GET_PASSWORD_REFERRER = "http://192.168.1.1/menu.html";
-                Nucom.super.getWifiPassword(listener, errorListener);
-
-                /*final StringRequestRouterNucom stringRequest = new StringRequestRouterNucom(Request.Method.GET,
-                        _routerConstants.get(eUrl.WIFI_GET_PASSWORD),
-                        new Response.Listener<String>() {
-                            @Override
-                            public void onResponse(String response) {
-                                String password = Utils.getTextBetween(response, "var wpaPskKey = '", "';", "Error password wifi");
-                                listener.onResponse(password);
-                            }
-                        }, new Response.ErrorListener() {
+        super.setWifiSsid(newSsid,
+                new Response.Listener() {
                     @Override
-                    public void onErrorResponse(VolleyError error) {
-                        errorListener.onErrorResponse(error);
+                    public void onResponse(Object response) {
+                        String ssid = response.toString();
+                        final UrlRouter url ;
+                        url = _routerConstants.get(eUrl.WIFI_SET_SSID_TO_GET_SESSIONKEY);
+                        getValueFromHtmlResponse(url,
+                                new Response.Listener() {
+                                    @Override
+                                    public void onResponse(Object response) {
+                                        String sessionKey = response.toString();
+                                        final UrlRouter urlset;
+                                        urlset = _routerConstants.get(eUrl.WIFI_SET_SSID);
+
+                                        setValueWithSessionKey(newSsid, sessionKey, urlset,
+                                                new Response.Listener() {
+                                                    @Override
+                                                    public void onResponse(Object response) {
+                                                        connectToNetwork(newSsid, listener);
+                                                    }
+                                                },
+                                                errorListener);
+
+                                    }
+                                }, errorListener);
                     }
-                }
-                );
-                execute(stringRequest);
-                */
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                errorListener.onErrorResponse(error);
-            }
-        });
+                }, errorListener);
     }
 
     @Override
-    public void setWifiSsid(String newSsid, Response.Listener listener, Response.ErrorListener errorListener) {
+    public void setWifiPassword(final String newPassword, final Response.Listener listener, final Response.ErrorListener errorListener) {
+        super.setWifiPassword(newPassword,
+                new Response.Listener() {
+                    @Override
+                    public void onResponse(Object response) {
+                        final String ssid = response.toString();
+                        final UrlRouter url ;
+                        url = _routerConstants.get(eUrl.WIFI_SET_PASSWORD_TO_GET_SESSIONKEY);
+                        getValueFromHtmlResponse(url,
+                                new Response.Listener() {
+                                    @Override
+                                    public void onResponse(Object response) {
+                                        String sessionKey = response.toString();
+                                        final UrlRouter urlset;
+                                        urlset = _routerConstants.get(eUrl.WIFI_SET_PASSWORD);
 
-    }
+                                        setValueWithSessionKey(newPassword, sessionKey, urlset,
+                                                new Response.Listener() {
+                                                    @Override
+                                                    public void onResponse(Object response) {
+                                                        connectToNetwork(ssid, listener);
+                                                    }
+                                                },
+                                                errorListener);
 
-    @Override
-    public void setWifiPassword(String newPassword, Response.Listener listener, Response.ErrorListener errorListener) {
-
+                                    }
+                                }, errorListener);
+                    }
+                }, errorListener);
     }
 
     @Override
@@ -161,11 +152,6 @@ public class Nucom extends Router {
 
     @Override
     public void setConfigWifi(ConfigWifi configWifi, Response.Listener listener, Response.ErrorListener errorListener) {
-
-    }
-
-    @Override
-    public void saveWifiChanges(ConfigWifi configWifi) {
 
     }
 
@@ -209,6 +195,15 @@ public class Nucom extends Router {
             device.setMac(devicesString [1]);
             device.setIp(devicesString [2]);
 
+            listDevice.add(device);
+        }
+
+
+        if(listDevice.size() == 0){
+            device = new Device();
+            device.setIp("0.0.0.0");
+            device.setMac("00.00.00.00.00.00");
+            device.setName("Ningun dispositivo conectado");
             listDevice.add(device);
         }
 
