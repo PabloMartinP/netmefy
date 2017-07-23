@@ -15,9 +15,12 @@ public  class ResponseTPLink {
     private ResponseTPLink(){
 
     }
+    public static void set_listDevice(List<Device> list){
+        listDevices = list;
+    }
     public  static List<Device> getListDevices(){
         return listDevices;
-    }
+    }/*
     public  static List<String> getListDevicesString(){
         List<String> list = new ArrayList<String>();
 
@@ -27,8 +30,8 @@ public  class ResponseTPLink {
             list.add(deviceString);
         }
         return list;
-    }
-
+    }*/
+/*
     public  static List<Device> setListDevices(String response){
         String result = response;
         String find = "var DHCPDynList = new Array(\n";
@@ -50,7 +53,7 @@ public  class ResponseTPLink {
 
         listDevices = listDevicesaux;
         return listDevices;
-    }
+    }*/
 
 
 

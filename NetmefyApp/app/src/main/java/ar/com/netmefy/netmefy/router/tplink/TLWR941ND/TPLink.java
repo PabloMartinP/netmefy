@@ -11,7 +11,9 @@ import android.os.Build;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -21,6 +23,10 @@ import ar.com.netmefy.netmefy.router.Device;
 import ar.com.netmefy.netmefy.router.RequestQueueSingleton;
 import ar.com.netmefy.netmefy.router.RestartTry;
 import ar.com.netmefy.netmefy.router.Router;
+import ar.com.netmefy.netmefy.router.RouterConstants;
+import ar.com.netmefy.netmefy.router.UrlRouter;
+import ar.com.netmefy.netmefy.router.eUrl;
+import ar.com.netmefy.netmefy.services.Utils;
 
 /*
 final class Constantsok {
@@ -32,21 +38,25 @@ final class Constantsok {
     public static String BACKSLASH = "\"";
 }*/
 
-/**
- * Created by fiok on 24/06/2017.
- */
 
 public class TPLink extends Router {
+
+
     public TPLink(Context context){
         _context = context;
         _queue = RequestQueueSingleton.getInstance(this._context).getRequestQueue();
-
+        _routerConstants = new RouterConstants(RouterConstants.eRouter.TPLink);
     }
+
+    @Override
+    public StringRequest newStringRequest(int method, UrlRouter urlRouter, Response.Listener listener, Response.ErrorListener errorListener) {
+        return new StringRequestRouter(method, urlRouter, listener, errorListener);
+    }
+
     @Override
     public void restart(final Response.Listener listener, final Response.ErrorListener errorListener) {
         StringRequestRouter sr = new StringRequestRouter(Request.Method.GET,
-                TPLinkConstants.URL_RESTART,
-                TPLinkConstants.URL_RESTART_REFERRER,
+                _routerConstants.get(eUrl.RESTART),
                 listener,
                 errorListener);
 
@@ -155,6 +165,7 @@ public class TPLink extends Router {
         }, errorListener);
 
     }
+
 
     @Override
     public void setWifiSsid(String newSsid, final Response.Listener listener, final Response.ErrorListener errorListener){
@@ -351,7 +362,7 @@ public class TPLink extends Router {
                 });
 */
     }
-
+/*
     @Override
     public void getWifiSsid(final Response.Listener<String> listener, final Response.ErrorListener errorListener){
         StringRequestRouter stringRequest = new StringRequestRouter(Request.Method.GET,
@@ -360,15 +371,8 @@ public class TPLink extends Router {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String result) {
-                        String ssid;
 
-                        String textBefore = "0, 8, 0, ";
-                        int pinit = result.indexOf(textBefore) + textBefore.length();
-                        int pend = result.indexOf(", 108, 2, 1, ");
-                        String aux ;
-                        aux = result.substring(pinit, pend);
-
-                        ssid = aux.replace("\"", "");
+                        String ssid = Utils.getTextBetween(result, "0, 8, 0, \"", "\", 108, ", "Error ssid");
 
                         listener.onResponse(ssid);
                     }
@@ -379,11 +383,9 @@ public class TPLink extends Router {
                         errorListener.onErrorResponse(error);
                     }
                 });
-
-        //_queue.add(stringRequest);
         execute(stringRequest);
-    }
-
+    }*/
+/*
     @Override
     public void getWifiPassword(final Response.Listener listener, final Response.ErrorListener errorListener) {
         StringRequestRouter stringRequest = new StringRequestRouter(Request.Method.GET,
@@ -410,7 +412,7 @@ public class TPLink extends Router {
                     }
                 });
         execute(stringRequest);
-    }
+    }*/
 
 
     @Override
@@ -442,37 +444,6 @@ public class TPLink extends Router {
 
     }
 
-    @Override
-    public void getConfigWifi(final Response.Listener listener, final Response.ErrorListener errorListener) {
-        this.getWifiSsid(new Response.Listener<String>() {
-            @Override
-            public void onResponse(final String ssid) {
-
-                getWifiPassword(new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(final String password) {
-                        ConfigWifi configWifi = new ConfigWifi();
-
-                        configWifi.setSsid(ssid);
-                        configWifi.setPassword(password);
-
-                        listener.onResponse(configWifi);
-                    }
-                }, new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        errorListener.onErrorResponse(error);
-                    }
-                });
-
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                errorListener.onErrorResponse(error);
-            }
-        });
-    }
 
     /*
     * ESTE TPLINK AL PARECER ACUMULA LA LISTA DE LOS DHCP,
@@ -480,6 +451,7 @@ public class TPLink extends Router {
     * ASI QUE MUESTRA ALGUNOS DEVICES QUE YA SE DESCONECTARON
     * POR AHORA LA SOLUCION SERIA RESTART
     * */
+    /*
     @Override
     public void listDevicesConnected(final Response.Listener<List<Device>> listener, Response.ErrorListener errorListener ) {
 
@@ -493,11 +465,37 @@ public class TPLink extends Router {
                         ResponseTPLink.setListDevices(result);
 
                         listener.onResponse(ResponseTPLink.getListDevices());
-
                     }
                 },
                 errorListener);
 
         execute(stringRequest);
+    }*/
+
+    @Override
+    protected List<Device> parseHtmlListDevices(String html){
+        String result = html;
+        String find = "var DHCPDynList = new Array(\n";
+        int pinit;
+        pinit = result.indexOf(find) + find.length();
+        int pend;
+        pend = result.indexOf("</SCRIPT>");
+
+        String aux ;
+        aux = result.substring(pinit, pend);
+
+        String[] devicesString = aux.split("\n");
+        List<Device> listDevicesAux = new ArrayList<Device>();
+        Device device;
+        for (int i=0;i<devicesString.length-1;i++){
+            device = Device.newFromString(devicesString[i]);
+            listDevicesAux.add(device);
+        }
+
+        List<Device>  listDevices;
+        listDevices = listDevicesAux;
+        return listDevices;
     }
+
+
 }

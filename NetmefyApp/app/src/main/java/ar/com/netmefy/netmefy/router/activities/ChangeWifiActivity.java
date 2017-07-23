@@ -41,10 +41,8 @@ public class ChangeWifiActivity extends AppCompatActivity {
         btn.setEnabled(false);
 
         router = new Nucom(this.getApplicationContext());
+        //router = new TPLink(this.getApplicationContext());
 
-
-        /*
-        router = new TPLink(this.getApplicationContext());
         router.getConfigWifi(new Response.Listener<ConfigWifi>() {
             @Override
             public void onResponse(ConfigWifi configWifi) {
@@ -59,10 +57,10 @@ public class ChangeWifiActivity extends AppCompatActivity {
                 etSsid.setText("ERR!!!");
                 etPassword.setText("ERRR!!!");
             }
-        });*/
+        });
 
 
-
+/*
         router.getWifiSsid(new Response.Listener<String>() {
                                @Override
                                public void onResponse(String ssid) {
@@ -78,17 +76,17 @@ public class ChangeWifiActivity extends AppCompatActivity {
 
 
         router.getWifiPassword(new Response.Listener<String>() {
+            @Override
+            public void onResponse(String password) {
+                etPassword.setText(password);
+                }
+        }, new Response.ErrorListener() {
                                    @Override
-                                       public void onResponse(String password) {
-                                           etPassword.setText(password);
-                                       }
-                                   }, new Response.ErrorListener() {
-                                       @Override
                                        public void onErrorResponse(VolleyError error) {
                                            etPassword.setText("ERROR!!!" + error.getMessage());;
                                        }
                                    }
-            );
+            );*/
 
 
     }
@@ -112,6 +110,37 @@ public class ChangeWifiActivity extends AppCompatActivity {
         configWifi.setPassword(newPassword);
 
         btn.setText("Changing ...");
+        router.setWifiSsid(configWifi.getSsid(),
+                new Response.Listener() {
+                    @Override
+                    public void onResponse(final Object response) {
+
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                //etSsid.setText("SSID OK");
+                                //etPassword.setText("PASSWORD OK");
+                                btn.setText(response.toString());
+                            }
+                        });
+
+                    }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(final VolleyError error) {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                //etSsid.setText("SSID NO OK");
+                                //etPassword.setText("PASSWORD NO OK");
+                                btn.setText(error.getMessage());
+                            }
+                        });
+
+
+                    }
+                });
+        /*
         router.setConfigWifiAndRestart(configWifi,
                 new Response.Listener() {
                     @Override
@@ -140,7 +169,7 @@ public class ChangeWifiActivity extends AppCompatActivity {
                         });
 
                     }
-                });
+                });*/
 
 
     }

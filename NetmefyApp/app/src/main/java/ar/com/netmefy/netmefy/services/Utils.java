@@ -1,5 +1,11 @@
 package ar.com.netmefy.netmefy.services;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import ar.com.netmefy.netmefy.router.Device;
+import ar.com.netmefy.netmefy.router.tplink.TLWR941ND.ResponseTPLink;
+
 /**
  * Created by fiok on 16/07/2017.
  */
@@ -20,5 +26,16 @@ public class Utils {
             return textOnError;
         }
 
+    }
+
+    public  static List<String> getListDevicesString(List<Device> listDevices){
+        List<String> list = new ArrayList<String>();
+
+
+        for (final Device device: listDevices) {
+            String deviceString = "Nombre: " + device.getName() + ", Ip: " + device.getIp() + ", Mac: " + device.getMac();
+            list.add(deviceString);
+        }
+        return list;
     }
 }

@@ -8,6 +8,8 @@ import com.android.volley.Response;
 import java.util.HashMap;
 import java.util.Map;
 
+import ar.com.netmefy.netmefy.router.UrlRouter;
+
 /**
  * Created by fiok on 24/06/2017.
  */
@@ -15,28 +17,26 @@ import java.util.Map;
 public class StringRequestRouter extends com.android.volley.toolbox.StringRequest {
     //private final String _username = "admin";
     //private final String _password = "admin";
-    private final Map<String, String> _params = null;
+    //private final Map<String, String> _params = null;
     private  final String _referrer;
-    /**
-     * @param method
-     * @param url           A {@link HashMap} to post with the request. Null is allowed
-     *                      and indicates no parameters will be posted along with request.
-     * @param listener
-     * @param errorListener
-     */
+
+    public StringRequestRouter(int method, UrlRouter urlRouter,
+                               Response.Listener<String> listener,
+                               Response.ErrorListener errorListener) {
+        super(method, urlRouter.get_url(), listener, errorListener);
+        _referrer = urlRouter.get_referrer();
+    }
     public StringRequestRouter(int method, String url, String referrer,
                                Response.Listener<String> listener,
                                Response.ErrorListener errorListener) {
         super(method, url, listener, errorListener);
-
         _referrer = referrer;
     }
 
-    @Override
+    /*@Override
     protected Map<String, String> getParams() {
         return _params;
-    }
-
+    }*/
 
     /* (non-Javadoc)
      * @see com.android.volley.Request#getHeaders()
