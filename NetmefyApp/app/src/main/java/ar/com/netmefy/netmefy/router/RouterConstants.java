@@ -40,15 +40,19 @@ public class RouterConstants {
 
         //"wlcfg.wl?wlSsidIdx=0&enblewlautogeneration=0&wlEnbl=1&wlButtonEnable=0&wlHide=0&wlAPIsolation=0&wlSsid=NMFNUCOM5&wlCountry=AR&wlMaxAssoc=32&wlDisableWme=0&wlEnableWmf=0&wlEnbl_wl0v1=0&wlSsid_wl0v1=fiok-guest&wlHide_wl0v1=0&wlAPIsolation_wl0v1=0&wlDisableWme_wl0v1=0&wlEnableWmf_wl0v1=0&wlMaxAssoc_wl0v1=32&wlEnbl_wl0v2=0&wlSsid_wl0v2=Broadcom3&wlHide_wl0v2=0&wlAPIsolation_wl0v2=0&wlDisableWme_wl0v2=0&wlEnableWmf_wl0v2=0&wlMaxAssoc_wl0v2=32&wlEnbl_wl0v3=0&wlSsid_wl0v3=Broadcom4&wlHide_wl0v3=0&wlAPIsolation_wl0v3=0&wlDisableWme_wl0v3=0&wlEnableWmf_wl0v3=0&wlMaxAssoc_wl0v3=32&wlSyncNvram=1&sessionKey=531981182"
         String URL_WIFI_SET_SSID_PARAM = "[_ssid_]";
-        String URL_WIFI_SET_SSID = "wlcfg.wl?wlSsidIdx=0&enblewlautogeneration=0&wlEnbl=1&wlButtonEnable=0&wlHide=0&wlAPIsolation=0&wlSsid="+URL_WIFI_SET_SSID_PARAM+"&wlCountry=AR&wlMaxAssoc=32&wlDisableWme=0&wlEnableWmf=0&wlEnbl_wl0v1=0&wlSsid_wl0v1=fiok-guest&wlHide_wl0v1=0&wlAPIsolation_wl0v1=0&wlDisableWme_wl0v1=0&wlEnableWmf_wl0v1=0&wlMaxAssoc_wl0v1=32&wlEnbl_wl0v2=0&wlSsid_wl0v2=Broadcom3&wlHide_wl0v2=0&wlAPIsolation_wl0v2=0&wlDisableWme_wl0v2=0&wlEnableWmf_wl0v2=0&wlMaxAssoc_wl0v2=32&wlEnbl_wl0v3=0&wlSsid_wl0v3=Broadcom4&wlHide_wl0v3=0&wlAPIsolation_wl0v3=0&wlDisableWme_wl0v3=0&wlEnableWmf_wl0v3=0&wlMaxAssoc_wl0v3=32&wlSyncNvram=1";
+        String URL_WIFI_SET_SSID = "wlcfg.wl?wlSsidIdx=0&enblewlautogeneration=0&wlEnbl=1&wlButtonEnable=0&wlHide=0&wlAPIsolation=0&wlSsid="+URL_WIFI_SET_SSID_PARAM+"&wlCountry=AR&wlMaxAssoc=32&wlDisableWme=0&wlEnableWmf=0&wlEnbl_wl0v1=0&wlSsid_wl0v1=fiok-guest&wlHide_wl0v1=0&wlAPIsolation_wl0v1=0&wlDisableWme_wl0v1=0&wlEnableWmf_wl0v1=0&wlMaxAssoc_wl0v1=32&wlEnbl_wl0v2=0&wlSsid_wl0v2=Broadcom3&wlHide_wl0v2=0&wlAPIsolation_wl0v2=0&wlDisableWme_wl0v2=0&wlEnableWmf_wl0v2=0&wlMaxAssoc_wl0v2=32&wlEnbl_wl0v3=0&wlSsid_wl0v3=Broadcom4&wlHide_wl0v3=0&wlAPIsolation_wl0v3=0&wlDisableWme_wl0v3=0&wlEnableWmf_wl0v3=0&wlMaxAssoc_wl0v3=32&wlSyncNvram=1&";
         _urlRouters.put(eUrl.WIFI_SET_SSID, UrlRouter.createWithReplace(URL_WIFI_SET_SSID, "wlcfg.html", URL_WIFI_SET_SSID_PARAM));
         _urlRouters.put(eUrl.WIFI_SET_SSID_TO_GET_SESSIONKEY, UrlRouter.createWithFinder("wlcfg.html", "menu.html", "loc += '&sessionKey=", "';", "Error sessionKey SET SSID"));
 
         String URL_WIFI_SET_PASSWORD_PARAM = "[_ssid_]";
-        String URL_WIFI_SET_PASSWORD = "wlsecurity.wl?wl_wsc_mode=disabled&wlWscVer2=disabled&wl_wsc_reg=enabled&wsc_config_state=1&wlAuthMode=psk%20psk2&wlAuth=0&wlWpaPsk="+URL_WIFI_SET_PASSWORD_PARAM+"&wlWpaGtkRekey=0&wlNetReauth=36000&wlWep=disabled&wlWpa=tkip+aes&wlKeyBit=1&wlPreauth=0&wlSsidIdx=0&wlSyncNvram=1";
+        String URL_WIFI_SET_PASSWORD = "wlsecurity.wl?wl_wsc_mode=disabled&wlWscVer2=disabled&wl_wsc_reg=enabled&wsc_config_state=1&wlAuthMode=psk%20psk2&wlAuth=0&wlWpaPsk="+URL_WIFI_SET_PASSWORD_PARAM+"&wlWpaGtkRekey=0&wlNetReauth=36000&wlWep=disabled&wlWpa=tkip+aes&wlKeyBit=1&wlPreauth=0&wlSsidIdx=0&wlSyncNvram=1&";
         _urlRouters.put(eUrl.WIFI_SET_PASSWORD, UrlRouter.createWithReplace(URL_WIFI_SET_PASSWORD, "wlsecurity.html", URL_WIFI_SET_PASSWORD_PARAM));
         _urlRouters.put(eUrl.WIFI_SET_PASSWORD_TO_GET_SESSIONKEY, UrlRouter.createWithFinder("wlsecurity.html ", "menu.html", "var sessionKey='", "';", "Error sessionKey SET PASSWORD"));
 
+        String URL_RESTART = "rebootinfo.cgi?";
+        _urlRouters.put(eUrl.RESTART, UrlRouter.create(URL_RESTART, "resetrouter.html"));
+        _urlRouters.put(eUrl.RESTART_TO_GET_SESSIONKEY, UrlRouter.createWithFinder("resetrouter.html", "menu.html", "var sessionKey='", "';", "Error sessionKey RESTART"));
+        //_urlRouters.put(eUrl.RESTART, UrlRouter.create("userRpm/SysRebootRpm.htm?Reboot=Reboot", "userRpm/SysRebootRpm.htm"));
     }
 
     private void InitTPLink(){

@@ -118,7 +118,11 @@ public class UrlRouter {
         this._referrer = _referrer;
     }
 
-
+    public void addSessionKey(String sessionKey){
+        //String sessionKeyQueryString = "&sessionKey=" + sessionKey;
+        String sessionKeyQueryString = "sessionKey=" + sessionKey;
+        this.appendToUrl(sessionKeyQueryString);
+    }
     public void appendToUrl(String sessionKeyQueryString) {
         set_url( _url.concat(sessionKeyQueryString));
     }

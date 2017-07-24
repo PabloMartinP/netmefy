@@ -44,7 +44,37 @@ public abstract class Router {
 
     public  abstract void restart(Response.Listener listener, Response.ErrorListener errorListener);
 
-    public  abstract void restartAndWaitUntilConnected(Response.Listener listener, Response.ErrorListener errorListener);
+
+    public void restartAndWaitUntilConnected(final Response.Listener listener, final Response.ErrorListener errorListener) {
+        //antes de hacer el restart obtengo el ssid,
+        // para que al reconectar sepa a que ssid tengo que conectarme
+        //esto es porque los cells por default al perder conexion con un AP
+        //se conectan a otro que tenga configurado y este al alcance
+        final int DELAY_RESTART_SECS = 20;
+        final int DELAY_BETWEEN_INTENT_TO_RECONNCET_SECS = 5;
+
+        getWifiSsid(new Response.Listener<String>() {
+            @Override
+            public void onResponse(String ssid) {
+
+                final String ssidtoconnect = ssid;
+                restart(new Response.Listener() {
+                    @Override
+                    public void onResponse(Object response) {
+
+                        connectToNetwork(ssidtoconnect, listener);
+
+                    }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        errorListener.onErrorResponse(error);
+                    }
+                });
+
+            }
+        }, errorListener);
+    }
 
     public abstract StringRequest newStringRequest(UrlRouter urlRouter,
                                Response.Listener listener,
@@ -100,7 +130,14 @@ public abstract class Router {
             return "";
         }
     }
+    private void disconnectFromWifi(String ssid){
+        WifiManager manager = (WifiManager) _context.getSystemService(Context.WIFI_SERVICE);
+        manager.disconnect();
+    }
     protected void connectToNetwork(final String ssidtoconnect, final Response.Listener listener){
+        disconnectFromWifi(ssidtoconnect);
+
+
         final int DELAY_RESTART_SECS = 20;
         final int DELAY_BETWEEN_INTENT_TO_RECONNCET_SECS = 5;
 
@@ -123,7 +160,10 @@ public abstract class Router {
                         tryConnectToNetwork(ssidtoconnect);
                         actualSsid = getWifiName();
 
-                        this.cancel();
+                        if(actualSsid !="")
+                            this.cancel();
+                        else
+                            restartTry  = new RestartTry(false, i, "El ssid actual ["+actualSsid+"] no es igual al configurado ["+ssidtoconnect+"]");
                     }else{
                         //info = "NOO-"+Integer.toString(i);;
                         restartTry  = new RestartTry(false, i, "El ssid actual ["+actualSsid+"] no es igual al configurado ["+ssidtoconnect+"]");
@@ -182,8 +222,8 @@ public abstract class Router {
     }
 
     protected void setValueWithSessionKey(String newValue, String sessionKey, final UrlRouter urlRouter, final Response.Listener listener, final Response.ErrorListener errorListener){
-        String sessionKeyQueryString = "&sessionKey=" + sessionKey;
-        urlRouter.appendToUrl(sessionKeyQueryString);
+
+        urlRouter.addSessionKey(sessionKey);
 
         setValue(newValue, urlRouter, listener, errorListener);
     }

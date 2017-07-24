@@ -40,14 +40,34 @@ public class Nucom extends Router {
 
 
     @Override
-    public void restart(Response.Listener listener, Response.ErrorListener errorListener) {
+    public void restart(final Response.Listener listener, final Response.ErrorListener errorListener) {
+        final UrlRouter url ;
+        url = _routerConstants.get(eUrl.RESTART_TO_GET_SESSIONKEY);
+        getValueFromHtmlResponse(url,
+                new Response.Listener() {
+                    @Override
+                    public void onResponse(Object response) {
+                        String sessionKey = response.toString();
+                        final UrlRouter urlRestart;
+                        urlRestart = _routerConstants.get(eUrl.RESTART);
+                        urlRestart.addSessionKey(sessionKey);
 
+                        StringRequest stringRequest = newStringRequest(urlRestart, listener, errorListener);/*
+                        StringRequest stringRequest = newStringRequest(urlRestart,
+                                new Response.Listener() {
+                                    @Override
+                                    public void onResponse(Object response) {
+                                        listener.onResponse(response);
+                                    }
+                                }, errorListener);
+*/
+
+                        execute(stringRequest);
+
+                    }
+                }, errorListener);
     }
 
-    @Override
-    public void restartAndWaitUntilConnected(Response.Listener listener, Response.ErrorListener errorListener) {
-
-    }
 
     @Override
     protected void login(final Response.Listener<String> listener,final Response.ErrorListener errorListener){

@@ -93,40 +93,6 @@ public class TPLink extends Router {
     }
 
 
-
-    @Override
-    public void restartAndWaitUntilConnected(final Response.Listener listener, final Response.ErrorListener errorListener) {
-        //antes de hacer el restart obtengo el ssid,
-        // para que al reconectar sepa a que ssid tengo que conectarme
-        //esto es porque los cells por default al perder conexion con un AP
-        //se conectan a otro que tenga configurado y este al alcance
-        final int DELAY_RESTART_SECS = 20;
-        final int DELAY_BETWEEN_INTENT_TO_RECONNCET_SECS = 5;
-
-        getWifiSsid(new Response.Listener<String>() {
-            @Override
-            public void onResponse(String ssid) {
-
-                final String ssidtoconnect = ssid;
-                restart(new Response.Listener() {
-                    @Override
-                    public void onResponse(Object response) {
-                        connectToNetwork(ssidtoconnect, listener);
-
-                    }
-                }, new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        errorListener.onErrorResponse(error);
-                    }
-                });
-
-            }
-        }, errorListener);
-
-    }
-
-
     @Override
     public void setConfigWifiAndRestart(final ConfigWifi configWifi, final Response.Listener listener, final Response.ErrorListener errorListener) {
         saveWifiChanges(configWifi);
