@@ -45,8 +45,9 @@ public class ChangeWifiActivity extends AppCompatActivity {
         btnSsid.setEnabled(false);
         btnPassword.setEnabled(false);
 
-        router = new Nucom(this.getApplicationContext());
+        //router = new Nucom(this.getApplicationContext());
         //router = new TPLink(this.getApplicationContext());
+        router = Router.getInstance(getApplicationContext());
 
         router.getConfigWifi(new Response.Listener<ConfigWifi>() {
             @Override

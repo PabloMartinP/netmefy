@@ -26,8 +26,9 @@ public class RestartActivity extends AppCompatActivity {
         final Button btnrestart =(Button) findViewById(R.id.btn);
         btnrestart.setText("Restarteando ...");
 
-        Router router  = new TPLink(this.getApplicationContext());
         //Router router  = new Nucom(this.getApplicationContext());
+        //Router router  = new TPLink(this.getApplicationContext());
+        Router router  = Router.getInstance(getApplicationContext());
 
         btnrestart.setText("Restarteado ...");
         router.restartAndWaitUntilConnected(new Response.Listener() {

@@ -2,31 +2,23 @@ package ar.com.netmefy.netmefy.router.tplink.TLWR941ND;
 
 
 import android.content.Context;
-import android.net.NetworkInfo;
-import android.net.wifi.WifiConfiguration;
-import android.net.wifi.WifiInfo;
-import android.net.wifi.WifiManager;
-import android.os.Build;
 
-import com.android.volley.Request;
+
 import com.android.volley.Response;
-import com.android.volley.VolleyError;
+
 import com.android.volley.toolbox.StringRequest;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 
-import ar.com.netmefy.netmefy.router.ConfigWifi;
 import ar.com.netmefy.netmefy.router.Device;
 import ar.com.netmefy.netmefy.router.RequestQueueSingleton;
-import ar.com.netmefy.netmefy.router.RestartTry;
+
 import ar.com.netmefy.netmefy.router.Router;
 import ar.com.netmefy.netmefy.router.RouterConstants;
 import ar.com.netmefy.netmefy.router.UrlRouter;
 import ar.com.netmefy.netmefy.router.eUrl;
-import ar.com.netmefy.netmefy.services.Utils;
+
 
 public class TPLink extends Router {
 
@@ -46,6 +38,22 @@ public class TPLink extends Router {
     * los tplink no necesitan login por eso nohace nada este metodo*/
     public void login(final Response.Listener listener, final Response.ErrorListener errorListener){
         listener.onResponse("");
+    }
+
+    @Override
+    public void addBlockByMac(String mac, final Response.Listener listener, final Response.ErrorListener errorListener){
+        listener.onResponse("");
+    }
+
+    @Override
+    public void removeBlockByMac(String mac, Response.Listener listener, Response.ErrorListener errorListener) {
+
+    }
+
+
+    @Override
+    public String getName(){
+        return "TPLink(inPark) TL-WR941ND";
     }
 
     @Override
@@ -92,7 +100,7 @@ public class TPLink extends Router {
                 }, errorListener);
     }
 
-
+/*
     @Override
     public void setConfigWifiAndRestart(final ConfigWifi configWifi, final Response.Listener listener, final Response.ErrorListener errorListener) {
         saveWifiChanges(configWifi);
@@ -105,7 +113,6 @@ public class TPLink extends Router {
                     }
                 }, errorListener);
     }
-
 
     @Override
     public void setConfigWifi(final ConfigWifi configWifi, final Response.Listener listener, final Response.ErrorListener errorListener) {
@@ -134,7 +141,7 @@ public class TPLink extends Router {
                     }
                 });
 
-    }
+    }*/
 
 
 

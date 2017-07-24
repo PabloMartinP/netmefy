@@ -64,7 +64,8 @@
         <activity android:name=".router.activities.RestartActivity" />
         <activity android:name=".router.activities.DevicesConnectedActivity" />
         <activity android:name=".router.activities.ChangeWifiActivity" />
-        <activity android:name=".MainGoogleActivity"></activity>
+        <activity android:name=".MainGoogleActivity" />
+        <activity android:name=".router.activities.TestBlockByMacActivity"></activity>
     </application>
 
 </manifest>

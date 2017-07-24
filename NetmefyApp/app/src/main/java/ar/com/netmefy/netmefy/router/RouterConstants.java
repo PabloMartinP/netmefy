@@ -11,7 +11,8 @@ public class RouterConstants {
 
     public enum eRouter{
         TPLink,
-        Nucom
+        Nucom,
+        none
     }
 
     eUrl URL;
@@ -32,7 +33,7 @@ public class RouterConstants {
 
     private void InitNucom(){
         UrlRouter.set_urlRoot("http://192.168.1.1/");
-        _urlRouters.put(eUrl.LOGIN, UrlRouter.create("login.cgi?username=admin&psd=taller", ""));
+        _urlRouters.put(eUrl.LOGIN, UrlRouter.create("login.cgi?username=admin&psd=1234", ""));
         _urlRouters.put(eUrl.WIFI_GET_SSID, UrlRouter.createWithFinder("wlcfg.html", "menu.html", "var ssid = '", "';", "Error SSID!"));
         _urlRouters.put(eUrl.WIFI_GET_PASSWORD, UrlRouter.createWithFinder("wlsecurity.html", "menu.html", "var wpaPskKey = '", "';", "Error Password!"));
 
@@ -52,7 +53,28 @@ public class RouterConstants {
         String URL_RESTART = "rebootinfo.cgi?";
         _urlRouters.put(eUrl.RESTART, UrlRouter.create(URL_RESTART, "resetrouter.html"));
         _urlRouters.put(eUrl.RESTART_TO_GET_SESSIONKEY, UrlRouter.createWithFinder("resetrouter.html", "menu.html", "var sessionKey='", "';", "Error sessionKey RESTART"));
-        //_urlRouters.put(eUrl.RESTART, UrlRouter.create("userRpm/SysRebootRpm.htm?Reboot=Reboot", "userRpm/SysRebootRpm.htm"));
+
+
+
+
+        String URL_ADD_BLOCK_BY_MAC_PARAM = "[_mac_]";
+        //String URL_ADD_BLOCK_BY_MAC = "wlmacflt.cmd?action=add&wlFltMacAddr=44:78:3e:27:d0:4e&wlSyncNvram=1&";
+        String URL_ADD_BLOCK_BY_MAC = "wlmacflt.cmd?action=add&wlFltMacAddr="+URL_ADD_BLOCK_BY_MAC_PARAM+"&wlSyncNvram=1&";
+        _urlRouters.put(eUrl.ADD_BLOCK_BY_MAC, UrlRouter.createWithReplace(URL_ADD_BLOCK_BY_MAC, "wlmacflt.html", URL_ADD_BLOCK_BY_MAC_PARAM));
+        _urlRouters.put(eUrl.ADD_BLOCK_BY_MAC_TO_GET_SESSIONKEY, UrlRouter.createWithFinder("wlmacflt.html ", "menu.html", "loc += '&sessionKey=", "';", "Error ADD_BLOCK_BY_MAC_TO_GET_SESSIONKEY"));
+
+
+
+        String URL_REMOVE_BLOCK_BY_MAC_PARAM = "[_mac_]";//AA:BB:CC:00:11:06
+        //String URL_REMOVE_BLOCK_BY_MAC = "wlmacflt.cmd?action=remove&rmLst="+URL_REMOVE_BLOCK_BY_MAC_PARAM+",%20&";
+        //                               /wlmacflt.cmd?action=remove&rmLst=AA:BB:CC:00:11:06,%20&sessionKey=1602707458
+        String URL_REMOVE_BLOCK_BY_MAC = "wlmacflt.cmd?action=remove&rmLst="+URL_REMOVE_BLOCK_BY_MAC_PARAM+"&";
+        _urlRouters.put(eUrl.REMOVE_BLOCK_BY_MAC, UrlRouter.createWithReplace(URL_REMOVE_BLOCK_BY_MAC, "wlmacflt.cmd?action=view", URL_REMOVE_BLOCK_BY_MAC_PARAM));
+        _urlRouters.put(eUrl.REMOVE_BLOCK_BY_MAC_TO_GET_SESSIONKEY, UrlRouter.createWithFinder("wlmacflt.cmd?action=view", "menu.html", "wlmacflt.cmd?action=refresh&sessionKey=", "\"'", "Error REMOVE_BLOCK_BY_MAC_TO_GET_SESSIONKEY"));
+
+        _urlRouters.put(eUrl.LOGOUT, UrlRouter.create("logout.cgi ", "menu.html"));
+
+
     }
 
     private void InitTPLink(){
@@ -73,7 +95,6 @@ public class RouterConstants {
         _urlRouters.put(eUrl.WIFI_SET_PASSWORD, UrlRouter.createWithReplace(URL_WIFI_SET_PASSWORD, URL_WIFI_SET_PASSWORD_REFERRER, URL_WIFI_SET_PASSWORD_PARAM));
 
         _urlRouters.put(eUrl.RESTART, UrlRouter.create("userRpm/SysRebootRpm.htm?Reboot=Reboot", "userRpm/SysRebootRpm.htm"));
-
 
     }
 

@@ -32,8 +32,9 @@ public class DevicesConnectedActivity extends AppCompatActivity {
         final Button btn =(Button) findViewById(R.id.btnDevicesConnected);
         btn.setText("showDevicesConnected ...");
 
-        Router router= new TPLink(this.getApplicationContext());
+        //Router router= new TPLink(this.getApplicationContext());
         //Router router= new Nucom(this.getApplicationContext());
+        Router router= Router.getInstance(getApplicationContext());
 
         final Context context = this.getApplicationContext();
         router.listDevicesConnected(
