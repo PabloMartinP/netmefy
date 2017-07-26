@@ -108,7 +108,7 @@ public class Utils {
     }
 
 
-    public static void connectToNetwork(final String ssidtoconnect, final Context context, final Response.Listener listener){
+    public static void connectToNetwork(final String ssidtoconnect, final Context context, final Response.Listener listener, final Response.Listener listenerSuccess){
 
 
         disconnectFromWifi(ssidtoconnect, context);
@@ -136,8 +136,10 @@ public class Utils {
                         tryConnectToNetwork(ssidtoconnect, context);
                         actualSsid = getWifiName(context);
 
-                        if(actualSsid !="")
+                        if(actualSsid !="") {
                             this.cancel();
+                            listenerSuccess.onResponse("ok");
+                        }
                         else
                             restartTry  = new RestartTry(false, i, "El ssid actual ["+actualSsid+"] no es igual al configurado ["+ssidtoconnect+"]");
                     }else{

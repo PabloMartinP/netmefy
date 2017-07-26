@@ -6,6 +6,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
 
 import org.w3c.dom.Text;
 
@@ -49,6 +53,22 @@ public class TPLinkTestsActivity extends AppCompatActivity {
 
     public void blockByMac(View view){
         startActivity(new Intent(TPLinkTestsActivity.this, TestBlockByMacActivity.class));
+    }
+
+    public void logout(View v){
+        router.logout(new Response.Listener() {
+            @Override
+            public void onResponse(Object response) {
+                Toast.makeText(getApplicationContext(), "onResponse!!!!!", Toast.LENGTH_LONG).show();
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(getApplicationContext(), "onErrorResponse!!!!!", Toast.LENGTH_LONG).show();
+
+            }
+        });
     }
 
 }

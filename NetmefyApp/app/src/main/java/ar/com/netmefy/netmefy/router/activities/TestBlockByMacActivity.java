@@ -12,6 +12,7 @@ import com.android.volley.VolleyError;
 
 import ar.com.netmefy.netmefy.R;
 import ar.com.netmefy.netmefy.router.Router;
+import ar.com.netmefy.netmefy.router.nucom.R5000UNv2.Nucom;
 
 public class TestBlockByMacActivity extends AppCompatActivity {
     EditText etMac;
@@ -29,6 +30,30 @@ public class TestBlockByMacActivity extends AppCompatActivity {
         btnRemove = (Button)findViewById(R.id.btnRemoveBlock);
 
         router = Router.getInstance(getApplicationContext());
+/*
+        router.getListBlocked(new Response.Listener() {
+            @Override
+            public void onResponse(Object response) {
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+            }
+        });*/
+/*
+        ((Nucom)router).removeAllBlocked(new Response.Listener() {
+            @Override
+            public void onResponse(Object response) {
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+            }
+        });*/
     }
 
     public void addBlock(View v){
@@ -60,10 +85,16 @@ public class TestBlockByMacActivity extends AppCompatActivity {
                             public void run() {
                                 //etSsid.setText("SSID NO OK");
                                 //etPassword.setText("PASSWORD NO OK");
-                                btnAdd.setText("Error-"+error.getMessage());
+                                btnAdd.setText("Error-" + error.getMessage());
                             }
                         });
 
+
+                    }
+                }, new Response.Listener() {
+                    @Override
+                    public void onResponse(Object response) {
+                        Toast.makeText(getApplicationContext(), "addBlockByMac OKKKK", Toast.LENGTH_LONG).show();
 
                     }
                 });
@@ -99,10 +130,16 @@ public class TestBlockByMacActivity extends AppCompatActivity {
                             public void run() {
                                 //etSsid.setText("SSID NO OK");
                                 //etPassword.setText("PASSWORD NO OK");
-                                btnRemove.setText("Error-"+error.getMessage());
+                                btnRemove.setText("Error-" + error.getMessage());
                             }
                         });
 
+
+                    }
+                }, new Response.Listener() {
+                    @Override
+                    public void onResponse(Object response) {
+                        Toast.makeText(getApplicationContext(), "removeBlockByMac OKKKK", Toast.LENGTH_LONG).show();
 
                     }
                 });

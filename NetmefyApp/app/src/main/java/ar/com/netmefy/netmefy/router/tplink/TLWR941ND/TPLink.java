@@ -40,16 +40,6 @@ public class TPLink extends Router {
         listener.onResponse("");
     }
 
-    @Override
-    public void addBlockByMac(String mac, final Response.Listener listener, final Response.ErrorListener errorListener){
-        listener.onResponse("");
-    }
-
-    @Override
-    public void removeBlockByMac(String mac, Response.Listener listener, Response.ErrorListener errorListener) {
-
-    }
-
 
     @Override
     public String getName(){
@@ -67,8 +57,14 @@ public class TPLink extends Router {
     }
 
     @Override
-    public void setWifiSsid(final String newSsid, final Response.Listener listener, final Response.ErrorListener errorListener){
-        super.setWifiSsid(newSsid,
+    public void _setWifiSsid(final String newSsid, final Response.Listener progressListener, final Response.ErrorListener errorListener, final Response.Listener successListener){
+        setValue(newSsid, _routerConstants.get(eUrl.WIFI_SET_SSID), new Response.Listener() {
+            @Override
+            public void onResponse(Object response) {
+                restartAndWaitUntilConnected(progressListener, errorListener, successListener);
+            }
+        }, errorListener);
+        /*super.setWifiSsid(newSsid,
                 new Response.Listener() {
                     @Override
                     public void onResponse(Object response) {
@@ -76,16 +72,23 @@ public class TPLink extends Router {
                                 new Response.Listener() {
                                     @Override
                                     public void onResponse(Object response) {
-                                        restartAndWaitUntilConnected(listener, errorListener);
+                                        restartAndWaitUntilConnected(listener, errorListener, listenerSuccess);
                                     }
                                 }, errorListener);
                     }
-                }, errorListener);
+                }, errorListener, listenerSuccess);
+        */
     }
 
     @Override
-    public void setWifiPassword(final String newPassword, final Response.Listener listener, final Response.ErrorListener errorListener){
-        super.setWifiPassword(newPassword,
+    public void _setWifiPassword(final String newPassword, final Response.Listener progressListener, final Response.ErrorListener errorListener, final Response.Listener successListener){
+        setValue(newPassword, _routerConstants.get(eUrl.WIFI_SET_PASSWORD), new Response.Listener() {
+            @Override
+            public void onResponse(Object response) {
+                restartAndWaitUntilConnected(progressListener, errorListener, successListener);
+            }
+        }, errorListener);
+        /*super.setWifiPassword(newPassword,
                 new Response.Listener() {
                     @Override
                     public void onResponse(Object response) {
@@ -93,11 +96,12 @@ public class TPLink extends Router {
                                 new Response.Listener() {
                                     @Override
                                     public void onResponse(Object response) {
-                                        restartAndWaitUntilConnected(listener, errorListener);
+                                        restartAndWaitUntilConnected(listener, errorListener, listenerSuccess);
                                     }
                                 }, errorListener);
                     }
-                }, errorListener);
+                }, errorListener, listenerSuccess);
+        */
     }
 
 /*
@@ -170,5 +174,22 @@ public class TPLink extends Router {
         return listDevices;
     }
 
+    public void getListBlocked(final Response.Listener listener, final Response.ErrorListener errorListener){
 
+    }
+
+
+    public void logout(final Response.Listener listener,final Response.ErrorListener errorListener){
+
+    }
+
+    @Override
+    public void addBlockByMac(String mac, Response.Listener progressListener, Response.ErrorListener errorListener, Response.Listener successListener) {
+
+    }
+
+    @Override
+    public void removeBlockByMac(String mac, Response.Listener progressListener, Response.ErrorListener errorListener, Response.Listener successListener) {
+
+    }
 }

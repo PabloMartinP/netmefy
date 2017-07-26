@@ -74,6 +74,14 @@ public class RouterConstants {
 
         _urlRouters.put(eUrl.LOGOUT, UrlRouter.create("logout.cgi ", "menu.html"));
 
+        String HTML_BEGIN = "<tr>\n" +
+                "      <td class='hd' id='wlmacfltview7'>MAC Address</td>\n" +
+                "      <td class='hd' id='wlmacfltview8'>Remove</td>\n" +
+                "   </tr>\n";
+        _urlRouters.put(eUrl.GET_LIST_BLOCKED, UrlRouter.createWithFinder("wlmacflt.cmd?action=view ", "menu.html", HTML_BEGIN, "</table><br><br>", "ERROR GET_LIST_BLOCKED"));
+
+
+
 
     }
 

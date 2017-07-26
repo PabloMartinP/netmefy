@@ -108,22 +108,19 @@ public class ChangeWifiActivity extends AppCompatActivity {
         }
         btn.setText("Changing ssid ..." + newSsid);
 
-        router.setWifiSsid(newSsid,
-                new Response.Listener() {
+        router.setWifiSsid(newSsid,new Response.Listener() {
+            @Override
+            public void onResponse(final Object response) {
+                runOnUiThread(new Runnable() {
                     @Override
-                    public void onResponse(final Object response) {
-
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                //etSsid.setText("SSID OK");
-                                //etPassword.setText("PASSWORD OK");
-                                btn.setText(response.toString());
-                            }
-                        });
-
+                    public void run() {
+                        //etSsid.setText("SSID OK");
+                        // etPassword.setText("PASSWORD OK");
+                        btn.setText(response.toString());
                     }
-                }, new Response.ErrorListener() {
+                });
+            }
+        }, new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(final VolleyError error) {
                         runOnUiThread(new Runnable() {
@@ -135,6 +132,12 @@ public class ChangeWifiActivity extends AppCompatActivity {
                             }
                         });
 
+
+                    }
+                }, new Response.Listener() {
+                    @Override
+                    public void onResponse(Object response) {
+                        //Toast.makeText(getApplicationContext(), "setWifiSsid OK !!!!!", Toast.LENGTH_LONG).show();
 
                     }
                 });
@@ -181,63 +184,13 @@ public class ChangeWifiActivity extends AppCompatActivity {
 
 
                     }
-                });
-
-    }
-
-
-    public void change(View view){
-        String newSsid = etSsid.getText().toString();
-        String newPassword = etPassword.getText().toString();
-
-        if(newPassword.length()<8){
-            Toast.makeText(getApplicationContext(), "La pass debe ser mayor o igual a ocho!!!!!", Toast.LENGTH_LONG).show();
-            return;
-        }
-        if(newSsid.length() == 0){
-            Toast.makeText(getApplicationContext(), "completar ssid!!!!!", Toast.LENGTH_LONG).show();
-            return;
-        }
-
-        final ConfigWifi configWifi = new ConfigWifi();
-        configWifi.setSsid(newSsid);
-        configWifi.setPassword(newPassword);
-/*
-        btn.setText("Changing ..." + newSsid);
-
-
-
-        /*
-        router.setConfigWifiAndRestart(configWifi,
-                new Response.Listener() {
+                }, new Response.Listener() {
                     @Override
-                    public void onResponse(final Object response) {
-
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                //etSsid.setText("SSID OK");
-                                //etPassword.setText("PASSWORD OK");
-                                btn.setText(response.toString());
-                            }
-                        });
-
-                    }
-                }, new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(final VolleyError error) {
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                //etSsid.setText("SSID NO OK");
-                                //etPassword.setText("PASSWORD NO OK");
-                                btn.setText(error.getMessage());
-                            }
-                        });
+                    public void onResponse(Object response) {
+                        //Toast.makeText(getApplicationContext(), "changePassword OKKK!!!!!", Toast.LENGTH_LONG).show();
 
                     }
                 });
-*/
 
     }
 }

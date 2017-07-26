@@ -6,6 +6,11 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -69,10 +74,20 @@ public class Nucom extends Router {
 
     @Override
     protected void login(final Response.Listener listener,final Response.ErrorListener errorListener){
-        executeRequest(_routerConstants.get(eUrl.LOGIN), listener, errorListener);
+        executeRequest(_routerConstants.get(eUrl.LOGIN), new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                if(!response.contains("Other user logined") && !response.contains("/login."))
+                    listener.onResponse(response);
+                else{
+                    errorListener.onErrorResponse(new VolleyError("Error - usuario ya logueado"));
+                }
+
+            }
+        }, errorListener);
     }
 
-    protected void logout(final Response.Listener listener,final Response.ErrorListener errorListener){
+    public void logout(final Response.Listener listener,final Response.ErrorListener errorListener){
         executeRequest(_routerConstants.get(eUrl.LOGOUT), listener, errorListener);
     }
 
@@ -86,141 +101,108 @@ public class Nucom extends Router {
         }, errorListener);
     }
 
-    @Override
-    public void setWifiSsid(final String newSsid, final Response.Listener listener, final Response.ErrorListener errorListener) {
-        super.setWifiSsid(newSsid,
-                new Response.Listener() {
+
+    protected void setValueWithSessionKeyAndReconnect(final String newValue, eUrl eUrlSessionKey, final UrlRouter urlRouter, final Response.Listener progresListener, final Response.ErrorListener errorListener, final Response.Listener successListener){
+        getSessionKey(eUrlSessionKey, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String sessionKey) {
+
+                urlRouter.addSessionKey(sessionKey);
+                setValue(newValue, urlRouter, new Response.Listener() {
                     @Override
                     public void onResponse(Object response) {
-                        getSessionKey(eUrl.WIFI_SET_SSID_TO_GET_SESSIONKEY,
-                                new Response.Listener<String>() {
-                                    @Override
-                                    public void onResponse(String sessionKey) {
-                                        setValueWithSessionKey(newSsid, sessionKey,
-                                                _routerConstants.get(eUrl.WIFI_SET_SSID),
-                                                new Response.Listener() {
-                                                    @Override
-                                                    public void onResponse(Object response) {
-                                                        Utils.connectToNetwork(newSsid, _context, listener);
-                                                    }
-                                                },
-                                                errorListener);
-
-                                    }
-                                }, errorListener);
-                        ///////////////////////////////////////////////
-                    }
+                        Utils.connectToNetwork(
+                                _ssid,
+                                _context,
+                                progresListener, successListener);
+                        }
                 }, errorListener);
+
+            }
+        }, errorListener);
+    }
+
+
+    @Override
+    public void _setWifiSsid(final String newSsid, final Response.Listener progressListener, final Response.ErrorListener errorListener, final Response.Listener successListener) {
+        _ssid = newSsid;
+        setValueWithSessionKeyAndReconnect(newSsid,
+                eUrl.WIFI_SET_SSID_TO_GET_SESSIONKEY,
+                _routerConstants.get(eUrl.WIFI_SET_SSID),
+                progressListener, errorListener, successListener);
     }
 
     @Override
-    public void setWifiPassword(final String newPassword, final Response.Listener listener, final Response.ErrorListener errorListener) {
-        super.setWifiPassword(newPassword,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(final String ssid) {
-                        getSessionKey(eUrl.WIFI_SET_PASSWORD_TO_GET_SESSIONKEY,
-                                new Response.Listener<String>() {
-                                    @Override
-                                    public void onResponse(String sessionKey) {
-                                        final UrlRouter urlset;
-                                        urlset = _routerConstants.get(eUrl.WIFI_SET_PASSWORD);
-                                        setValueWithSessionKey(newPassword, sessionKey, urlset,
-                                                new Response.Listener() {
-                                                    @Override
-                                                    public void onResponse(Object response) {
-                                                        Utils.connectToNetwork(ssid, _context, listener);
-                                                    }
-                                                },
-                                                errorListener);
-                                    }
-                                }, errorListener);
-                    }
-                }, errorListener);
+    public void _setWifiPassword(final String newPassword, final Response.Listener progressListener, final Response.ErrorListener errorListener, final Response.Listener successListener) {
+        setValueWithSessionKeyAndReconnect(newPassword,
+                eUrl.WIFI_SET_PASSWORD_TO_GET_SESSIONKEY,
+                _routerConstants.get(eUrl.WIFI_SET_PASSWORD),
+                progressListener, errorListener, successListener);
+
     }
     @Override
     public String getName(){
         return "NucomR500UNv2";
     }
 
+    private void addBlockByMacAndReconnect(final String mac, final Response.Listener progressListener, final Response.ErrorListener errorListener, final Response.Listener successListener){
+        setValueWithSessionKeyAndReconnect(mac,
+                eUrl.ADD_BLOCK_BY_MAC_TO_GET_SESSIONKEY,
+                _routerConstants.get(eUrl.ADD_BLOCK_BY_MAC),
+                progressListener,
+                errorListener, successListener);
+    }
+
     @Override
-    public void addBlockByMac(final String mac, final Response.Listener listener, final Response.ErrorListener errorListener){
-
-        getWifiSsid(
-                new Response.Listener<String>() {
+    public void addBlockByMac(final String mac, final Response.Listener progressListener, final Response.ErrorListener errorListener, final Response.Listener successListener){
+        addBlockByMacAndReconnect(mac,
+                progressListener,
+                errorListener,
+                new Response.Listener() {
                     @Override
-                    public void onResponse(final String ssid) {
-                        getSessionKey(eUrl.ADD_BLOCK_BY_MAC_TO_GET_SESSIONKEY,
-                                new Response.Listener<String>() {
-                                    @Override
-                                    public void onResponse(String sessionKey) {
-                                        final UrlRouter urlset;
-                                        urlset = _routerConstants.get(eUrl.ADD_BLOCK_BY_MAC);
-                                        setValueWithSessionKey(mac, sessionKey, urlset,
-                                                new Response.Listener() {
-                                                    @Override
-                                                    public void onResponse(Object response) {
-                                                        logout(
-                                                                new Response.Listener() {
-                                                                    @Override
-                                                                    public void onResponse(Object response) {
-                                                                        Utils.connectToNetwork(ssid, _context, listener);
-                                                                    }
-                                                                },
-                                                                new Response.ErrorListener() {
-                                                                    @Override
-                                                                    public void onErrorResponse(VolleyError error) {
-                                                                        errorListener.onErrorResponse(error);
-                                                                    }
-                                                                }
-                                                        );
-                                                    }
-                                                },
-                                                errorListener);
-                                    }
-                                }, errorListener);
+                    public void onResponse(Object response) {
+                        //borra tod0 excepto la mac psada por param
+                        removeAllBlockedAndReconnect(mac,
+                                progressListener, errorListener, successListener);
+
+
                     }
-                }, errorListener
-        );
+                });
+    }
 
+    public void removeAllBlockedAndReconnect(final String macToIgnore, final Response.Listener progressListener, final Response.ErrorListener errorListener, final Response.Listener successListener){
+        getListBlocked(new Response.Listener() {
+            @Override
+            public void onResponse(Object response) {
+                List<Device> listBlocked = (List<Device>)response;
 
+                //convierto todas las mac bloquedas a string e ignoro las del param
+                String macsToBlock = "";
+                for (Device device :listBlocked) {
+                    if(!macToIgnore.equalsIgnoreCase(device.getMac()))
+                        macsToBlock = macsToBlock.concat(device.getMac()).concat(",%20");
+
+                }
+
+                removeBlockByMac(macsToBlock,
+                        progressListener, errorListener, successListener);
+
+            }
+        }, errorListener);
     }
 
 
     @Override
-    public void removeBlockByMac(final String mac, final Response.Listener listener, final Response.ErrorListener errorListener){
-        getWifiSsid(
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(final String ssid) {
-                        getSessionKey(eUrl.REMOVE_BLOCK_BY_MAC_TO_GET_SESSIONKEY,
-                                new Response.Listener<String>() {
-                                    @Override
-                                    public void onResponse(String sessionKey) {
-                                        final UrlRouter urlset;
-                                        urlset = _routerConstants.get(eUrl.REMOVE_BLOCK_BY_MAC);
-                                        setValueWithSessionKey(mac, sessionKey, urlset,
-                                                new Response.Listener() {
-                                                    @Override
-                                                    public void onResponse(Object response) {
-                                                        Utils.connectToNetwork(ssid, _context, listener);
-                                                        /*logout(
-                                                                new Response.Listener() {
-                                                                    @Override
-                                                                    public void onResponse(Object response) {
-                                                                        Utils.connectToNetwork(ssid, _context, listener);
-                                                                    }
-                                                                }, errorListener
-                                                        );*/
-                                                    }
-                                                },
-                                                errorListener);
+    public void removeBlockByMac(final String mac, final Response.Listener progressListener, final Response.ErrorListener errorListener, final Response.Listener successListener){
+        if(mac.isEmpty())
+            successListener.onResponse("ok-empty");
 
-                                    }
-                                }, errorListener);
-                    }
-                }, errorListener
-        );
+        setValueWithSessionKeyAndReconnect(mac,
+                eUrl.REMOVE_BLOCK_BY_MAC_TO_GET_SESSIONKEY,
+                _routerConstants.get(eUrl.REMOVE_BLOCK_BY_MAC),
+                progressListener,
+                errorListener,
+                successListener);
     }
 
 
@@ -285,6 +267,49 @@ public class Nucom extends Router {
             @Override
             public void onResponse(Object response) {
                 Nucom.super.listDevicesConnected(listener, errorListener);
+            }
+        }, errorListener);
+
+    }
+
+    private List<Device> parseHtmlListBlocked(String html){
+        Device device ;
+        List<Device> list = new ArrayList<Device>();
+        if(!html.isEmpty()){
+            Document doc ;
+            doc = Jsoup.parse(html);
+
+            Elements elements ;
+            elements = doc.getElementsByAttribute("type");
+            String mac ;
+            for (Element element : elements) {
+                mac = element.attr("value");
+                device = new Device();
+                device.setMac(mac);
+                list.add(device);
+            }
+
+
+
+
+
+        }
+
+        return list;
+    }
+
+    @Override
+    public void getListBlocked(final Response.Listener listener, final Response.ErrorListener errorListener){
+        login(new Response.Listener() {
+            @Override
+            public void onResponse(Object response) {
+                getValueFromHtmlResponse(_routerConstants.get(eUrl.GET_LIST_BLOCKED), new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(final String htmlListBlocked) {
+                        listener.onResponse(parseHtmlListBlocked(htmlListBlocked));
+                    }
+                }, errorListener);
+
             }
         }, errorListener);
 
