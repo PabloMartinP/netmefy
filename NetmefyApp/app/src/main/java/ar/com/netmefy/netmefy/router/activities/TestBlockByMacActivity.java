@@ -10,14 +10,18 @@ import android.widget.Toast;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 
+import java.util.List;
+
 import ar.com.netmefy.netmefy.R;
+import ar.com.netmefy.netmefy.router.Device;
 import ar.com.netmefy.netmefy.router.Router;
 import ar.com.netmefy.netmefy.router.nucom.R5000UNv2.Nucom;
 
 public class TestBlockByMacActivity extends AppCompatActivity {
-    EditText etMac;
+    EditText etMac, etListBlocked;
     Router router;
     Button btnAdd, btnRemove;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -26,10 +30,14 @@ public class TestBlockByMacActivity extends AppCompatActivity {
         etMac = (EditText) findViewById(R.id.etMac);
         etMac.setText("aa:bb:cc:00:11:22");
 
+        etListBlocked = (EditText) findViewById(R.id.etListBlocked);
+
         btnAdd = (Button)findViewById(R.id.btnAddBlock);
         btnRemove = (Button)findViewById(R.id.btnRemoveBlock);
 
         router = Router.getInstance(getApplicationContext());
+
+        showListBlocked();
 /*
         router.getListBlocked(new Response.Listener() {
             @Override
@@ -54,6 +62,32 @@ public class TestBlockByMacActivity extends AppCompatActivity {
 
             }
         });*/
+    }
+
+    private void showListBlocked(){
+        etListBlocked.setText("Getting list blocked ...");
+        router.getListBlocked(new Response.Listener<List<Device>>() {
+            @Override
+            public void onResponse(List<Device> devicesBlocked) {
+                etListBlocked.setText("");
+                for (Device device :
+                        devicesBlocked) {
+                    etListBlocked.setText(etListBlocked.getText().toString() +  device.getMac() + "\n");
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(final VolleyError error) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        //etSsid.setText("SSID OK");
+                        //etPassword.setText("PASSWORD OK");
+                        etListBlocked.setText("error: "+error.getMessage());
+                    }
+                });
+            }
+        });
     }
 
     public void addBlock(View v){
@@ -94,7 +128,15 @@ public class TestBlockByMacActivity extends AppCompatActivity {
                 }, new Response.Listener() {
                     @Override
                     public void onResponse(Object response) {
-                        Toast.makeText(getApplicationContext(), "addBlockByMac OKKKK", Toast.LENGTH_LONG).show();
+                        //Toast.makeText(getApplicationContext(), "addBlockByMac OKKKK", Toast.LENGTH_LONG).show();
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                //etSsid.setText("SSID NO OK");
+                                //etPassword.setText("PASSWORD NO OK");
+                                btnAdd.setText("Termino OK al parecer" );
+                            }
+                        });
 
                     }
                 });
@@ -108,6 +150,7 @@ public class TestBlockByMacActivity extends AppCompatActivity {
         String mac = etMac.getText().toString();
 
         btnRemove.setText("removeBlock..." + mac);
+
 
         router.removeBlockByMac(mac,
                 new Response.Listener() {
@@ -138,8 +181,15 @@ public class TestBlockByMacActivity extends AppCompatActivity {
                     }
                 }, new Response.Listener() {
                     @Override
-                    public void onResponse(Object response) {
-                        Toast.makeText(getApplicationContext(), "removeBlockByMac OKKKK", Toast.LENGTH_LONG).show();
+                    public void onResponse(final Object response) {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                //etSsid.setText("SSID OK");
+                                //etPassword.setText("PASSWORD OK");
+                                btnRemove.setText("Fin "+response.toString());
+                            }
+                        });
 
                     }
                 });

@@ -19,7 +19,7 @@ public class StringRequestRouterNucom extends com.android.volley.toolbox.StringR
 
     static Map<String, String> _params = null;
     static String _referrer;
-    static String _cookies ;
+    static String _cookies = "Name=0admin; path=/";
     public StringRequestRouterNucom( UrlRouter urlRouter, Response.Listener<String> listener, Response.ErrorListener errorListener) {
         super(Request.Method.GET, urlRouter.get_url(), listener, errorListener);
         _referrer = urlRouter.get_referrer();
@@ -90,11 +90,14 @@ public class StringRequestRouterNucom extends com.android.volley.toolbox.StringR
 
     @Override
     public Map<String, String> getHeaders() throws AuthFailureError {
+        return getHeadersGetSsid();
+        /*
         if(_params == null)
+        //if(_cookies.isEmpty())
             return new HashMap<>();
         else{
             return getHeadersGetSsid();
-        }
+        }*/
 
 
     }

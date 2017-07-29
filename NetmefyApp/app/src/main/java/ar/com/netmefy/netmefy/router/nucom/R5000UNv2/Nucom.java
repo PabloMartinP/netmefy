@@ -14,7 +14,6 @@ import org.jsoup.select.Elements;
 import java.util.ArrayList;
 import java.util.List;
 
-
 import ar.com.netmefy.netmefy.router.Device;
 import ar.com.netmefy.netmefy.router.RequestQueueSingleton;
 import ar.com.netmefy.netmefy.router.Router;
@@ -88,6 +87,7 @@ public class Nucom extends Router {
     }
 
     public void logout(final Response.Listener listener,final Response.ErrorListener errorListener){
+
         executeRequest(_routerConstants.get(eUrl.LOGOUT), listener, errorListener);
     }
 
@@ -150,27 +150,49 @@ public class Nucom extends Router {
                 eUrl.ADD_BLOCK_BY_MAC_TO_GET_SESSIONKEY,
                 _routerConstants.get(eUrl.ADD_BLOCK_BY_MAC),
                 progressListener,
-                errorListener, successListener);
+                errorListener,
+                successListener);
     }
 
     @Override
     public void addBlockByMac(final String mac, final Response.Listener progressListener, final Response.ErrorListener errorListener, final Response.Listener successListener){
-        addBlockByMacAndReconnect(mac,
-                progressListener,
-                errorListener,
-                new Response.Listener() {
-                    @Override
-                    public void onResponse(Object response) {
-                        //borra tod0 excepto la mac psada por param
-                        removeAllBlockedAndReconnect(mac,
-                                progressListener, errorListener, successListener);
+
+        getListBlocked(new Response.Listener<List<Device>>() {
+            @Override
+            public void onResponse(final List<Device> devicesBlockedBeforeAdd) {
+                final List<String> macsString = new ArrayList<String>();
+                //armo una lista de macs
+                for (Device dev :devicesBlockedBeforeAdd) {
+                    macsString.add(dev.getMac());
+                }
+                /*
+                * agrego la mac y porque anda mal el router me vuelve a agregar todos los que habia eliminado!!!
+                * para parchearlo al terminar de agregar borro tod0 excepto la mac que se agrego
+                * */
+                addBlockByMacAndReconnect(mac,
+                        progressListener,
+                        errorListener,
+                        new Response.Listener() {
+                            @Override
+                            public void onResponse(Object response) {
+                                //borra tod0 excepto la mac psada por param
+
+                                macsString.add(mac.toUpperCase());
+                                
+                                ///////////////////////
+                                removeAllBlockedAndReconnect(macsString,
+                                        progressListener, errorListener, successListener);
+                            }
+                        });
+
+            }
+        }, errorListener);
 
 
-                    }
-                });
+
     }
 
-    public void removeAllBlockedAndReconnect(final String macToIgnore, final Response.Listener progressListener, final Response.ErrorListener errorListener, final Response.Listener successListener){
+    public void removeAllBlockedAndReconnect(final List<String> macsToIgnore, final Response.Listener progressListener, final Response.ErrorListener errorListener, final Response.Listener successListener){
         getListBlocked(new Response.Listener() {
             @Override
             public void onResponse(Object response) {
@@ -178,11 +200,13 @@ public class Nucom extends Router {
 
                 //convierto todas las mac bloquedas a string e ignoro las del param
                 String macsToBlock = "";
+                String aux1;
                 for (Device device :listBlocked) {
-                    if(!macToIgnore.equalsIgnoreCase(device.getMac()))
+                    if(!macsToIgnore.contains(device.getMac()))
                         macsToBlock = macsToBlock.concat(device.getMac()).concat(",%20");
 
                 }
+                macsToBlock = macsToBlock.toUpperCase();
 
                 removeBlockByMac(macsToBlock,
                         progressListener, errorListener, successListener);
@@ -194,10 +218,16 @@ public class Nucom extends Router {
 
     @Override
     public void removeBlockByMac(final String mac, final Response.Listener progressListener, final Response.ErrorListener errorListener, final Response.Listener successListener){
+        String macFormat;
+        if(!mac.substring(mac.length()-1).equals(",%20"))
+            macFormat = mac.concat(",%20").toUpperCase();
+        else
+            macFormat = mac;
+
         if(mac.isEmpty())
             successListener.onResponse("ok-empty");
 
-        setValueWithSessionKeyAndReconnect(mac,
+        setValueWithSessionKeyAndReconnect(macFormat,
                 eUrl.REMOVE_BLOCK_BY_MAC_TO_GET_SESSIONKEY,
                 _routerConstants.get(eUrl.REMOVE_BLOCK_BY_MAC),
                 progressListener,
@@ -299,7 +329,7 @@ public class Nucom extends Router {
     }
 
     @Override
-    public void getListBlocked(final Response.Listener listener, final Response.ErrorListener errorListener){
+    public void getListBlocked(final Response.Listener<List<Device>> listener, final Response.ErrorListener errorListener){
         login(new Response.Listener() {
             @Override
             public void onResponse(Object response) {

@@ -42,6 +42,6 @@ public class Device {
     }
 
     public void setMac(String mac) {
-        this.mac = mac;
+        this.mac = mac.toUpperCase();
     }
 }

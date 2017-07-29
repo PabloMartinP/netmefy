@@ -174,7 +174,7 @@ public class TPLink extends Router {
         return listDevices;
     }
 
-    public void getListBlocked(final Response.Listener listener, final Response.ErrorListener errorListener){
+    public void getListBlocked(final Response.Listener<List<Device>> listener, final Response.ErrorListener errorListener){
 
     }
 

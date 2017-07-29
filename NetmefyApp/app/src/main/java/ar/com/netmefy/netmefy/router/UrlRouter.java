@@ -15,6 +15,8 @@ public class UrlRouter {
 
     private String _textOnError;
 
+    private String _sessionKey = "";
+
     public String get_textOnError() {
         return _textOnError;
     }
@@ -102,7 +104,17 @@ public class UrlRouter {
         else{
             String url;
             url = _url.replace(this.get_valueToReplace(), this.get_newValue() );
-            return _urlRoot.concat(url);
+            String url1 = "";
+            if(!_sessionKey.isEmpty()) {
+                url1 = _urlRoot.concat(url);//.concat("sessionKey=" + _sessionKey);
+                if(!url1.substring(url1.length()-1).equals("&"))
+                    url1 = url1.concat("&");
+                url1 = url1.concat("sessionKey=" + _sessionKey);
+            }
+            else
+                url1 = _urlRoot.concat(url);
+
+            return url1;
         }
     }
 
@@ -119,11 +131,11 @@ public class UrlRouter {
     }
 
     public void addSessionKey(String sessionKey){
-        //String sessionKeyQueryString = "&sessionKey=" + sessionKey;
-        String sessionKeyQueryString = "sessionKey=" + sessionKey;
-        this.appendToUrl(sessionKeyQueryString);
+        //String sessionKeyQueryString = "sessionKey=" + sessionKey;
+        //this.appendToUrl(sessionKeyQueryString);
+        _sessionKey = sessionKey;
     }
-    public void appendToUrl(String sessionKeyQueryString) {
+    /*public void appendToUrl(String sessionKeyQueryString) {
         set_url( _url.concat(sessionKeyQueryString));
-    }
+    }*/
 }

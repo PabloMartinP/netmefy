@@ -181,7 +181,7 @@ public abstract class Router {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String result) {
-                        listener.onResponse("ok");
+                        listener.onResponse("ok-"+result);
                     }
                 }, new Response.ErrorListener() {
                     @Override
@@ -307,7 +307,7 @@ public abstract class Router {
 
     public abstract void removeBlockByMac(final String mac, final Response.Listener progressListener, final Response.ErrorListener errorListener, final Response.Listener successListener);
 
-    public abstract void getListBlocked(final Response.Listener listener, final Response.ErrorListener errorListener);
+    public abstract void getListBlocked(final Response.Listener<List<Device>> listener, final Response.ErrorListener errorListener);
 
     public void saveWifiChanges(ConfigWifi configWifi ) {
         Utils.addWifiConfig(configWifi.getSsid(), configWifi.getPassword(), _context);

@@ -62,8 +62,8 @@ public class ChangeWifiActivity extends AppCompatActivity {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                etSsid.setText("ERR!!!");
-                etPassword.setText("ERRR!!!");
+                etSsid.setText("ERR!!!"+ error.getMessage());
+                etPassword.setText("ERRR!!!" + error.getMessage());
             }
         });
 
