@@ -109,7 +109,10 @@ public class Nucom extends Router {
             public void onResponse(String sessionKey) {
 
                 urlRouter.addSessionKey(sessionKey);
-                setValue(newValue, urlRouter, new Response.Listener() {
+
+
+                setValueAndReconnect(newValue, urlRouter, progresListener, errorListener, successListener);
+                /*setValue(newValue, urlRouter, new Response.Listener() {
                     @Override
                     public void onResponse(Object response) {
                         Utils.connectToNetwork(
@@ -117,7 +120,7 @@ public class Nucom extends Router {
                                 _context,
                                 progresListener, successListener);
                         }
-                }, errorListener);
+                }, errorListener);*/
 
             }
         }, errorListener);
@@ -158,7 +161,7 @@ public class Nucom extends Router {
     @Override
     public void addBlockByMac(final String mac, final Response.Listener progressListener, final Response.ErrorListener errorListener, final Response.Listener successListener){
 
-        getListBlocked(new Response.Listener<List<Device>>() {
+        getMacListBlocked(new Response.Listener<List<Device>>() {
             @Override
             public void onResponse(final List<Device> devicesBlockedBeforeAdd) {
                 final List<String> macsString = new ArrayList<String>();
@@ -194,7 +197,7 @@ public class Nucom extends Router {
     }
 
     public void removeAllBlockedAndReconnect(final List<String> macsToIgnore, final Response.Listener progressListener, final Response.ErrorListener errorListener, final Response.Listener successListener){
-        getListBlocked(new Response.Listener() {
+        getMacListBlocked(new Response.Listener() {
             @Override
             public void onResponse(Object response) {
                 List<Device> listBlocked = (List<Device>)response;
@@ -228,6 +231,7 @@ public class Nucom extends Router {
         if(mac.isEmpty())
             successListener.onResponse("ok-empty");
 
+        //////////////////////////
         setValueWithSessionKeyAndReconnect(macFormat,
                 eUrl.REMOVE_BLOCK_BY_MAC_TO_GET_SESSIONKEY,
                 _routerConstants.get(eUrl.REMOVE_BLOCK_BY_MAC),
@@ -303,7 +307,8 @@ public class Nucom extends Router {
 
     }
 
-    private List<Device> parseHtmlListBlocked(String html){
+    @Override
+    protected List<Device> parseHtmlMacListBlocked(String html){
         Device device ;
         List<Device> list = new ArrayList<Device>();
         if(!html.isEmpty()){
@@ -323,22 +328,22 @@ public class Nucom extends Router {
         return list;
     }
 
-    @Override
-    public void getListBlocked(final Response.Listener<List<Device>> listener, final Response.ErrorListener errorListener){
+
+    /*@Override
+    public void getMacListBlocked(final Response.Listener<List<Device>> listener, final Response.ErrorListener errorListener){
         login(new Response.Listener() {
             @Override
             public void onResponse(Object response) {
-                getValueFromHtmlResponse(_routerConstants.get(eUrl.GET_LIST_BLOCKED), new Response.Listener<String>() {
+                getValueFromHtmlResponse(_routerConstants.get(eUrl.GET_MAC_LIST_BLOCKED), new Response.Listener<String>() {
                     @Override
                     public void onResponse(final String htmlListBlocked) {
-                        listener.onResponse(parseHtmlListBlocked(htmlListBlocked));
+                        listener.onResponse(parseHtmlMacListBlocked(htmlListBlocked));
                     }
                 }, errorListener);
-
             }
         }, errorListener);
 
-    }
+    }*/
 
     private List<String> parseHtmlUrlListBlocked(String html){
         List<String> list = new ArrayList<String>();

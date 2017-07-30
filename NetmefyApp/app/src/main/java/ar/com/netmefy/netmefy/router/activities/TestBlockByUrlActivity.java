@@ -37,7 +37,7 @@ public class TestBlockByUrlActivity extends AppCompatActivity {
 
         showListBlocked();
 /*
-        router.getListBlocked(new Response.Listener() {
+        router.getMacListBlocked(new Response.Listener() {
             @Override
             public void onResponse(Object response) {
 

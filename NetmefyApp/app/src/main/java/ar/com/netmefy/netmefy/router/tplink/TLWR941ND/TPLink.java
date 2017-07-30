@@ -18,6 +18,7 @@ import ar.com.netmefy.netmefy.router.Router;
 import ar.com.netmefy.netmefy.router.RouterConstants;
 import ar.com.netmefy.netmefy.router.UrlRouter;
 import ar.com.netmefy.netmefy.router.eUrl;
+import ar.com.netmefy.netmefy.services.Utils;
 
 
 public class TPLink extends Router {
@@ -61,23 +62,10 @@ public class TPLink extends Router {
         setValue(newSsid, _routerConstants.get(eUrl.WIFI_SET_SSID), new Response.Listener() {
             @Override
             public void onResponse(Object response) {
+                _ssid = newSsid;
                 restartAndWaitUntilConnected(progressListener, errorListener, successListener);
             }
         }, errorListener);
-        /*super.setWifiSsid(newSsid,
-                new Response.Listener() {
-                    @Override
-                    public void onResponse(Object response) {
-                        setValue(newSsid, _routerConstants.get(eUrl.WIFI_SET_SSID),
-                                new Response.Listener() {
-                                    @Override
-                                    public void onResponse(Object response) {
-                                        restartAndWaitUntilConnected(listener, errorListener, listenerSuccess);
-                                    }
-                                }, errorListener);
-                    }
-                }, errorListener, listenerSuccess);
-        */
     }
 
     @Override
@@ -88,64 +76,7 @@ public class TPLink extends Router {
                 restartAndWaitUntilConnected(progressListener, errorListener, successListener);
             }
         }, errorListener);
-        /*super.setWifiPassword(newPassword,
-                new Response.Listener() {
-                    @Override
-                    public void onResponse(Object response) {
-                        setValue(newPassword, _routerConstants.get(eUrl.WIFI_SET_PASSWORD),
-                                new Response.Listener() {
-                                    @Override
-                                    public void onResponse(Object response) {
-                                        restartAndWaitUntilConnected(listener, errorListener, listenerSuccess);
-                                    }
-                                }, errorListener);
-                    }
-                }, errorListener, listenerSuccess);
-        */
     }
-
-/*
-    @Override
-    public void setConfigWifiAndRestart(final ConfigWifi configWifi, final Response.Listener listener, final Response.ErrorListener errorListener) {
-        saveWifiChanges(configWifi);
-
-        setConfigWifi(configWifi,
-                new Response.Listener() {
-                    @Override
-                    public void onResponse(Object response) {
-                        restartAndWaitUntilConnected(listener, errorListener);
-                    }
-                }, errorListener);
-    }
-
-    @Override
-    public void setConfigWifi(final ConfigWifi configWifi, final Response.Listener listener, final Response.ErrorListener errorListener) {
-        this.setWifiSsid(configWifi.getSsid(),
-                new Response.Listener() {
-                    @Override
-                    public void onResponse(Object response) {
-                        setWifiPassword(configWifi.getPassword(),
-                                new Response.Listener() {
-                                    @Override
-                                    public void onResponse(Object response) {
-
-                                        listener.onResponse("ok");
-                                    }
-                                }, new Response.ErrorListener() {
-                                    @Override
-                                    public void onErrorResponse(VolleyError error) {
-                                        errorListener.onErrorResponse(error);
-                                    }
-                                });
-                    }
-                }, new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        errorListener.onErrorResponse(error);
-                    }
-                });
-
-    }*/
 
 
 
@@ -174,9 +105,24 @@ public class TPLink extends Router {
         return listDevices;
     }
 
-    public void getListBlocked(final Response.Listener<List<Device>> listener, final Response.ErrorListener errorListener){
+    @Override
+    protected List<Device> parseHtmlMacListBlocked(String html){
+        List<Device> list = new ArrayList<Device>();
 
+        String[] splitted = html.split("\n");
+        Device device;
+        for (int i = 0; i < splitted.length; i++) {
+            device  = new Device();
+            device.setMac(Utils.getTextBetween(splitted[i], "\"", "\"", ""));
+            device.setId(i);
+            list.add(device);
+        }
+
+        //Utils.getTextBetween(html.split("\n")[0], "\"", "\"", "")
+
+        return list;
     }
+
 
     @Override
     public void getUrlListBlocked(Response.Listener<List<String>> success, Response.ErrorListener error) {
@@ -197,14 +143,46 @@ public class TPLink extends Router {
     public void logout(final Response.Listener listener,final Response.ErrorListener errorListener){
 
     }
-
-    @Override
-    public void addBlockByMac(String mac, Response.Listener progressListener, Response.ErrorListener errorListener, Response.Listener successListener) {
-
+    
+    private String formatMac(String mac){
+        return mac.replace(":", "-").toUpperCase();
     }
 
     @Override
-    public void removeBlockByMac(String mac, Response.Listener progressListener, Response.ErrorListener errorListener, Response.Listener successListener) {
+    public void addBlockByMac(String mac, Response.Listener progress, Response.ErrorListener error, Response.Listener success) {
+        String macWithFormat ;
+        macWithFormat = formatMac(mac);
+        setValueAndReconnect(macWithFormat,
+                _routerConstants.get(eUrl.ADD_BLOCK_BY_MAC),
+                progress,
+                error,
+                success);
+    }
 
+    @Override
+    public void removeBlockByMac(String mac,final Response.Listener progress, final Response.ErrorListener error, final Response.Listener success) {
+        final String macWithFormat = formatMac(mac);
+        getMacListBlocked(new Response.Listener<List<Device>>() {
+            @Override
+            public void onResponse(List<Device> devicesBlocked) {
+                Device deviceFound = null   ;
+                for (Device device : devicesBlocked) {
+                    if(device.getMac().equalsIgnoreCase(macWithFormat)){
+                        deviceFound = device;
+                        break;
+                    }
+                }
+                ////////////////////////////////////
+                if(deviceFound !=null){
+                    setValueAndReconnect(String.valueOf(deviceFound.getId()) ,
+                            _routerConstants.get(eUrl.REMOVE_BLOCK_BY_MAC),
+                            progress,
+                            error,
+                            success);
+                }
+
+
+            }
+        }, error);
     }
 }

@@ -307,7 +307,32 @@ public abstract class Router {
 
     public abstract void removeBlockByMac(final String mac, final Response.Listener progressListener, final Response.ErrorListener errorListener, final Response.Listener successListener);
 
-    public abstract void getListBlocked(final Response.Listener<List<Device>> listener, final Response.ErrorListener errorListener);
+    protected abstract List<Device> parseHtmlMacListBlocked(String html);
+    protected void setValueAndReconnect(String newValue, UrlRouter urlRouter, final Response.Listener progress, final Response.ErrorListener error, final Response.Listener success){
+        setValue(newValue, urlRouter, new Response.Listener() {
+            @Override
+            public void onResponse(Object response) {
+                Utils.connectToNetwork(
+                        _ssid,
+                        _context,
+                        progress, success);
+            }
+        }, error);
+    }
+
+    public void getMacListBlocked(final Response.Listener<List<Device>> success, final Response.ErrorListener error){
+        login(new Response.Listener() {
+            @Override
+            public void onResponse(Object response) {
+                getValueFromHtmlResponse(_routerConstants.get(eUrl.GET_MAC_LIST_BLOCKED), new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(final String htmlListBlocked) {
+                        success.onResponse(parseHtmlMacListBlocked(htmlListBlocked));
+                    }
+                }, error);
+            }
+        }, error);
+    }
 
     public void saveWifiChanges(ConfigWifi configWifi ) {
         Utils.addWifiConfig(configWifi.getSsid(), configWifi.getPassword(), _context);

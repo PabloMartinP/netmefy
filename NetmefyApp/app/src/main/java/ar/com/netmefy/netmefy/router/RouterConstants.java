@@ -78,7 +78,7 @@ public class RouterConstants {
                 "      <td class='hd' id='wlmacfltview7'>MAC Address</td>\n" +
                 "      <td class='hd' id='wlmacfltview8'>Remove</td>\n" +
                 "   </tr>\n";
-        _urlRouters.put(eUrl.GET_LIST_BLOCKED, UrlRouter.createWithFinder("wlmacflt.cmd?action=view", "menu.html", HTML_BEGIN, "</table><br><br>", "ERROR GET_LIST_BLOCKED"));
+        _urlRouters.put(eUrl.GET_MAC_LIST_BLOCKED, UrlRouter.createWithFinder("wlmacflt.cmd?action=view", "menu.html", HTML_BEGIN, "</table><br><br>", "ERROR GET_MAC_LIST_BLOCKED"));
 
 
         String HTML_URL_BEGIN = "var UrlFilterListObjectItems = '";
@@ -119,6 +119,19 @@ public class RouterConstants {
 
         _urlRouters.put(eUrl.RESTART, UrlRouter.create("userRpm/SysRebootRpm.htm?Reboot=Reboot", "userRpm/SysRebootRpm.htm"));
 
+
+        String HTML_BEGIN = "var wlanFilterList = new Array(\n";
+        _urlRouters.put(eUrl.GET_MAC_LIST_BLOCKED, UrlRouter.createWithFinder("userRpm/WlanMacFilterRpm.htm", "userRpm/MenuRpm.htm", HTML_BEGIN, "0,0 );", "ERROR GET_MAC_LIST_BLOCKED"));
+
+        String URL_ADD_BLOCK_BY_MAC_PARAM = "[_mac_]";
+        //String URL_ADD_BLOCK_BY_MAC = "/userRpm/WlanMacFilterRpm.htm?Mac=A8-9F-BA-60-B9-B7&Desc=Test2&Type=1&entryEnabled=1&Changed=0&SelIndex=0&Page=1&Save=Save";
+        //String URL_ADD_BLOCK_BY_MAC = "userRpm/WlanMacFilterRpm.htm?Mac="+URL_ADD_BLOCK_BY_MAC_PARAM+"&Desc=NMF-"+URL_ADD_BLOCK_BY_MAC_PARAM+"&Type=1&entryEnabled=1&Changed=0&SelIndex=0&Page=1&Save=Save";
+        String URL_ADD_BLOCK_BY_MAC = "userRpm/WlanMacFilterRpm.htm?Mac="+URL_ADD_BLOCK_BY_MAC_PARAM+"&Desc=NMFok&Type=1&entryEnabled=1&Changed=0&SelIndex=0&Page=1&Save=Save";
+        _urlRouters.put(eUrl.ADD_BLOCK_BY_MAC, UrlRouter.createWithReplace(URL_ADD_BLOCK_BY_MAC, "userRpm/WlanMacFilterRpm.htm?Add=Add&Page=1", URL_ADD_BLOCK_BY_MAC_PARAM));
+
+        String URL_REMOVE_BLOCK_BY_MAC_PARAM = "[_mac_]";//
+        String URL_REMOVE_BLOCK_BY_MAC = "userRpm/WlanMacFilterRpm.htm?Del="+URL_REMOVE_BLOCK_BY_MAC_PARAM+"&Page=1";
+        _urlRouters.put(eUrl.REMOVE_BLOCK_BY_MAC, UrlRouter.createWithReplace(URL_REMOVE_BLOCK_BY_MAC, "wlmacflt.cmd?action=view", URL_REMOVE_BLOCK_BY_MAC_PARAM));
 
     }
 

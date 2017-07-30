@@ -8,10 +8,22 @@ public class Device {
     private String name;
     private String ip;
     private String mac;
+    private int id;
+
+    public int getId() {
+        return id;
+    }
+
 
     /*
-    example: "fiok-PC", "C4-6E-1F-22-49-D1", "192.168.0.100", "01:13:02"
-     */
+    * Usado para los TPLINK, al elimiar hay que pasar este ID*/
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    /*
+        example: "fiok-PC", "C4-6E-1F-22-49-D1", "192.168.0.100", "01:13:02"
+         */
     public static Device newFromString(String stringdevice){
         String[] fields = stringdevice.split(", ");
         Device device = new Device();

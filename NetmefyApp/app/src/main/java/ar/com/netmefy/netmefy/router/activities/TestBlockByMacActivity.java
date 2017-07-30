@@ -15,7 +15,6 @@ import java.util.List;
 import ar.com.netmefy.netmefy.R;
 import ar.com.netmefy.netmefy.router.Device;
 import ar.com.netmefy.netmefy.router.Router;
-import ar.com.netmefy.netmefy.router.nucom.R5000UNv2.Nucom;
 
 public class TestBlockByMacActivity extends AppCompatActivity {
     EditText etMac, etListBlocked;
@@ -39,7 +38,7 @@ public class TestBlockByMacActivity extends AppCompatActivity {
 
         showListBlocked();
 /*
-        router.getListBlocked(new Response.Listener() {
+        router.getMacListBlocked(new Response.Listener() {
             @Override
             public void onResponse(Object response) {
 
@@ -66,7 +65,7 @@ public class TestBlockByMacActivity extends AppCompatActivity {
 
     private void showListBlocked(){
         etListBlocked.setText("Getting list blocked ...");
-        router.getListBlocked(new Response.Listener<List<Device>>() {
+        router.getMacListBlocked(new Response.Listener<List<Device>>() {
             @Override
             public void onResponse(List<Device> devicesBlocked) {
                 etListBlocked.setText("");
