@@ -33,5 +33,13 @@
     <string name="urlRate">/isp/rate/</string>
     <string name="urlLogin">/isp/login/</string>
     <string name="tech_user">Técnico</string>
+    <string name="control_parental">Control Parental</string>
+    <string name="set_de_pruebas">Set de Pruebas</string>
+    <string name="notificaciones">Notificaciones</string>
+    <string name="gestiones">Gestiones</string>
+    <string name="configuracion">Configuración</string>
+    <string name="comprobar_servicio">Comprobar Servicio</string>
+    <string name="reclamos_y_solicitudes">Reclamos y Solicitudes</string>
+    <string name="avisos_y_promociones">Avisos y Promociones</string>
 
 </resources>
