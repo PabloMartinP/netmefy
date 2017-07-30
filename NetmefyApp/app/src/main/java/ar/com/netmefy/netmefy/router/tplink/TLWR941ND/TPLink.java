@@ -2,502 +2,187 @@ package ar.com.netmefy.netmefy.router.tplink.TLWR941ND;
 
 
 import android.content.Context;
-import android.net.NetworkInfo;
-import android.net.wifi.WifiConfiguration;
-import android.net.wifi.WifiInfo;
-import android.net.wifi.WifiManager;
-import android.os.Build;
 
-import com.android.volley.Request;
+
 import com.android.volley.Response;
-import com.android.volley.VolleyError;
 
+import com.android.volley.toolbox.StringRequest;
+
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 
-import ar.com.netmefy.netmefy.router.ConfigWifi;
 import ar.com.netmefy.netmefy.router.Device;
 import ar.com.netmefy.netmefy.router.RequestQueueSingleton;
-import ar.com.netmefy.netmefy.router.RestartTry;
+
 import ar.com.netmefy.netmefy.router.Router;
+import ar.com.netmefy.netmefy.router.RouterConstants;
+import ar.com.netmefy.netmefy.router.UrlRouter;
+import ar.com.netmefy.netmefy.router.eUrl;
+import ar.com.netmefy.netmefy.services.Utils;
 
-/*
-final class Constantsok {
-
-    public static String NETWORK_ADDITIONAL_SECURITY_TKIP = "tkip";
-    public static String NETWORK_ADDITIONAL_SECURITY_AES = "aes";
-    public static String NETWORK_ADDITIONAL_SECURITY_WEP = "wep";
-    public static String NETWORK_ADDITIONAL_SECURITY_NONE = "";
-    public static String BACKSLASH = "\"";
-}*/
-
-/**
- * Created by fiok on 24/06/2017.
- */
 
 public class TPLink extends Router {
+
+
     public TPLink(Context context){
         _context = context;
         _queue = RequestQueueSingleton.getInstance(this._context).getRequestQueue();
-
+        _routerConstants = new RouterConstants(RouterConstants.eRouter.TPLink);
     }
+
+    @Override
+    public StringRequest newStringRequest( UrlRouter urlRouter, Response.Listener listener, Response.ErrorListener errorListener) {
+        return new StringRequestRouter( urlRouter, listener, errorListener);
+    }
+
+    /*
+    * los tplink no necesitan login por eso nohace nada este metodo*/
+    public void login(final Response.Listener listener, final Response.ErrorListener errorListener){
+        listener.onResponse("");
+    }
+
+
+    @Override
+    public String getName(){
+        return "TPLink(inPark) TL-WR941ND";
+    }
+
     @Override
     public void restart(final Response.Listener listener, final Response.ErrorListener errorListener) {
-        StringRequestRouter sr = new StringRequestRouter(Request.Method.GET,
-                TPLinkConstants.URL_RESTART,
-                TPLinkConstants.URL_RESTART_REFERRER,
+        StringRequestRouter sr = new StringRequestRouter(
+                _routerConstants.get(eUrl.RESTART),
                 listener,
                 errorListener);
 
         execute(sr);
     }
 
-
-    /*
-    * trae el ssid de la red conectada actualmente
-    * */
-    public String getWifiName() {
-        try {
-            WifiManager manager = (WifiManager) _context.getSystemService(Context.WIFI_SERVICE);
-            if (manager.isWifiEnabled()) {
-                WifiInfo wifiInfo = manager.getConnectionInfo();
-                if (wifiInfo != null) {
-                    NetworkInfo.DetailedState state = WifiInfo.getDetailedStateOf(wifiInfo.getSupplicantState());
-                    if (state == NetworkInfo.DetailedState.CONNECTED || state == NetworkInfo.DetailedState.OBTAINING_IPADDR) {
-                        return wifiInfo.getSSID().replace("\"", "");
-                    }
-                }
-            }
-            return "";
-        }catch (Exception ex){
-            ex.printStackTrace();
-            return "";
-        }
-    }
-
-    /*
-    * intenta conectar a un ssid especifico,
-    * si esta conectado a otra red la desconecta y se conecta a la ssid
-    * Importante: El SSID ya tienen que estar agregado a la lista de redes del android
-    * */
-    private  boolean tryConnectToNetwork(String ssid){
-        WifiManager wifiManager = (WifiManager)_context.getSystemService(Context.WIFI_SERVICE);
-        for (WifiConfiguration network:wifiManager.getConfiguredNetworks()) {
-            if (network.SSID.replace("\"", "").equalsIgnoreCase(ssid)) {
-                wifiManager.enableNetwork(network.networkId, true);
-                wifiManager.saveConfiguration();
-                wifiManager.setWifiEnabled(true);
-                return true;
-            }
-        }
-        return false;
-    }
-
     @Override
-    public void restartAndWaitUntilConnected(final Response.Listener listener, final Response.ErrorListener errorListener) {
-        //antes de hacer el restart obtengo el ssid,
-        // para que al reconectar sepa a que ssid tengo que conectarme
-        //esto es porque los cells por default al perder conexion con un AP
-        //se conectan a otro que tenga configurado y este al alcance
-        final int DELAY_RESTART_SECS = 20;
-        final int DELAY_BETWEEN_INTENT_TO_RECONNCET_SECS = 5;
-
-        getWifiSsid(new Response.Listener<String>() {
+    public void _setWifiSsid(final String newSsid, final Response.Listener progressListener, final Response.ErrorListener errorListener, final Response.Listener successListener){
+        setValue(newSsid, _routerConstants.get(eUrl.WIFI_SET_SSID), new Response.Listener() {
             @Override
-            public void onResponse(String ssid) {
-
-                final String ssidtoconnect = ssid;
-                restart(new Response.Listener() {
-                    @Override
-                    public void onResponse(Object response) {
-                        Timer timer = new Timer();
-                        timer.schedule(new TimerTask()
-                        {
-                            int i = 0;
-                            @Override
-                            public void run()
-                            {
-                                i++;
-                                Context context = _context;
-                                RestartTry restartTry;
-                                if (tryConnectToNetwork(ssidtoconnect)){
-                                    String actualSsid = getWifiName();
-                                    if (actualSsid.equalsIgnoreCase(ssidtoconnect)){
-                                        //info = "OOOok" +Integer.toString(i);
-                                        //restartTry.set_success(true);
-                                        restartTry  = new RestartTry(true, i, "");
-                                        tryConnectToNetwork(ssidtoconnect);
-                                        actualSsid = getWifiName();
-
-                                        this.cancel();
-                                    }else{
-                                        //info = "NOO-"+Integer.toString(i);;
-                                        restartTry  = new RestartTry(false, i, "El ssid actual ["+actualSsid+"] no es igual al configurado ["+ssidtoconnect+"]");
-                                    }
-                                }else{
-                                    //info = "HHHHH-"+Integer.toString(i);;
-                                    restartTry  = new RestartTry(false, i, "SSID ["+ssidtoconnect+"] no encontrado");
-                                }
-
-                                listener.onResponse((Object) restartTry);
-                            }
-                        }, DELAY_RESTART_SECS*1000, DELAY_BETWEEN_INTENT_TO_RECONNCET_SECS*1000);
-                    }
-                }, new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        errorListener.onErrorResponse(error);
-                    }
-                });
-
+            public void onResponse(Object response) {
+                _ssid = newSsid;
+                restartAndWaitUntilConnected(progressListener, errorListener, successListener);
             }
         }, errorListener);
-
     }
 
     @Override
-    public void setWifiSsid(String newSsid, final Response.Listener listener, final Response.ErrorListener errorListener){
-        String url;
-        url = TPLinkConstants.URL_WIFI_SET_SSID.replace(TPLinkConstants.URL_WIFI_SET_SSID_PARAM, newSsid);
-        StringRequestRouter stringRequest = new StringRequestRouter(Request.Method.GET,
-                url,
-                TPLinkConstants.URL_WIFI_SET_SSID_REFERRER,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String result) {
-                        String ssid = result;
-                        listener.onResponse(ssid);
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        errorListener.onErrorResponse(error);
-                    }
-                });
-        //_queue.add(stringRequest);
-        execute(stringRequest);
-    }
-
-    @Override
-    public void setWifiPassword(String newPassword, final Response.Listener listener, final Response.ErrorListener errorListener) {
-        String url;
-        url = TPLinkConstants.URL_WIFI_SET_PASSWORD.replace(TPLinkConstants.URL_WIFI_SET_PASSWORD_PARAM, newPassword);
-        StringRequestRouter stringRequest = new StringRequestRouter(Request.Method.GET,
-                url,
-                TPLinkConstants.URL_WIFI_SET_PASSWORD_REFERRER,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String result) {
-                        String ssid = result;
-                        listener.onResponse(ssid);
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        errorListener.onErrorResponse(error);
-                    }
-                });
-        //_queue.add(stringRequest);
-        execute(stringRequest);
-    }
-
-    @Override
-    public void saveWifiChanges(ConfigWifi configWifi ) {
-        addWifiConfig(configWifi.getSsid(), configWifi.getPassword(),"wpa2", TPLinkConstants.NETWORK_ADDITIONAL_SECURITY_AES);
-
-
-    }
-
-    public void addWifiConfig(String ssid,String password,String securityParam,String securityDetailParam) {
-        if (ssid == null) {
-            throw new IllegalArgumentException(
-                    "Required parameters can not be NULL #");
-        }
-
-        String wifiName = ssid;
-        WifiConfiguration conf = new WifiConfiguration();
-        // On devices with version Kitkat and below, We need to send SSID name
-        // with double quotes. On devices with version Lollipop, We need to send
-        // SSID name without double quotes
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            conf.SSID = wifiName;
-        } else {
-            conf.SSID = TPLinkConstants.BACKSLASH + wifiName + TPLinkConstants.BACKSLASH;
-        }
-        String security = securityParam;
-        if (security.equalsIgnoreCase("WEP")) {
-            conf.wepKeys[0] = password;
-            conf.wepTxKeyIndex = 0;
-            conf.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.NONE);
-            conf.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.WEP40);
-        } else if (security.equalsIgnoreCase("NONE")) {
-            conf.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.NONE);
-        } else if ("WPA"
-                .equalsIgnoreCase(security)
-                || "WPA2"
-                .equalsIgnoreCase(security)
-                || "WPA/WPA2 PSK"
-                .equalsIgnoreCase(security)) {
-            // appropriate ciper is need to set according to security type used,
-            // ifcase of not added it will not be able to connect
-            conf.preSharedKey = TPLinkConstants.BACKSLASH + password + TPLinkConstants.BACKSLASH;
-            conf.allowedProtocols.set(WifiConfiguration.Protocol.RSN);
-            conf.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.WPA_PSK);
-            conf.status = WifiConfiguration.Status.ENABLED;
-            conf.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.TKIP);
-            conf.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.CCMP);
-            conf.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.WPA_PSK);
-            conf.allowedPairwiseCiphers.set(WifiConfiguration.PairwiseCipher.TKIP);
-            conf.allowedPairwiseCiphers.set(WifiConfiguration.PairwiseCipher.CCMP);
-            conf.allowedProtocols.set(WifiConfiguration.Protocol.RSN);
-            conf.allowedProtocols.set(WifiConfiguration.Protocol.WPA);
-        }
-        String securityDetails = securityDetailParam;
-        if (securityDetails.equalsIgnoreCase(TPLinkConstants.NETWORK_ADDITIONAL_SECURITY_TKIP)) {
-            conf.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.TKIP);
-            conf.allowedPairwiseCiphers.set(WifiConfiguration.PairwiseCipher.TKIP);
-        } else if (securityDetails.equalsIgnoreCase(TPLinkConstants.NETWORK_ADDITIONAL_SECURITY_AES)) {
-            conf.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.CCMP);
-            conf.allowedPairwiseCiphers.set(WifiConfiguration.PairwiseCipher.CCMP);
-        } else if (securityDetails.equalsIgnoreCase(TPLinkConstants.NETWORK_ADDITIONAL_SECURITY_WEP)) {
-            conf.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.WEP104);
-            conf.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.WEP40);
-        } else if (securityDetails.equalsIgnoreCase(TPLinkConstants.NETWORK_ADDITIONAL_SECURITY_NONE)) {
-            conf.allowedPairwiseCiphers.set(WifiConfiguration.PairwiseCipher.NONE);
-        }
-        WifiManager wifiManager = (WifiManager) _context.getSystemService(Context.WIFI_SERVICE);
-
-        int newNetworkId = wifiManager.addNetwork(conf);
-
-        //TODO: Deberia chequar si devuelve -1 que lance una excepcion
-        //wifiManager.enableNetwork(newNetworkId, true);
-        wifiManager.saveConfiguration();
-        //wifiManager.setWifiEnabled(true);
-    }
-
-    @Override
-    public void setConfigWifiAndRestart(final ConfigWifi configWifi, final Response.Listener listener, final Response.ErrorListener errorListener) {
-        saveWifiChanges(configWifi);
-
-        setConfigWifi(configWifi,
-                new Response.Listener() {
-                    @Override
-                    public void onResponse(Object response) {
-
-                        restartAndWaitUntilConnected(listener, errorListener);
-                    }
-                }, errorListener);
-        /*
-        setConfigWifi(configWifi,
-                new Response.Listener() {
-                    @Override
-                    public void onResponse(Object response) {
-                        restart(new Response.Listener() {
-                            @Override
-                            public void onResponse(Object response) {
-                                Timer timer = new Timer();
-                                timer.schedule(new TimerTask()
-                                {
-                                    @Override
-                                    public void run()
-                                    {
-                                        Context context = _context;
-                                        String info = "";
-                                        try{
-
-
-                                            ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-                                            NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
-                                            if (activeNetwork != null) { // connected to the internet
-                                                if (activeNetwork.getType() == ConnectivityManager.TYPE_WIFI) {
-                                                    // connected to wifi
-                                                    //Toast.makeText(context, activeNetwork.getTypeName(), Toast.LENGTH_SHORT).show();
-                                                    info = activeNetwork.getTypeName();
-                                                } else if (activeNetwork.getType() == ConnectivityManager.TYPE_MOBILE) {
-                                                    // connected to the mobile provider's data plan
-                                                    //Toast.makeText(context, activeNetwork.getTypeName(), Toast.LENGTH_SHORT).show();
-                                                    info = activeNetwork.getTypeName();
-                                                }
-                                            } else {
-                                                // not connected to the internet
-                                                //Toast.makeText(context, "No Conectado!!!", Toast.LENGTH_SHORT).show();
-                                            }
-                                            listener.onResponse((Object) info);
-
-                                        }catch (Exception ex){
-                                            //Toast.makeText(context, ex.getMessage(), Toast.LENGTH_SHORT).show();
-                                            info = ex.getMessage();
-                                        }
-
-                                    }
-                                }, 0, 5000);
-                            }
-                        }, new Response.ErrorListener() {
-                            @Override
-                            public void onErrorResponse(VolleyError error) {
-                                errorListener.onErrorResponse(error);
-                            }
-                        });
-
-                    }
-                }, new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        errorListener.onErrorResponse(error);
-                    }
-                });
-*/
-    }
-
-    @Override
-    public void getWifiSsid(final Response.Listener<String> listener, final Response.ErrorListener errorListener){
-        StringRequestRouter stringRequest = new StringRequestRouter(Request.Method.GET,
-                TPLinkConstants.URL_WIFI_GET_SSID,
-                TPLinkConstants.URL_WIFI_GET_SSID_REFERRER,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String result) {
-                        String ssid;
-
-                        String textBefore = "0, 8, 0, ";
-                        int pinit = result.indexOf(textBefore) + textBefore.length();
-                        int pend = result.indexOf(", 108, 2, 1, ");
-                        String aux ;
-                        aux = result.substring(pinit, pend);
-
-                        ssid = aux.replace("\"", "");
-
-                        listener.onResponse(ssid);
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        errorListener.onErrorResponse(error);
-                    }
-                });
-
-        //_queue.add(stringRequest);
-        execute(stringRequest);
-    }
-
-    @Override
-    public void getWifiPassword(final Response.Listener listener, final Response.ErrorListener errorListener) {
-        StringRequestRouter stringRequest = new StringRequestRouter(Request.Method.GET,
-                TPLinkConstants.URL_WIFI_GET_PASSWORD,
-                TPLinkConstants.URL_WIFI_GET_PASSWORD_REFERRER,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String result) {
-                        String textBefore = "8, 1, 3, \"132\", 1, 0, \"\", 1812, \"\", ";
-                        int pinit = result.indexOf(textBefore) + textBefore.length();
-                        int pend = result.indexOf(", 1, 0, 0, 1, ");
-                        String aux ;
-                        aux = result.substring(pinit, pend);
-
-                        String password;
-                        password= aux.replace("\"", "");
-                        listener.onResponse(password);
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        errorListener.onErrorResponse(error);
-                    }
-                });
-        execute(stringRequest);
-    }
-
-
-    @Override
-    public void setConfigWifi(final ConfigWifi configWifi, final Response.Listener listener, final Response.ErrorListener errorListener) {
-        this.setWifiSsid(configWifi.getSsid(),
-                new Response.Listener() {
-                    @Override
-                    public void onResponse(Object response) {
-                        setWifiPassword(configWifi.getPassword(),
-                                new Response.Listener() {
-                                    @Override
-                                    public void onResponse(Object response) {
-
-                                        listener.onResponse("ok");
-                                    }
-                                }, new Response.ErrorListener() {
-                                    @Override
-                                    public void onErrorResponse(VolleyError error) {
-                                        errorListener.onErrorResponse(error);
-                                    }
-                                });
-                    }
-                }, new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        errorListener.onErrorResponse(error);
-                    }
-                });
-
-    }
-
-    @Override
-    public void getConfigWifi(final Response.Listener listener, final Response.ErrorListener errorListener) {
-        this.getWifiSsid(new Response.Listener<String>() {
+    public void _setWifiPassword(final String newPassword, final Response.Listener progressListener, final Response.ErrorListener errorListener, final Response.Listener successListener){
+        setValue(newPassword, _routerConstants.get(eUrl.WIFI_SET_PASSWORD), new Response.Listener() {
             @Override
-            public void onResponse(final String ssid) {
+            public void onResponse(Object response) {
+                restartAndWaitUntilConnected(progressListener, errorListener, successListener);
+            }
+        }, errorListener);
+    }
 
-                getWifiPassword(new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(final String password) {
-                        ConfigWifi configWifi = new ConfigWifi();
 
-                        configWifi.setSsid(ssid);
-                        configWifi.setPassword(password);
 
-                        listener.onResponse(configWifi);
+    @Override
+    protected List<Device> parseHtmlListDevices(String html){
+        String result = html;
+        String find = "var DHCPDynList = new Array(\n";
+        int pinit;
+        pinit = result.indexOf(find) + find.length();
+        int pend;
+        pend = result.indexOf("</SCRIPT>");
+
+        String aux ;
+        aux = result.substring(pinit, pend);
+
+        String[] devicesString = aux.split("\n");
+        List<Device> listDevicesAux = new ArrayList<Device>();
+        Device device;
+        for (int i=0;i<devicesString.length-1;i++){
+            device = Device.newFromString(devicesString[i]);
+            listDevicesAux.add(device);
+        }
+
+        List<Device>  listDevices;
+        listDevices = listDevicesAux;
+        return listDevices;
+    }
+
+    @Override
+    protected List<Device> parseHtmlMacListBlocked(String html){
+        List<Device> list = new ArrayList<Device>();
+
+        String[] splitted = html.split("\n");
+        Device device;
+        for (int i = 0; i < splitted.length; i++) {
+            device  = new Device();
+            device.setMac(Utils.getTextBetween(splitted[i], "\"", "\"", ""));
+            device.setId(i);
+            list.add(device);
+        }
+
+        //Utils.getTextBetween(html.split("\n")[0], "\"", "\"", "")
+
+        return list;
+    }
+
+
+    @Override
+    public void getUrlListBlocked(Response.Listener<List<String>> success, Response.ErrorListener error) {
+
+    }
+
+    @Override
+    public void addBlockByUrl(String url, Response.Listener progress, Response.ErrorListener error, Response.Listener success) {
+
+    }
+
+    @Override
+    public void removeBlockByUrl(String url, Response.Listener progress, Response.ErrorListener error, Response.Listener success) {
+
+    }
+
+
+    public void logout(final Response.Listener listener,final Response.ErrorListener errorListener){
+
+    }
+    
+    private String formatMac(String mac){
+        return mac.replace(":", "-").toUpperCase();
+    }
+
+    @Override
+    public void addBlockByMac(String mac, Response.Listener progress, Response.ErrorListener error, Response.Listener success) {
+        String macWithFormat ;
+        macWithFormat = formatMac(mac);
+        setValueAndReconnect(macWithFormat,
+                _routerConstants.get(eUrl.ADD_BLOCK_BY_MAC),
+                progress,
+                error,
+                success);
+    }
+
+    @Override
+    public void removeBlockByMac(String mac,final Response.Listener progress, final Response.ErrorListener error, final Response.Listener success) {
+        final String macWithFormat = formatMac(mac);
+        getMacListBlocked(new Response.Listener<List<Device>>() {
+            @Override
+            public void onResponse(List<Device> devicesBlocked) {
+                Device deviceFound = null   ;
+                for (Device device : devicesBlocked) {
+                    if(device.getMac().equalsIgnoreCase(macWithFormat)){
+                        deviceFound = device;
+                        break;
                     }
-                }, new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        errorListener.onErrorResponse(error);
-                    }
-                });
+                }
+                ////////////////////////////////////
+                if(deviceFound !=null){
+                    setValueAndReconnect(String.valueOf(deviceFound.getId()) ,
+                            _routerConstants.get(eUrl.REMOVE_BLOCK_BY_MAC),
+                            progress,
+                            error,
+                            success);
+                }
+
 
             }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                errorListener.onErrorResponse(error);
-            }
-        });
-    }
-
-    /*
-    * ESTE TPLINK AL PARECER ACUMULA LA LISTA DE LOS DHCP,
-    * Y CUANDO SE DESCONECTA UNO NO LO LIMPIA DE LA LISTA,
-    * ASI QUE MUESTRA ALGUNOS DEVICES QUE YA SE DESCONECTARON
-    * POR AHORA LA SOLUCION SERIA RESTART
-    * */
-    @Override
-    public void listDevicesConnected(final Response.Listener<List<Device>> listener, Response.ErrorListener errorListener ) {
-
-        StringRequestRouter stringRequest = new StringRequestRouter(Request.Method.GET,
-                TPLinkConstants.URL_LIST_CONNECTED,
-                TPLinkConstants.URL_LIST_CONNECTED_REFERRER,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        String result = response.toString();
-                        ResponseTPLink.setListDevices(result);
-
-                        listener.onResponse(ResponseTPLink.getListDevices());
-
-                    }
-                },
-                errorListener);
-
-        execute(stringRequest);
+        }, error);
     }
 }

@@ -1,7 +1,6 @@
 package ar.com.netmefy.netmefy.router.activities;
 
 import android.content.Context;
-import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -17,8 +16,9 @@ import java.util.List;
 import ar.com.netmefy.netmefy.R;
 import ar.com.netmefy.netmefy.router.Device;
 import ar.com.netmefy.netmefy.router.Router;
-import ar.com.netmefy.netmefy.router.tplink.TLWR941ND.ResponseTPLink;
+import ar.com.netmefy.netmefy.router.nucom.R5000UNv2.Nucom;
 import ar.com.netmefy.netmefy.router.tplink.TLWR941ND.TPLink;
+import ar.com.netmefy.netmefy.services.Utils;
 
 public class DevicesConnectedActivity extends AppCompatActivity {
 
@@ -31,7 +31,11 @@ public class DevicesConnectedActivity extends AppCompatActivity {
     public void showDevicesConnected(View view){
         final Button btn =(Button) findViewById(R.id.btnDevicesConnected);
         btn.setText("showDevicesConnected ...");
-        Router router= new TPLink(this.getApplicationContext());
+
+        //Router router= new TPLink(this.getApplicationContext());
+        //Router router= new Nucom(this.getApplicationContext());
+        Router router= Router.getInstance(getApplicationContext());
+
         final Context context = this.getApplicationContext();
         router.listDevicesConnected(
                 new Response.Listener<List<Device>>() {
@@ -44,8 +48,9 @@ public class DevicesConnectedActivity extends AppCompatActivity {
                         TODO: Crear una clase que contenga a List<Device>
                          */
 
-                        List<String> listDevices = ResponseTPLink.getListDevicesString();
-
+                        //ResponseTPLink.set_listDevice(devices);
+                        //List<String> listDevices = ResponseTPLink.getListDevicesString();
+                        List<String> listDevices = Utils.getListDevicesString(devices);
 
                         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(
                                 context, android.R.layout.simple_list_item_1, listDevices);

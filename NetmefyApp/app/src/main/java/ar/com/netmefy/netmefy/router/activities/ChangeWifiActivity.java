@@ -29,6 +29,7 @@ public class ChangeWifiActivity extends AppCompatActivity {
     EditText etSsid;
     EditText etPassword;
     Button btn;
+    Button btnSsid, btnPassword;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,14 +38,17 @@ public class ChangeWifiActivity extends AppCompatActivity {
         etSsid = (EditText) findViewById(R.id.etSsid);
         etPassword= (EditText) findViewById(R.id.etPassword);
         btn = (Button) findViewById(R.id.btnChangeWifi);
+        btnSsid = (Button) findViewById(R.id.btnChangeSsid);
+        btnPassword = (Button) findViewById(R.id.btnChangePassword);
 
         btn.setEnabled(false);
+        btnSsid.setEnabled(false);
+        btnPassword.setEnabled(false);
 
-        router = new Nucom(this.getApplicationContext());
+        //router = new Nucom(this.getApplicationContext());
+        //router = new TPLink(this.getApplicationContext());
+        router = Router.getInstance(getApplicationContext());
 
-
-        /*
-        router = new TPLink(this.getApplicationContext());
         router.getConfigWifi(new Response.Listener<ConfigWifi>() {
             @Override
             public void onResponse(ConfigWifi configWifi) {
@@ -52,17 +56,19 @@ public class ChangeWifiActivity extends AppCompatActivity {
                 etPassword.setText(configWifi.getPassword());
 
                 btn.setEnabled(true);
+                btnSsid.setEnabled(true);
+                btnPassword.setEnabled(true);
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                etSsid.setText("ERR!!!");
-                etPassword.setText("ERRR!!!");
+                etSsid.setText("ERR!!!"+ error.getMessage());
+                etPassword.setText("ERRR!!!" + error.getMessage());
             }
-        });*/
+        });
 
 
-
+/*
         router.getWifiSsid(new Response.Listener<String>() {
                                @Override
                                public void onResponse(String ssid) {
@@ -78,41 +84,78 @@ public class ChangeWifiActivity extends AppCompatActivity {
 
 
         router.getWifiPassword(new Response.Listener<String>() {
+            @Override
+            public void onResponse(String password) {
+                etPassword.setText(password);
+                }
+        }, new Response.ErrorListener() {
                                    @Override
-                                       public void onResponse(String password) {
-                                           etPassword.setText(password);
-                                       }
-                                   }, new Response.ErrorListener() {
-                                       @Override
                                        public void onErrorResponse(VolleyError error) {
                                            etPassword.setText("ERROR!!!" + error.getMessage());;
                                        }
                                    }
-            );
+            );*/
 
 
     }
 
-
-    public void change(View view){
+    public void changeSsid(View view){
+        Toast.makeText(getApplicationContext(), "changeSsid!!!!!", Toast.LENGTH_LONG).show();
         String newSsid = etSsid.getText().toString();
-        String newPassword = etPassword.getText().toString();
-
-        if(newPassword.length()<8){
-            Toast.makeText(getApplicationContext(), "La pass debe ser mayor o igual a ocho!!!!!", Toast.LENGTH_LONG).show();
-            return;
-        }
         if(newSsid.length() == 0){
             Toast.makeText(getApplicationContext(), "completar ssid!!!!!", Toast.LENGTH_LONG).show();
             return;
         }
+        btn.setText("Changing ssid ..." + newSsid);
 
-        final ConfigWifi configWifi = new ConfigWifi();
-        configWifi.setSsid(newSsid);
-        configWifi.setPassword(newPassword);
+        router.setWifiSsid(newSsid,new Response.Listener() {
+            @Override
+            public void onResponse(final Object response) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        //etSsid.setText("SSID OK");
+                        // etPassword.setText("PASSWORD OK");
+                        btn.setText(response.toString());
+                    }
+                });
+            }
+        }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(final VolleyError error) {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                //etSsid.setText("SSID NO OK");
+                                //etPassword.setText("PASSWORD NO OK");
+                                btn.setText(error.getMessage());
+                            }
+                        });
 
-        btn.setText("Changing ...");
-        router.setConfigWifiAndRestart(configWifi,
+
+                    }
+                }, new Response.Listener() {
+                    @Override
+                    public void onResponse(Object response) {
+                        //Toast.makeText(getApplicationContext(), "setWifiSsid OK !!!!!", Toast.LENGTH_LONG).show();
+
+                    }
+                });
+
+
+    }
+    public void changePassword(View view){
+        Toast.makeText(getApplicationContext(), "changePassword!!!!!", Toast.LENGTH_LONG).show();
+
+        //String newSsid = etSsid.getText().toString();
+        String newPassword = etPassword.getText().toString();
+        if(newPassword.length()<8){
+            Toast.makeText(getApplicationContext(), "La pass debe ser mayor o igual a ocho!!!!!", Toast.LENGTH_LONG).show();
+            return;
+        }
+        btn.setText("Changing password ..." + newPassword);
+
+        router.setWifiPassword(newPassword,
                 new Response.Listener() {
                     @Override
                     public void onResponse(final Object response) {
@@ -139,11 +182,15 @@ public class ChangeWifiActivity extends AppCompatActivity {
                             }
                         });
 
+
+                    }
+                }, new Response.Listener() {
+                    @Override
+                    public void onResponse(Object response) {
+                        //Toast.makeText(getApplicationContext(), "changePassword OKKK!!!!!", Toast.LENGTH_LONG).show();
+
                     }
                 });
 
-
     }
-
-
 }

@@ -24,4 +24,12 @@ public class ConfigWifi {
     public void setPassword(String password) {
         this.password = password;
     }
+
+    public ConfigWifi(String ssid, String password){
+        this.ssid = ssid;
+        this.password = password;
+    }
+    public ConfigWifi(){
+
+    }
 }
