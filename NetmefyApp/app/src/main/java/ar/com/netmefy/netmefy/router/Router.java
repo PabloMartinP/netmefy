@@ -313,4 +313,9 @@ public abstract class Router {
         Utils.addWifiConfig(configWifi.getSsid(), configWifi.getPassword(), _context);
     }
 
+    public abstract void getUrlListBlocked(Response.Listener<List<String>> success, Response.ErrorListener error);
+
+    public abstract void addBlockByUrl(String url, Response.Listener progress, Response.ErrorListener error, Response.Listener success);
+
+    public abstract void removeBlockByUrl(String url, Response.Listener progress, Response.ErrorListener error, Response.Listener success);
 }

@@ -54,6 +54,9 @@ public class TPLinkTestsActivity extends AppCompatActivity {
     public void blockByMac(View view){
         startActivity(new Intent(TPLinkTestsActivity.this, TestBlockByMacActivity.class));
     }
+    public void blockByUrl(View view){
+        startActivity(new Intent(TPLinkTestsActivity.this, TestBlockByUrlActivity.class));
+    }
 
     public void logout(View v){
         router.logout(new Response.Listener() {

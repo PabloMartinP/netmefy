@@ -13,6 +13,7 @@ import org.jsoup.select.Elements;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import ar.com.netmefy.netmefy.router.Device;
 import ar.com.netmefy.netmefy.router.RequestQueueSingleton;
@@ -318,13 +319,7 @@ public class Nucom extends Router {
                 device.setMac(mac);
                 list.add(device);
             }
-
-
-
-
-
         }
-
         return list;
     }
 
@@ -343,5 +338,66 @@ public class Nucom extends Router {
             }
         }, errorListener);
 
+    }
+
+    private List<String> parseHtmlUrlListBlocked(String html){
+        List<String> list = new ArrayList<String>();
+
+        String BEGIN = "1}-{";
+        String END = "}-{";
+        String url ;
+
+        String[] splitted = html.split(Pattern.quote("1}-"));
+
+        for (int i=0;i<splitted.length;i++){
+            if(!splitted[i].isEmpty()){
+                url = Utils.getTextBetween(splitted[i], "{", "}", "");
+                if(!url.isEmpty())
+                    list.add(url);
+            }
+
+        }
+
+        return list;
+    }
+
+    @Override
+    public void getUrlListBlocked(final Response.Listener<List<String>> success, Response.ErrorListener error) {
+        getValueFromHtmlResponse(_routerConstants.get(eUrl.GET_URL_LIST_BLOCKED), new Response.Listener<String>() {
+            @Override
+            public void onResponse(final String htmlListBlocked) {
+                success.onResponse(parseHtmlUrlListBlocked(htmlListBlocked));
+            }
+        }, error);
+    }
+
+    @Override
+    public void addBlockByUrl(String url, Response.Listener progress, Response.ErrorListener error, Response.Listener success) {
+        setValueWithSessionKeyAndReconnect(url,
+                eUrl.ADD_BLOCK_BY_URL_TO_GET_SESSIONKEY,
+                _routerConstants.get(eUrl.ADD_BLOCK_BY_URL),
+                progress,
+                error,
+                success);
+    }
+
+    @Override
+    public void removeBlockByUrl(String url, Response.Listener progress, Response.ErrorListener error, Response.Listener success) {
+        String urlFormat;
+        //A DIFERENCIA DEL ...BYMAC ESTE VA SIN comma
+        if(!url.substring(url.length()-1).equals("%20"))
+            urlFormat = url.concat("%20");
+        else
+            urlFormat = url;
+
+        if(url.isEmpty())
+            success.onResponse("ok-empty");
+
+        setValueWithSessionKeyAndReconnect(urlFormat,
+                eUrl.REMOVE_BLOCK_BY_URL_TO_GET_SESSIONKEY,
+                _routerConstants.get(eUrl.REMOVE_BLOCK_BY_URL),
+                progress,
+                error,
+                success);
     }
 }

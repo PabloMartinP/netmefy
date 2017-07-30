@@ -92,4 +92,15 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btnBlockByMac" />
 
+    <Button
+        android:id="@+id/btnblockByUrl"
+        android:layout_width="368dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:onClick="blockByUrl"
+        android:text="BLOCK BY URL"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnLogout" />
+
 </android.support.constraint.ConstraintLayout>

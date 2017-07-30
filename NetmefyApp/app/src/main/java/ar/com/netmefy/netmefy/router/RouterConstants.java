@@ -61,7 +61,7 @@ public class RouterConstants {
         //String URL_ADD_BLOCK_BY_MAC = "wlmacflt.cmd?action=add&wlFltMacAddr=44:78:3e:27:d0:4e&wlSyncNvram=1&";
         String URL_ADD_BLOCK_BY_MAC = "wlmacflt.cmd?action=add&wlFltMacAddr="+URL_ADD_BLOCK_BY_MAC_PARAM+"&wlSyncNvram=1&";
         _urlRouters.put(eUrl.ADD_BLOCK_BY_MAC, UrlRouter.createWithReplace(URL_ADD_BLOCK_BY_MAC, "wlmacflt.html", URL_ADD_BLOCK_BY_MAC_PARAM));
-        _urlRouters.put(eUrl.ADD_BLOCK_BY_MAC_TO_GET_SESSIONKEY, UrlRouter.createWithFinder("wlmacflt.html ", "menu.html", "loc += '&sessionKey=", "';", "Error ADD_BLOCK_BY_MAC_TO_GET_SESSIONKEY"));
+        _urlRouters.put(eUrl.ADD_BLOCK_BY_MAC_TO_GET_SESSIONKEY, UrlRouter.createWithFinder("wlmacflt.html", "menu.html", "loc += '&sessionKey=", "';", "Error ADD_BLOCK_BY_MAC_TO_GET_SESSIONKEY"));
 
 
 
@@ -78,10 +78,25 @@ public class RouterConstants {
                 "      <td class='hd' id='wlmacfltview7'>MAC Address</td>\n" +
                 "      <td class='hd' id='wlmacfltview8'>Remove</td>\n" +
                 "   </tr>\n";
-        _urlRouters.put(eUrl.GET_LIST_BLOCKED, UrlRouter.createWithFinder("wlmacflt.cmd?action=view ", "menu.html", HTML_BEGIN, "</table><br><br>", "ERROR GET_LIST_BLOCKED"));
+        _urlRouters.put(eUrl.GET_LIST_BLOCKED, UrlRouter.createWithFinder("wlmacflt.cmd?action=view", "menu.html", HTML_BEGIN, "</table><br><br>", "ERROR GET_LIST_BLOCKED"));
 
 
+        String HTML_URL_BEGIN = "var UrlFilterListObjectItems = '";
+        _urlRouters.put(eUrl.GET_URL_LIST_BLOCKED, UrlRouter.createWithFinder("urlfilter.cmd?action=view", "menu.html", HTML_URL_BEGIN, "';", "ERROR GET_URL_LIST_BLOCKED"));
 
+
+        String URL_ADD_BLOCK_BY_URL_PARAM = "[_URL_]";
+        String URL_ADD_BLOCK_BY_URL = "urlfilter.cmd?action=set_url&TodUrlAdd="+URL_ADD_BLOCK_BY_URL_PARAM+"&port_num=80&";
+        _urlRouters.put(eUrl.ADD_BLOCK_BY_URL, UrlRouter.createWithReplace(URL_ADD_BLOCK_BY_URL, "url_add.html", URL_ADD_BLOCK_BY_URL_PARAM));
+        _urlRouters.put(eUrl.ADD_BLOCK_BY_URL_TO_GET_SESSIONKEY, UrlRouter.createWithFinder("url_add.html", "menu.html", "loc += '&sessionKey=", "';", "Error ADD_BLOCK_BY_MAC_TO_GET_SESSIONKEY"));
+
+
+        String URL_REMOVE_BLOCK_BY_URL_PARAM = "[_URL_]";//AA:BB:CC:00:11:06
+        //urlfilter.cmd?action=remove_url&rmLst=www.a3.com.ar%20&sessionKey=265785373
+        //String URL_REMOVE_BLOCK_BY_URL = "wlmacflt.cmd?action=remove&rmLst="+URL_REMOVE_BLOCK_BY_MAC_PARAM+"&";
+        String URL_REMOVE_BLOCK_BY_URL = "urlfilter.cmd?action=remove_url&rmLst="+URL_REMOVE_BLOCK_BY_URL_PARAM+"&";
+        _urlRouters.put(eUrl.REMOVE_BLOCK_BY_URL, UrlRouter.createWithReplace(URL_REMOVE_BLOCK_BY_URL, "urlfilter.cmd?action=view", URL_REMOVE_BLOCK_BY_URL_PARAM));
+        _urlRouters.put(eUrl.REMOVE_BLOCK_BY_URL_TO_GET_SESSIONKEY, UrlRouter.createWithFinder("urlfilter.cmd?action=view", "menu.html", "var locationQuery=\"sessionKey=", "\";", "Error REMOVE_BLOCK_BY_URL_TO_GET_SESSIONKEY"));
 
     }
 
@@ -103,6 +118,7 @@ public class RouterConstants {
         _urlRouters.put(eUrl.WIFI_SET_PASSWORD, UrlRouter.createWithReplace(URL_WIFI_SET_PASSWORD, URL_WIFI_SET_PASSWORD_REFERRER, URL_WIFI_SET_PASSWORD_PARAM));
 
         _urlRouters.put(eUrl.RESTART, UrlRouter.create("userRpm/SysRebootRpm.htm?Reboot=Reboot", "userRpm/SysRebootRpm.htm"));
+
 
     }
 

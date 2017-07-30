@@ -178,6 +178,21 @@ public class TPLink extends Router {
 
     }
 
+    @Override
+    public void getUrlListBlocked(Response.Listener<List<String>> success, Response.ErrorListener error) {
+
+    }
+
+    @Override
+    public void addBlockByUrl(String url, Response.Listener progress, Response.ErrorListener error, Response.Listener success) {
+
+    }
+
+    @Override
+    public void removeBlockByUrl(String url, Response.Listener progress, Response.ErrorListener error, Response.Listener success) {
+
+    }
+
 
     public void logout(final Response.Listener listener,final Response.ErrorListener errorListener){
 

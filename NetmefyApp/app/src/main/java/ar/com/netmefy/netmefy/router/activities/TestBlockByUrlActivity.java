@@ -13,27 +13,25 @@ import com.android.volley.VolleyError;
 import java.util.List;
 
 import ar.com.netmefy.netmefy.R;
-import ar.com.netmefy.netmefy.router.Device;
 import ar.com.netmefy.netmefy.router.Router;
-import ar.com.netmefy.netmefy.router.nucom.R5000UNv2.Nucom;
 
-public class TestBlockByMacActivity extends AppCompatActivity {
-    EditText etMac, etListBlocked;
+public class TestBlockByUrlActivity extends AppCompatActivity {
+    EditText etUrl, etListBlocked;
     Router router;
     Button btnAdd, btnRemove;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_test_block_by_mac);
+        setContentView(R.layout.activity_test_block_by_url);
 
-        etMac = (EditText) findViewById(R.id.etMac);
-        etMac.setText("aa:bb:cc:00:11:22");
+        etUrl= (EditText) findViewById(R.id.etUrl);
+        etUrl.setText("www.test10.com.ar");
 
-        etListBlocked = (EditText) findViewById(R.id.etListBlocked);
+        etListBlocked = (EditText) findViewById(R.id.etListBlockedUrl);
 
-        btnAdd = (Button)findViewById(R.id.btnAddBlock);
-        btnRemove = (Button)findViewById(R.id.btnRemoveBlock);
+        btnAdd = (Button)findViewById(R.id.btnAddBlockUrl);
+        btnRemove = (Button)findViewById(R.id.btnRemoveBlockUrl);
 
         router = Router.getInstance(getApplicationContext());
 
@@ -62,17 +60,17 @@ public class TestBlockByMacActivity extends AppCompatActivity {
 
             }
         });*/
+
     }
 
     private void showListBlocked(){
         etListBlocked.setText("Getting list blocked ...");
-        router.getListBlocked(new Response.Listener<List<Device>>() {
+        router.getUrlListBlocked(new Response.Listener<List<String>>() {
             @Override
-            public void onResponse(List<Device> devicesBlocked) {
+            public void onResponse(List<String> urlBlocked) {
                 etListBlocked.setText("");
-                for (Device device :
-                        devicesBlocked) {
-                    etListBlocked.setText(etListBlocked.getText().toString() +  device.getMac() + "\n");
+                for (String url : urlBlocked) {
+                    etListBlocked.setText(etListBlocked.getText().toString() +  url + "\n");
                 }
             }
         }, new Response.ErrorListener() {
@@ -90,15 +88,16 @@ public class TestBlockByMacActivity extends AppCompatActivity {
         });
     }
 
+
     public void addBlock(View v){
         Toast.makeText(getApplicationContext(), "addBlock", Toast.LENGTH_LONG).show();
-        String mac ;
+        String url ;
 
-        mac = etMac.getText().toString();
+        url = etUrl.getText().toString();
 
-        btnAdd.setText("addBlock ..." + mac);
+        btnAdd.setText("addBlock ..." + url);
 
-        router.addBlockByMac(mac,
+        router.addBlockByUrl(url,
                 new Response.Listener() {
                     @Override
                     public void onResponse(final Object response) {
@@ -142,14 +141,15 @@ public class TestBlockByMacActivity extends AppCompatActivity {
                 });
     }
 
+
     public void removeBlock(View v){
         Toast.makeText(getApplicationContext(), "removeBlock", Toast.LENGTH_LONG).show();
-        String mac = etMac.getText().toString();
+        String url = etUrl.getText().toString();
 
-        btnRemove.setText("removeBlock..." + mac);
+        btnRemove.setText("removeBlock..." + url);
 
 
-        router.removeBlockByMac(mac,
+        router.removeBlockByUrl(url,
                 new Response.Listener() {
                     @Override
                     public void onResponse(final Object response) {
@@ -192,5 +192,6 @@ public class TestBlockByMacActivity extends AppCompatActivity {
                 });
 
     }
+
 
 }
