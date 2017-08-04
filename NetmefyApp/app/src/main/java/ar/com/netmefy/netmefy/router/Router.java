@@ -101,7 +101,12 @@ public abstract class Router {
                 });
 
             }
-        }, errorListener);
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                errorListener.onErrorResponse(error);
+            }
+        });
     }
 
     public abstract StringRequest newStringRequest(UrlRouter urlRouter,

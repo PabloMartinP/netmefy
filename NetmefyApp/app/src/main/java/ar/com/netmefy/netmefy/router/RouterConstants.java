@@ -51,6 +51,7 @@ public class RouterConstants {
         _urlRouters.put(eUrl.WIFI_SET_PASSWORD_TO_GET_SESSIONKEY, UrlRouter.createWithFinder("wlsecurity.html ", "menu.html", "var sessionKey='", "';", "Error sessionKey SET PASSWORD"));
 
         String URL_RESTART = "rebootinfo.cgi?";
+        //String URL_RESTART = "rebootinfo.cgi";
         _urlRouters.put(eUrl.RESTART, UrlRouter.create(URL_RESTART, "resetrouter.html"));
         _urlRouters.put(eUrl.RESTART_TO_GET_SESSIONKEY, UrlRouter.createWithFinder("resetrouter.html", "menu.html", "var sessionKey='", "';", "Error sessionKey RESTART"));
 

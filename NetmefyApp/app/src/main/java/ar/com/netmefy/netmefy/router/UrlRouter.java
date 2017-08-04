@@ -98,18 +98,33 @@ public class UrlRouter {
         return _valueToReplace !=null && !_valueToReplace.isEmpty() && this._newValue!=null && !this._newValue.isEmpty();
     }
 
+    private boolean needSessionKey(){
+        return !_sessionKey.isEmpty();
+    }
+    private String appendSessionKey(String url1){
+        if(needSessionKey()){
+            if(!url1.substring(url1.length()-1).equals("&") && !url1.substring(url1.length()-1).equals("?"))
+                url1 = url1.concat("&");
+
+
+            url1 = url1.concat("sessionKey=" + _sessionKey);
+            return url1;
+        }else
+            return url1 ;
+
+    }
     public String get_url() {
         if(!needReplace() )
-            return _urlRoot.concat(_url);
+            return _urlRoot.concat(appendSessionKey(_url));
         else{
             String url;
             url = _url.replace(this.get_valueToReplace(), this.get_newValue() );
             String url1 = "";
-            if(!_sessionKey.isEmpty()) {
+
+            if(needSessionKey()){
                 url1 = _urlRoot.concat(url);//.concat("sessionKey=" + _sessionKey);
-                if(!url1.substring(url1.length()-1).equals("&"))
-                    url1 = url1.concat("&");
-                url1 = url1.concat("sessionKey=" + _sessionKey);
+                url1= appendSessionKey(url1);
+
             }
             else
                 url1 = _urlRoot.concat(url);
