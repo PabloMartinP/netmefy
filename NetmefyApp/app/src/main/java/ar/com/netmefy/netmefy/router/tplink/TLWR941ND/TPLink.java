@@ -6,10 +6,12 @@ import android.content.Context;
 
 import com.android.volley.Response;
 
+import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import ar.com.netmefy.netmefy.router.Device;
 import ar.com.netmefy.netmefy.router.RequestQueueSingleton;
@@ -123,19 +125,40 @@ public class TPLink extends Router {
         return list;
     }
 
-
-    @Override
-    public void getUrlListBlocked(Response.Listener<List<String>> success, Response.ErrorListener error) {
-
-    }
-
     @Override
     public void addBlockByUrl(String url, Response.Listener progress, Response.ErrorListener error, Response.Listener success) {
-
+        setValueAndReconnect(url,
+                _routerConstants.get(eUrl.ADD_BLOCK_BY_URL),
+                progress,
+                error,
+                success);
     }
 
     @Override
-    public void removeBlockByUrl(String url, Response.Listener progress, Response.ErrorListener error, Response.Listener success) {
+    public void removeBlockByUrl(String url, final Response.Listener progress, final Response.ErrorListener error, final Response.Listener success) {
+        getUrlListBlocked(new Response.Listener<List<String>>() {
+            @Override
+            public void onResponse(List<String> urls) {
+                int number = -1;
+                int i = 0;
+                for (String url : urls) {
+                    if (url.equalsIgnoreCase(url)) {
+                        number = i;
+                        break;
+                    }
+                    i++;
+                }
+
+                if(number!=-1)
+                    setValueAndReconnect(String.valueOf(number),
+                            _routerConstants.get(eUrl.REMOVE_BLOCK_BY_URL),
+                            progress,
+                            error,
+                            success);
+            }
+        }, error);
+
+
 
     }
 
@@ -185,4 +208,27 @@ public class TPLink extends Router {
             }
         }, error);
     }
+
+    @Override
+    protected List<String> parseHtmlUrlListBlocked(String html){
+        List<String> list = new ArrayList<String>();
+
+        String url ;
+
+        //String[] splitted = html.split(Pattern.quote("1}-"));
+        String[] splitted = html.split("\n");
+
+        //RESTO UNO PORQUE SIEMPRE TRAE EL ULTIMO CON CERO
+        for (int i=0;i<splitted.length-1;i++){
+            url  = splitted[i].replace("\"", "").split(",")[3];
+
+            if(!url.isEmpty()){
+                list.add(url);
+            }
+
+        }
+
+        return list;
+    }
+
 }

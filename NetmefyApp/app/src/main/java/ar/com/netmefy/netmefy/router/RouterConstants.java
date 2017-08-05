@@ -134,6 +134,17 @@ public class RouterConstants {
         String URL_REMOVE_BLOCK_BY_MAC = "userRpm/WlanMacFilterRpm.htm?Del="+URL_REMOVE_BLOCK_BY_MAC_PARAM+"&Page=1";
         _urlRouters.put(eUrl.REMOVE_BLOCK_BY_MAC, UrlRouter.createWithReplace(URL_REMOVE_BLOCK_BY_MAC, "wlmacflt.cmd?action=view", URL_REMOVE_BLOCK_BY_MAC_PARAM));
 
+        String HTML_URL_BEGIN = "var access_targets_data_param = new Array(\n";
+        _urlRouters.put(eUrl.GET_URL_LIST_BLOCKED, UrlRouter.createWithFinder("userRpm/AccessCtrlAccessTargetsRpm.htm", "userRpm/MenuRpm.htm", HTML_URL_BEGIN, ",0 );", "ERROR GET_URL_LIST_BLOCKED"));
+
+        String URL_ADD_BLOCK_BY_URL_PARAM = "[_URL_]";
+        String URL_ADD_BLOCK_BY_URL = "userRpm/AccessCtrlAccessTargetsRpm.htm?target_type=0&targets_lists_name=NMF-"+URL_ADD_BLOCK_BY_URL_PARAM+"&dst_ip_start=&dst_ip_end=&dst_port_start=&dst_port_end=&proto=0&Commonport=0&url_0="+URL_ADD_BLOCK_BY_URL_PARAM+"&url_1=&url_2=&url_3=&Changed=0&SelIndex=0&fromAdd=0&Page=1&Save=Save";
+        _urlRouters.put(eUrl.ADD_BLOCK_BY_URL, UrlRouter.createWithReplace(URL_ADD_BLOCK_BY_URL, "userRpm/MenuRpm.htm", URL_ADD_BLOCK_BY_URL_PARAM));
+
+
+        String URL_REMOVE_BLOCK_BY_URL_PARAM = "[_URL_]";
+        String URL_REMOVE_BLOCK_BY_URL = "userRpm/AccessCtrlAccessTargetsRpm.htm?Del="+URL_REMOVE_BLOCK_BY_URL_PARAM+"&Page=1";
+        _urlRouters.put(eUrl.REMOVE_BLOCK_BY_URL, UrlRouter.createWithReplace(URL_REMOVE_BLOCK_BY_URL, "userRpm/MenuRpm.htm", URL_REMOVE_BLOCK_BY_URL_PARAM));
     }
 
     public UrlRouter get(eUrl eUrl){

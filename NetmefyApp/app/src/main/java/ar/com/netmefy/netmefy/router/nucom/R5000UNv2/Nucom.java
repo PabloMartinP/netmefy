@@ -107,21 +107,8 @@ public class Nucom extends Router {
         getSessionKey(eUrlSessionKey, new Response.Listener<String>() {
             @Override
             public void onResponse(String sessionKey) {
-
                 urlRouter.addSessionKey(sessionKey);
-
-
                 setValueAndReconnect(newValue, urlRouter, progresListener, errorListener, successListener);
-                /*setValue(newValue, urlRouter, new Response.Listener() {
-                    @Override
-                    public void onResponse(Object response) {
-                        Utils.connectToNetwork(
-                                _ssid,
-                                _context,
-                                progresListener, successListener);
-                        }
-                }, errorListener);*/
-
             }
         }, errorListener);
     }
@@ -329,23 +316,8 @@ public class Nucom extends Router {
     }
 
 
-    /*@Override
-    public void getMacListBlocked(final Response.Listener<List<Device>> listener, final Response.ErrorListener errorListener){
-        login(new Response.Listener() {
-            @Override
-            public void onResponse(Object response) {
-                getValueFromHtmlResponse(_routerConstants.get(eUrl.GET_MAC_LIST_BLOCKED), new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(final String htmlListBlocked) {
-                        listener.onResponse(parseHtmlMacListBlocked(htmlListBlocked));
-                    }
-                }, errorListener);
-            }
-        }, errorListener);
-
-    }*/
-
-    private List<String> parseHtmlUrlListBlocked(String html){
+    @Override
+    protected List<String> parseHtmlUrlListBlocked(String html){
         List<String> list = new ArrayList<String>();
 
         String BEGIN = "1}-{";
@@ -366,15 +338,8 @@ public class Nucom extends Router {
         return list;
     }
 
-    @Override
-    public void getUrlListBlocked(final Response.Listener<List<String>> success, Response.ErrorListener error) {
-        getValueFromHtmlResponse(_routerConstants.get(eUrl.GET_URL_LIST_BLOCKED), new Response.Listener<String>() {
-            @Override
-            public void onResponse(final String htmlListBlocked) {
-                success.onResponse(parseHtmlUrlListBlocked(htmlListBlocked));
-            }
-        }, error);
-    }
+
+
 
     @Override
     public void addBlockByUrl(String url, Response.Listener progress, Response.ErrorListener error, Response.Listener success) {

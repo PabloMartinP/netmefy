@@ -36,30 +36,6 @@ public class TestBlockByUrlActivity extends AppCompatActivity {
         router = Router.getInstance(getApplicationContext());
 
         showListBlocked();
-/*
-        router.getMacListBlocked(new Response.Listener() {
-            @Override
-            public void onResponse(Object response) {
-
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-
-            }
-        });*/
-/*
-        ((Nucom)router).removeAllBlocked(new Response.Listener() {
-            @Override
-            public void onResponse(Object response) {
-
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-
-            }
-        });*/
 
     }
 
