@@ -13,6 +13,7 @@ import java.util.List;
 import ar.com.netmefy.netmefy.router.nucom.R5000UNv2.Nucom;
 import ar.com.netmefy.netmefy.router.tplink.TLWR941ND.TPLink;
 import ar.com.netmefy.netmefy.services.Utils;
+import ar.com.netmefy.netmefy.services.WifiUtils;
 
 /**
  * Created by fiok on 24/06/2017.
@@ -91,7 +92,7 @@ public abstract class Router {
                 restart(new Response.Listener() {
                     @Override
                     public void onResponse(Object response) {
-                        Utils.connectToNetwork(ssidtoconnect, _context, listener, listenerSuccess);
+                        WifiUtils.connectToNetwork(ssidtoconnect, _context, listener, listenerSuccess);
                     }
                 }, new Response.ErrorListener() {
                     @Override
@@ -317,7 +318,7 @@ public abstract class Router {
         setValue(newValue, urlRouter, new Response.Listener() {
             @Override
             public void onResponse(Object response) {
-                Utils.connectToNetwork(
+                WifiUtils.connectToNetwork(
                         _ssid,
                         _context,
                         progress, success);
@@ -340,7 +341,7 @@ public abstract class Router {
     }
 
     public void saveWifiChanges(ConfigWifi configWifi ) {
-        Utils.addWifiConfig(configWifi.getSsid(), configWifi.getPassword(), _context);
+        WifiUtils.addWifiConfig(configWifi.getSsid(), configWifi.getPassword(), _context);
     }
 
     protected abstract List<String> parseHtmlUrlListBlocked(String html);

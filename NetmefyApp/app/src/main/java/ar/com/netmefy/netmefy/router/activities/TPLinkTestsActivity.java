@@ -59,6 +59,10 @@ public class TPLinkTestsActivity extends AppCompatActivity {
         startActivity(new Intent(TPLinkTestsActivity.this, TestBlockByUrlActivity.class));
     }
 
+    public void signalWifi(View v){
+        startActivity(new Intent(TPLinkTestsActivity.this, TestWifiSignalActivity.class));
+    }
+
     public void logout(View v){
         router.logout(new Response.Listener() {
             @Override

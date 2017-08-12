@@ -103,4 +103,15 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btnLogout" />
 
+    <Button
+        android:id="@+id/btnTestSignalWifi"
+        android:layout_width="368dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:onClick="signalWifi"
+        android:text="Signal Wifi"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnblockByUrl" />
+
 </android.support.constraint.ConstraintLayout>
