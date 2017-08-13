@@ -63,6 +63,12 @@ public class TPLinkTestsActivity extends AppCompatActivity {
         startActivity(new Intent(TPLinkTestsActivity.this, TestWifiSignalActivity.class));
     }
 
+    public void openTestSpeed(View v){
+        startActivity(new Intent(TPLinkTestsActivity.this, TestSpeedActivity.class));
+    }
+
+
+
     public void logout(View v){
         router.logout(new Response.Listener() {
             @Override

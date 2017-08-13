@@ -6,14 +6,27 @@ import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Build;
+import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.AppCompatActivity;
+import android.view.View;
+import android.view.ViewGroup;
+import android.webkit.JavascriptInterface;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.Button;
 
 import com.android.volley.Response;
 
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
 
 import ar.com.netmefy.netmefy.router.RestartTry;
+import ar.com.netmefy.netmefy.router.models.InternetSpeed;
 import ar.com.netmefy.netmefy.router.models.WifiSignalResult;
 
 /**
@@ -23,9 +36,119 @@ import ar.com.netmefy.netmefy.router.models.WifiSignalResult;
 public class WifiUtils {
 
 
+    public static void testDownloadSpeedWithFast(Context context, final AppCompatActivity appCompatActivity, final Response.Listener<InternetSpeed> progress, final Response.Listener<InternetSpeed> success){
+        final AtomicBoolean TERMINO;
+        final AtomicReference<String> speedUnitOk;
+        final AtomicReference<String> speedOk;
+
+        //////////////////////////////////
+        TERMINO = new AtomicBoolean(false);
+        speedUnitOk = new AtomicReference<String>("");
+        speedOk = new AtomicReference<String>("");
+        speedOk.set("0");
+        ///////////////////////////////
+        TERMINO.set(false);
+        speedOk.set("0");
+        speedUnitOk.set("");
+
+
+        class MyJavaScriptInterface
+        {
+            @JavascriptInterface
+            //@SuppressWarnings("unused")
+            public void processHTML(String html)
+            {
+                Document document = Jsoup.parse(html);
+                String speed, speedUnit;
+                speed = document.getElementById("speed-value").html();
+                speedUnit = document.getElementById("speed-units").html();
+
+                speedOk.set(speed);
+
+                if(speedUnit.equalsIgnoreCase("&nbsp;"))
+                    speedUnitOk.set("?bps");
+                else
+                    speedUnitOk.set(speedUnit);
+
+
+                //btnok.setText(speed + " " + speedUnit);
+
+                InternetSpeed internetSpeed = new InternetSpeed();
+                internetSpeed.set_speed(speedOk.get());
+                internetSpeed.set_unit(speedUnitOk.get());
+
+                if(document.getElementById("after-test-actions").getElementsByAttribute("style").size()==1){
+                    TERMINO.set(true);
+                    success.onResponse(internetSpeed);
+                    //btnok.setText(speed + " " + speedUnit + " OK");
+                }else{
+                    progress.onResponse(internetSpeed);
+                }
+            }
+        }
+
+
+        //final WebView browser = (WebView)findViewById(R.id.webview);
+        //final WebView browser = webView;
+        final WebView browser = new WebView(context);
+
+
+        /* JavaScript must be enabled if you want it to work, obviously */
+        browser.getSettings().setJavaScriptEnabled(true);
+
+        /* Register a new JavaScript interface called HTMLOUT */
+        browser.addJavascriptInterface(new MyJavaScriptInterface(), "HTMLOUT");
+
+        /* WebViewClient must be set BEFORE calling loadUrl! */
+        browser.setWebViewClient(new WebViewClient() {
+            @Override
+            public void onPageFinished(WebView view, String url)
+            {
+                final int DELAY_RESTART_SECS = 5;
+                final int DELAY_BETWEEN_INTENT_TO_RECONNCET_SECS = 2;
+                //btn.setText("HOA");
+                Timer timer = new Timer();
+                timer.schedule(new TimerTask()
+                {
+                    int i = 0;
+                    @Override
+                    public void run()
+                    {
+                        try{
+                            //InternetSpeed internetSpeed = new InternetSpeed();
+                            //internetSpeed.set_speed(Integer.valueOf(speedOk.get()));
+                            //internetSpeed.set_unit(speedUnitOk.get());
+
+                            if(TERMINO.get()) {
+                                //success.onResponse(internetSpeed);
+                                this.cancel();
+                            }
+                            else{
+                                appCompatActivity.runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        browser.loadUrl("javascript:window.HTMLOUT.processHTML('<head>'+document.getElementsByTagName('html')[0].innerHTML+'</head>');");
+                                    }
+                                });
+
+                                //progress.onResponse(internetSpeed);
+                            }
+                        }catch (Exception e){
+                            e.printStackTrace();
+                        }
+                        i++;
+                    }
+                }, DELAY_RESTART_SECS*1000, DELAY_BETWEEN_INTENT_TO_RECONNCET_SECS*1000);
+
+            }
+        });
+
+        browser.loadUrl("https://fast.com/es/");
+    }
+
     public static void checkSignal(final Context context, final Response.Listener<WifiSignalResult> success){
         final int DELAY_SECS = 0;
-        final int DELAY_BETWEEN_INTENT_SECS = 3;
+        final int DELAY_BETWEEN_INTENT_SECS = 2;
         final WifiSignalResult result   =new WifiSignalResult();
         final int numberOfLevels = 5;
         Timer timer = new Timer();
@@ -37,9 +160,9 @@ public class WifiUtils {
                 WifiManager wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
 
                 final WifiInfo wifiInfo = wifiManager.getConnectionInfo();
-
-                int level = WifiManager.calculateSignalLevel(wifiInfo.getRssi(), numberOfLevels);
-                result.newIntent(level);
+                int rssi = wifiInfo.getRssi();
+                int level = WifiManager.calculateSignalLevel(rssi, numberOfLevels);
+                result.newIntent(level, rssi);
                 success.onResponse( result);
             }
         }, DELAY_SECS*1000, DELAY_BETWEEN_INTENT_SECS*1000);

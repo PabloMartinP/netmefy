@@ -114,4 +114,15 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btnblockByUrl" />
 
+    <Button
+        android:id="@+id/btnOpenTestSpeed"
+        android:layout_width="368dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:onClick="openTestSpeed"
+        android:text="Speed Test"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnTestSignalWifi" />
+
 </android.support.constraint.ConstraintLayout>

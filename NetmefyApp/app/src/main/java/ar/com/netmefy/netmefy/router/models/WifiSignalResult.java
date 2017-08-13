@@ -7,20 +7,31 @@ package ar.com.netmefy.netmefy.router.models;
 public class WifiSignalResult {
     private int _signal;
     private int _numberIntent;
+    private int _rssi;
 
     public WifiSignalResult(){
         set_signal(0);
         set_numberIntent(0);
+
     }
 
-    public void newIntent(int signal){
+    public int get_rssi() {
+        return _rssi;
+    }
+
+    public void set_rssi(int _rssi) {
+        this._rssi = _rssi;
+    }
+
+    public void newIntent(int signal, int rssi){
         set_signal(signal);
+        set_rssi(rssi);
         set_numberIntent(get_numberIntent() + 1);
     }
 
     @Override
     public String toString(){
-        return "intent n°" + String.valueOf(get_numberIntent()) + ", Value: " + String.valueOf(get_signal());
+        return "N°" + String.valueOf(get_numberIntent()) + ", Level:" + String.valueOf(get_signal()) + ", dBm:"+String.valueOf(get_rssi());
     }
 
     public int get_signal() {

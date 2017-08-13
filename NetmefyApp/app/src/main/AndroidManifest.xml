@@ -67,7 +67,8 @@
         <activity android:name=".MainGoogleActivity" />
         <activity android:name=".router.activities.TestBlockByMacActivity" />
         <activity android:name=".router.activities.TestBlockByUrlActivity" />
-        <activity android:name=".router.activities.TestWifiSignalActivity"></activity>
+        <activity android:name=".router.activities.TestWifiSignalActivity" />
+        <activity android:name=".router.activities.TestSpeedActivity"></activity>
     </application>
 
 </manifest>
