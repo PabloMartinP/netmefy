@@ -39,24 +39,14 @@ public class TPLink extends Router {
 
     /*
     * los tplink no necesitan login por eso nohace nada este metodo*/
-    public void login(final Response.Listener listener, final Response.ErrorListener errorListener){
+    /*public void login(final Response.Listener listener, final Response.ErrorListener errorListener){
         listener.onResponse("");
-    }
+    }*/
 
 
     @Override
     public String getName(){
         return "TPLink(inPark) TL-WR941ND";
-    }
-
-    @Override
-    public void restart(final Response.Listener listener, final Response.ErrorListener errorListener) {
-        StringRequestRouter sr = new StringRequestRouter(
-                _routerConstants.get(eUrl.RESTART),
-                listener,
-                errorListener);
-
-        execute(sr);
     }
 
     @Override

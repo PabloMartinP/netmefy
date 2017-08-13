@@ -37,71 +37,58 @@ public class Nucom extends Router {
         _routerConstants = new RouterConstants(RouterConstants.eRouter.Nucom);
     }
 
+    /*@Override
+    public void execute(StringRequest stringRequest){
+        _queue.add(stringRequest);
+    }*/
+
     @Override
     public StringRequest newStringRequest(UrlRouter urlRouter, Response.Listener listener, Response.ErrorListener errorListener) {
         return new StringRequestRouterNucom(urlRouter, listener, errorListener);
     }
 
-    private void getSessionKey(eUrl eUrl, final Response.Listener<String> listener, final Response.ErrorListener errorListener) {
-        getValueFromHtmlResponse(_routerConstants.get(eUrl),
-                new Response.Listener<String>() {
+    private void getSessionKey(final eUrl eUrl, final Response.Listener<String> listener, final Response.ErrorListener errorListener) {
+        getWifiSsid(new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                getValueFromHtmlResponse(_routerConstants.get(eUrl),new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
                         if(Utils.isNumeric(response))
                             listener.onResponse(response);
                         else
                             errorListener.onErrorResponse(new VolleyError(response));
-
                     }
                 }, errorListener);
+            }
+        }, errorListener);
+    }
+
+    /*
+    * EN ESTE MTODO COMO YA ESTA LOGEADO NO VUELVE A LOGEAR
+    * */
+    protected void executeRequestWithSessionKey(eUrl eUrl, String sessionKey, Response.Listener<String> listener, Response.ErrorListener errorListener){
+        UrlRouter urlRouter = _routerConstants.get(eUrl);
+        urlRouter.addSessionKey(sessionKey);
+        //no llamo a executeRequest para que no valide si ya logueo o no
+        // porque si estoy llamando a este metodo es que ya estoy logeado
+        execute(newStringRequest(urlRouter, listener, errorListener));
     }
 
     @Override
     public void restart(final Response.Listener listener, final Response.ErrorListener errorListener) {
-
         getSessionKey(eUrl.RESTART_TO_GET_SESSIONKEY,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String sessionKey) {
-                        final UrlRouter urlRestart;
-                        urlRestart = _routerConstants.get(eUrl.RESTART);
-                        urlRestart.addSessionKey(sessionKey);
-                        executeRequest(urlRestart, listener, errorListener);
+                        executeRequestWithSessionKey(eUrl.RESTART, sessionKey, listener, errorListener);
                     }
                 }, errorListener);
     }
 
-
-    @Override
-    protected void login(final Response.Listener listener,final Response.ErrorListener errorListener){
-        executeRequest(_routerConstants.get(eUrl.LOGIN), new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                if(!response.contains("Other user logined") && !response.contains("/login."))
-                    listener.onResponse(response);
-                else{
-                    errorListener.onErrorResponse(new VolleyError("Error - usuario ya logueado"));
-                }
-
-            }
-        }, errorListener);
-    }
-
     public void logout(final Response.Listener listener,final Response.ErrorListener errorListener){
-
         executeRequest(_routerConstants.get(eUrl.LOGOUT), listener, errorListener);
     }
-
-    @Override
-    public void getConfigWifi(final Response.Listener listener, final Response.ErrorListener errorListener) {
-        login(new Response.Listener() {
-            @Override
-            public void onResponse(Object response) {
-                Nucom.super.getConfigWifi(listener, errorListener);
-            }
-        }, errorListener);
-    }
-
 
     protected void setValueWithSessionKeyAndReconnect(final String newValue, eUrl eUrlSessionKey, final UrlRouter urlRouter, final Response.Listener progresListener, final Response.ErrorListener errorListener, final Response.Listener successListener){
         getSessionKey(eUrlSessionKey, new Response.Listener<String>() {
@@ -283,17 +270,6 @@ public class Nucom extends Router {
         return listDevice;
     }
 
-    public void listDevicesConnected(final Response.Listener listener, final Response.ErrorListener errorListener) {
-
-        login(new Response.Listener() {
-            @Override
-            public void onResponse(Object response) {
-                Nucom.super.listDevicesConnected(listener, errorListener);
-            }
-        }, errorListener);
-
-    }
-
     @Override
     protected List<Device> parseHtmlMacListBlocked(String html){
         Device device ;
@@ -337,9 +313,6 @@ public class Nucom extends Router {
 
         return list;
     }
-
-
-
 
     @Override
     public void addBlockByUrl(String url, Response.Listener progress, Response.ErrorListener error, Response.Listener success) {

@@ -21,6 +21,7 @@ import ar.com.netmefy.netmefy.services.WifiUtils;
 
 public abstract class Router {
 
+
     protected RouterConstants _routerConstants;
     protected  Context _context;
     protected RequestQueue _queue ;
@@ -29,6 +30,7 @@ public abstract class Router {
 
     private static RouterConstants.eRouter type = RouterConstants.eRouter.none;
     private static Router _router = null;
+    private static boolean _requiereLogin = false;
 
     public static Router getInstance(Context context){
         if(_router == null ){
@@ -55,7 +57,8 @@ public abstract class Router {
     * */
     public static void createNucom(){
         type = RouterConstants.eRouter.Nucom;
-        _router = null  ;
+        _router = null;
+        _requiereLogin = true;
     }
 
     /*
@@ -63,7 +66,8 @@ public abstract class Router {
     * */
     public static void createTPLink(){
         type = RouterConstants.eRouter.TPLink;
-        _router = null  ;
+        _router = null;
+        _requiereLogin = false;
     }
 
     public void set_context(Context context){
@@ -71,11 +75,14 @@ public abstract class Router {
     }
 
     public void execute(StringRequest stringRequest){
+
         _queue.add(stringRequest);
     }
 
 
-    public  abstract void restart(Response.Listener listener, Response.ErrorListener errorListener);
+    public void restart(Response.Listener listener, Response.ErrorListener errorListener){
+        executeRequest(_routerConstants.get(eUrl.RESTART), listener, errorListener);
+    }
 
 
     public void restartAndWaitUntilConnected(final Response.Listener listener, final Response.ErrorListener errorListener, final Response.Listener listenerSuccess) {
@@ -83,11 +90,9 @@ public abstract class Router {
         // para que al reconectar sepa a que ssid tengo que conectarme
         //esto es porque los cells por default al perder conexion con un AP
         //se conectan a otro que tenga configurado y este al alcance
-
         getWifiSsid(new Response.Listener<String>() {
             @Override
             public void onResponse(String ssid) {
-
                 final String ssidtoconnect = ssid;
                 restart(new Response.Listener() {
                     @Override
@@ -100,7 +105,6 @@ public abstract class Router {
                         errorListener.onErrorResponse(error);
                     }
                 });
-
             }
         }, new Response.ErrorListener() {
             @Override
@@ -114,88 +118,44 @@ public abstract class Router {
                                Response.Listener listener,
                                Response.ErrorListener errorListener);
 
-    protected abstract void login(final Response.Listener<String> listener, final Response.ErrorListener errorListener);
-
-
     public void getWifiSsid(final Response.Listener<String> listener, final Response.ErrorListener errorListener){
-
         if(_ssid.isEmpty()){
-            login(new Response.Listener<String>() {
+            getValueFromHtmlResponse(_routerConstants.get(eUrl.WIFI_GET_SSID), new Response.Listener() {
                 @Override
-                public void onResponse(String response) {
-                    if(!response.contains("Other user logined"))
-                        getValueFromHtmlResponse(_routerConstants.get(eUrl.WIFI_GET_SSID), new Response.Listener() {
-                            @Override
-                            public void onResponse(Object response) {
-                                _ssid = response.toString();
-                                listener.onResponse(_ssid);
-                            }
-                        }, errorListener);
-                    else{
-                        errorListener.onErrorResponse(new VolleyError("Error - usuario ya logueado"));
-                    }
-
+                public void onResponse(Object response) {
+                    _ssid = response.toString();
+                    listener.onResponse(_ssid);
                 }
-            }, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    errorListener.onErrorResponse(error);
-                }
-            });
+            }, errorListener);
         }else{
             listener.onResponse(_ssid);
         }
-
-
     }
 
 
     protected void getValueFromHtmlResponse(final UrlRouter urlRouter,final Response.Listener listener, final Response.ErrorListener errorListener) {
-        StringRequest stringRequest = newStringRequest(
-                urlRouter,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String result) {
-                        String value= Utils.getTextBetween(result, urlRouter.get_htmlBefore(), urlRouter.get_htmlAfter(), urlRouter.get_textOnError());
-                        listener.onResponse(value);
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        errorListener.onErrorResponse(error);
-                    }
-                });
-        execute(stringRequest);
-
-    }
-
-    public void getWifiPassword(final Response.Listener listener, final Response.ErrorListener errorListener) {
-        //final UrlRouter constants = _routerConstants.get(eUrl.WIFI_GET_PASSWORD);
-        login(new Response.Listener<String>() {
+        executeRequest(urlRouter, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                getValueFromHtmlResponse(_routerConstants.get(eUrl.WIFI_GET_PASSWORD), listener, errorListener);
+                String value= Utils.getTextBetween(response, urlRouter.get_htmlBefore(), urlRouter.get_htmlAfter(), urlRouter.get_textOnError());
+                listener.onResponse(value);
             }
         }, errorListener);
     }
 
+    public void getWifiPassword(final Response.Listener listener, final Response.ErrorListener errorListener) {
+        //final UrlRouter constants = _routerConstants.get(eUrl.WIFI_GET_PASSWORD);
+        getValueFromHtmlResponse(_routerConstants.get(eUrl.WIFI_GET_PASSWORD), listener, errorListener);
+    }
+
     protected void setValue(String newValue, final UrlRouter urlRouter, final Response.Listener listener, final Response.ErrorListener errorListener){
         urlRouter.set_newValue(newValue);
-        StringRequest stringRequest = newStringRequest(
-                urlRouter,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String result) {
-                        listener.onResponse("ok-"+result);
-                    }
-                }, new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        errorListener.onErrorResponse(error);
-                    }
-                });
-        execute(stringRequest);
+        executeRequest(urlRouter, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                listener.onResponse("ok-"+response);
+            }
+        }, errorListener);
     }
 
 
@@ -228,51 +188,55 @@ public abstract class Router {
             public void onResponse(String ssid) {
                 final ConfigWifi configWifi = new ConfigWifi(ssid, newPassword);
                 saveWifiChanges(configWifi);
-                //listener.onResponse("ok");
-                _setWifiPassword(newPassword,
-                        progressListener, errorListener, successListener );
-
-                //listener.onResponse(ssid);
+                _setWifiPassword(newPassword, progressListener, errorListener, successListener );
             }
         }, errorListener);
-
     }
-
-
-    //public abstract void setConfigWifiAndRestart(ConfigWifi configWifi, Response.Listener listener, Response.ErrorListener errorListener) ;
-    //public abstract void setConfigWifi(ConfigWifi configWifi, Response.Listener listener, Response.ErrorListener errorListener);
-
 
     protected abstract List<Device> parseHtmlListDevices(String html);
 
-    protected void executeRequest(UrlRouter urlRouter, final Response.Listener listener, Response.ErrorListener errorListener ) {
-        StringRequest stringRequest = newStringRequest(urlRouter, listener, errorListener);
-        execute(stringRequest);
-    }
-    public void listDevicesConnected(final Response.Listener listener, Response.ErrorListener errorListener ) {
+    protected void executeRequest(final UrlRouter urlRouter, final Response.Listener<String> listener, final Response.ErrorListener errorListener ) {
 
-    /*
-    * ESTE TPLINK AL PARECER ACUMULA LA LISTA DE LOS DHCP,
-    * Y CUANDO SE DESCONECTA UNO NO LO LIMPIA DE LA LISTA,
-    * ASI QUE MUESTRA ALGUNOS DEVICES QUE YA SE DESCONECTARON
-    * POR AHORA LA SOLUCION SERIA RESTART
-    * */
-        final UrlRouter constants = _routerConstants.get(eUrl.LIST_CONNECTED);
-        StringRequest stringRequest = newStringRequest(
-                constants,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        //String result = response.toString();
-                        //ResponseTPLink.setListDevices(result);
-                        List<Device> list = parseHtmlListDevices(response);
-                        //listener.onResponse(ResponseTPLink.getListDevices());
-                        listener.onResponse(list);
+        if(_requiereLogin){
+            execute(newStringRequest(urlRouter, new Response.Listener<String>() {
+                @Override
+                public void onResponse(final String response) {
+                    if(!response.contains("Login time out, please login again!") && !response.contains("parent.location='http://192.168.1.1/login.html'")) {
+                        listener.onResponse(response);
                     }
-                },
-                errorListener);
+                    else{
+                        StringRequest srLogin ;
+                        srLogin = newStringRequest(_routerConstants.get(eUrl.LOGIN), new Response.Listener() {
+                            @Override
+                            public void onResponse(Object response) {
+                                //_needLogin = false;
+                                StringRequest stringRequest = newStringRequest(urlRouter, listener, errorListener);
+                                execute(stringRequest);
+                            }
+                        }, errorListener);
+                        execute(srLogin);
+                    }
+                }
+            }, errorListener));
+        }else{
+            execute(newStringRequest(urlRouter, listener, errorListener));
+        }
+    }
 
-        execute(stringRequest);
+    public void listDevicesConnected(final Response.Listener listener, Response.ErrorListener errorListener ) {
+        /*
+        * ESTE TPLINK AL PARECER ACUMULA LA LISTA DE LOS DHCP,
+        * Y CUANDO SE DESCONECTA UNO NO LO LIMPIA DE LA LISTA,
+        * ASI QUE MUESTRA ALGUNOS DEVICES QUE YA SE DESCONECTARON
+        * POR AHORA LA SOLUCION SERIA RESTART
+        * */
+        executeRequest(_routerConstants.get(eUrl.LIST_CONNECTED), new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                List<Device> list = parseHtmlListDevices(response);
+                listener.onResponse(list);
+            }
+        }, errorListener);
     }
 
     public void getConfigWifi(final Response.Listener listener, final Response.ErrorListener errorListener) {
@@ -314,7 +278,7 @@ public abstract class Router {
     public abstract void removeBlockByMac(final String mac, final Response.Listener progressListener, final Response.ErrorListener errorListener, final Response.Listener successListener);
 
     protected abstract List<Device> parseHtmlMacListBlocked(String html);
-    protected void setValueAndReconnect(String newValue, UrlRouter urlRouter, final Response.Listener progress, final Response.ErrorListener error, final Response.Listener success){
+    protected void setValueAndReconnect(final String newValue, final UrlRouter urlRouter, final Response.Listener progress, final Response.ErrorListener error, final Response.Listener success){
         setValue(newValue, urlRouter, new Response.Listener() {
             @Override
             public void onResponse(Object response) {
@@ -327,15 +291,10 @@ public abstract class Router {
     }
 
     public void getMacListBlocked(final Response.Listener<List<Device>> success, final Response.ErrorListener error){
-        login(new Response.Listener() {
+        getValueFromHtmlResponse(_routerConstants.get(eUrl.GET_MAC_LIST_BLOCKED), new Response.Listener<String>() {
             @Override
-            public void onResponse(Object response) {
-                getValueFromHtmlResponse(_routerConstants.get(eUrl.GET_MAC_LIST_BLOCKED), new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(final String htmlListBlocked) {
-                        success.onResponse(parseHtmlMacListBlocked(htmlListBlocked));
-                    }
-                }, error);
+            public void onResponse(final String htmlListBlocked) {
+                success.onResponse(parseHtmlMacListBlocked(htmlListBlocked));
             }
         }, error);
     }
