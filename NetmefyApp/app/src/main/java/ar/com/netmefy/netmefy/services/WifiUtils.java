@@ -20,6 +20,9 @@ import com.android.volley.Response;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -35,6 +38,28 @@ import ar.com.netmefy.netmefy.router.models.WifiSignalResult;
 
 public class WifiUtils {
 
+    public static String ping(String url, int count) {
+        String str = "";
+        try {
+            Process process = Runtime.getRuntime().exec(
+                    "/system/bin/ping -c "+String.valueOf(count)+" " + url);
+            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+            int i;
+            char[] buffer = new char[4096];
+            StringBuffer output = new StringBuffer();
+            while ((i = reader.read(buffer)) > 0)
+                output.append(buffer, 0, i);
+            reader.close();
+
+            // body.append(output.toString()+"\n");
+            str = output.toString();
+            // Log.d(TAG, str);
+        } catch (IOException e) {
+            // body.append("Error\n");
+            e.printStackTrace();
+        }
+        return str;
+    }
 
     public static void testDownloadSpeedWithFast(Context context, final AppCompatActivity appCompatActivity, final Response.Listener<InternetSpeed> progress, final Response.Listener<InternetSpeed> success){
         final AtomicBoolean TERMINO;

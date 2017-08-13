@@ -9,12 +9,16 @@ import android.webkit.JavascriptInterface;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
+import android.widget.EditText;
 
 import com.android.volley.Response;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
@@ -114,6 +118,7 @@ public class TestSpeedActivity extends AppCompatActivity {
     }
     ////////////////////////////////////////////////////////////////////////////
     Button btnUp, btnDown;
+    EditText etResultPing ;
     //WebView webView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -123,7 +128,7 @@ public class TestSpeedActivity extends AppCompatActivity {
         btnUp = (Button)findViewById(R.id.btnTestSpeedUpload);
         btnDown  =(Button) findViewById(R.id.btnTestSpeedDownload);
         //webView = (WebView)findViewById(R.id.wvTestSpeed);
-
+        etResultPing = (EditText) findViewById(R.id.etTestPingResult);
     }
 
     public void testDownload(View v){
@@ -172,6 +177,18 @@ public class TestSpeedActivity extends AppCompatActivity {
     public void testUpload(View v){
 
     }
+
+    public void testPing(View v){
+
+        etResultPing.setText("Ping ...");
+
+        for(int i =0;i<1;i++);{
+            etResultPing.append("\n" + WifiUtils.ping("www.google.com.ar", 4));
+        }
+        etResultPing.append("\nFIN" );
+    }
+
+
 
     ///////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////

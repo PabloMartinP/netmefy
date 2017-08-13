@@ -30,6 +30,33 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btnTestSpeedDownload" />
 
+    <Button
+        android:id="@+id/btnTestPingOk"
+        android:layout_width="368dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:onClick="testPing"
+        android:text="Test Ping"
+        app:layout_constraintTop_toBottomOf="@+id/btnTestSpeedUpload"
+        tools:layout_editor_absoluteX="8dp" />
+
+    <EditText
+        android:id="@+id/etTestPingResult"
+        android:layout_width="355dp"
+        android:layout_height="248dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="8dp"
+        android:ems="10"
+        android:inputType="textMultiLine"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnTestPingOk"
+        tools:layout_editor_absoluteX="10dp"
+        tools:layout_editor_absoluteY="199dp" />
+
     <!--<WebView
         android:id="@+id/wvTestSpeed"
         android:layout_width="389dp"
