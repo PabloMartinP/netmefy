@@ -47,5 +47,13 @@
     <string name="router_yellow">router yellow</string>
     <string name="router_green">router green</string>
     <string name="router_red">router red</string>
+    <string name="buscar">Buscar</string>
+    <string name="info">Info.</string>
+    <string name="guardar">Guardar</string>
+    <string name="cargar">Cargar</string>
+    <string name="reset">Reset</string>
+    <string name="download">download</string>
+    <string name="save">save</string>
+    <string name="search">search</string>
 
 </resources>

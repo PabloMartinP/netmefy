@@ -10,7 +10,8 @@
         android:layout_width="match_parent"
         android:layout_height="0dip"
         android:layout_weight="6"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:baselineAligned="false">
 
         <android.support.constraint.ConstraintLayout
             android:layout_width="0dip"
@@ -231,7 +232,8 @@
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/logout_128" />
+                app:srcCompat="@drawable/logout_128"
+                android:contentDescription="@string/logout" />
 
         </android.support.constraint.ConstraintLayout>
 
@@ -266,7 +268,8 @@
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/reset_128" />
+                app:srcCompat="@drawable/reset_128"
+                android:contentDescription="@string/reset" />
 
             <ImageButton
                 android:id="@+id/ib_load"
@@ -282,7 +285,8 @@
                 app:layout_constraintLeft_toRightOf="@+id/ib_save"
                 app:layout_constraintRight_toLeftOf="@+id/ib_reset"
                 app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/download_128" />
+                app:srcCompat="@drawable/download_128"
+                android:contentDescription="@string/download" />
 
             <ImageButton
                 android:id="@+id/ib_save"
@@ -298,7 +302,8 @@
                 app:layout_constraintLeft_toRightOf="@+id/ib_info"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/save_128" />
+                app:srcCompat="@drawable/save_128"
+                android:contentDescription="@string/save" />
 
             <ImageButton
                 android:id="@+id/ib_info"
@@ -314,7 +319,8 @@
                 app:layout_constraintLeft_toRightOf="@+id/imageButton7"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/info_128" />
+                app:srcCompat="@drawable/info_128"
+                android:contentDescription="@string/info" />
 
             <ImageButton
                 android:id="@+id/imageButton7"
@@ -330,7 +336,8 @@
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/search_128" />
+                app:srcCompat="@drawable/search_128"
+                android:contentDescription="@string/search" />
 
             <TextView
                 android:id="@+id/textView18"
@@ -340,7 +347,7 @@
                 android:layout_marginLeft="8dp"
                 android:layout_marginRight="8dp"
                 android:layout_marginTop="8dp"
-                android:text="Reset"
+                android:text="@string/reset"
                 android:textColor="@android:color/background_light"
                 android:textSize="12sp"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -358,7 +365,7 @@
                 android:layout_marginLeft="8dp"
                 android:layout_marginRight="8dp"
                 android:layout_marginTop="8dp"
-                android:text="Cargar"
+                android:text="@string/cargar"
                 android:textColor="@android:color/background_light"
                 android:textSize="12sp"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -376,7 +383,7 @@
                 android:layout_marginLeft="8dp"
                 android:layout_marginRight="8dp"
                 android:layout_marginTop="8dp"
-                android:text="Guardar"
+                android:text="@string/guardar"
                 android:textColor="@android:color/background_light"
                 android:textSize="12sp"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -394,7 +401,7 @@
                 android:layout_marginLeft="8dp"
                 android:layout_marginRight="8dp"
                 android:layout_marginTop="8dp"
-                android:text="Info."
+                android:text="@string/info"
                 android:textColor="@android:color/background_light"
                 android:textSize="12sp"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -412,7 +419,7 @@
                 android:layout_marginLeft="8dp"
                 android:layout_marginRight="8dp"
                 android:layout_marginTop="8dp"
-                android:text="Buscar"
+                android:text="@string/buscar"
                 android:textColor="@android:color/background_light"
                 android:textSize="12sp"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -443,7 +450,8 @@
         android:layout_width="match_parent"
         android:layout_height="0dip"
         android:layout_weight="2"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:baselineAligned="false">
 
         <android.support.constraint.ConstraintLayout
             android:layout_width="0dip"
@@ -462,7 +470,8 @@
         android:layout_width="match_parent"
         android:layout_height="0dip"
         android:layout_weight="5"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:baselineAligned="false">
 
         <android.support.constraint.ConstraintLayout
             android:layout_width="0dip"
@@ -485,7 +494,7 @@
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/lock_128" />
+                app:srcCompat="@drawable/lock_5_128" />
 
             <TextView
                 android:id="@+id/textView1"
@@ -598,7 +607,7 @@
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/message_128" />
+                app:srcCompat="@drawable/message_2_128" />
 
             <TextView
                 android:id="@+id/textView3"
