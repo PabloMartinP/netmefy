@@ -3,6 +3,7 @@ package ar.com.netmefy.netmefy;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ImageButton;
 
@@ -29,7 +30,8 @@ import ar.com.netmefy.netmefy.login.UserIdActivity;
 import ar.com.netmefy.netmefy.services.login.LikesToFacebook;
 import ar.com.netmefy.netmefy.services.login.Session;
 
-public class MainActivity extends Activity {
+//public class MainActivity extends Activity {
+public class MainActivity extends AppCompatActivity {
 
     private ImageButton logout;
     private Session session;
