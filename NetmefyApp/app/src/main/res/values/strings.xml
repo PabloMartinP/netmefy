@@ -41,5 +41,11 @@
     <string name="comprobar_servicio">Comprobar Servicio</string>
     <string name="reclamos_y_solicitudes">Reclamos y Solicitudes</string>
     <string name="avisos_y_promociones">Avisos y Promociones</string>
+    <string name="nombre_de_wi_fi">Nombre de WI-FI:</string>
+    <string name="clave">Clave:</string>
+    <string name="router_white">router white</string>
+    <string name="router_yellow">router yellow</string>
+    <string name="router_green">router green</string>
+    <string name="router_red">router red</string>
 
 </resources>
