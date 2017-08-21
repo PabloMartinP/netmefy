@@ -39,7 +39,7 @@
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_bias="0.437"
-                app:srcCompat="@drawable/router_2_128_white" />
+                android:src="@drawable/router_2_128_white" />
             <ImageView
                 android:id="@+id/iv_router_yellow"
                 android:layout_width="80dp"
@@ -55,7 +55,7 @@
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_bias="0.457"
-                app:srcCompat="@drawable/router_2_128_orange"
+                android:src="@drawable/router_2_128_orange"
                 tools:layout_editor_absoluteX="115dp"
                 android:contentDescription="@string/router_yellow" />
             <ImageView
@@ -73,7 +73,7 @@
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_bias="0.457"
-                app:srcCompat="@drawable/router_2_128_green"
+                android:src="@drawable/router_2_128_green"
                 tools:layout_editor_absoluteX="115dp"
                 android:contentDescription="@string/router_green" />
             <ImageView
@@ -91,7 +91,7 @@
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_bias="0.457"
-                app:srcCompat="@drawable/router_2_128_red"
+                android:src="@drawable/router_2_128_red"
                 tools:layout_editor_absoluteX="115dp"
                 android:contentDescription="@string/router_red" />
 
@@ -162,17 +162,14 @@
                 android:id="@+id/ib_change_wifi_password"
                 android:layout_width="35dp"
                 android:layout_height="35dp"
-                android:layout_marginBottom="9dp"
-                android:layout_marginLeft="0dp"
-                android:layout_marginTop="8dp"
+                android:layout_marginLeft="-8dp"
+                android:layout_marginTop="124dp"
                 android:background="@android:color/transparent"
                 android:scaleType="fitXY"
                 android:visibility="visible"
-                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toRightOf="@+id/et_wifi_password"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="1.0"
-                app:srcCompat="@drawable/ok_128" />
+                android:src="@drawable/ok_128" />
 
             <ImageButton
                 android:id="@+id/ib_change_wifi_name"
@@ -185,7 +182,7 @@
                 android:visibility="visible"
                 app:layout_constraintLeft_toRightOf="@+id/et_wifi_name"
                 app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/ok_128" />
+                android:src="@drawable/ok_128" />
 
             <TextView
                 android:id="@+id/tv_user_number"
@@ -232,7 +229,7 @@
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/logout_128"
+                android:src="@drawable/logout_128"
                 android:contentDescription="@string/logout" />
 
         </android.support.constraint.ConstraintLayout>
@@ -268,7 +265,7 @@
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/reset_128"
+                android:src="@drawable/reset_128"
                 android:contentDescription="@string/reset" />
 
             <ImageButton
@@ -285,7 +282,7 @@
                 app:layout_constraintLeft_toRightOf="@+id/ib_save"
                 app:layout_constraintRight_toLeftOf="@+id/ib_reset"
                 app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/download_128"
+                android:src="@drawable/download_128"
                 android:contentDescription="@string/download" />
 
             <ImageButton
@@ -302,7 +299,7 @@
                 app:layout_constraintLeft_toRightOf="@+id/ib_info"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/save_128"
+                android:src="@drawable/save_128"
                 android:contentDescription="@string/save" />
 
             <ImageButton
@@ -319,7 +316,7 @@
                 app:layout_constraintLeft_toRightOf="@+id/imageButton7"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/info_128"
+                android:src="@drawable/info_128"
                 android:contentDescription="@string/info" />
 
             <ImageButton
@@ -336,7 +333,7 @@
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/search_128"
+                android:src="@drawable/search_128"
                 android:contentDescription="@string/search" />
 
             <TextView
@@ -494,7 +491,7 @@
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/lock_5_128" />
+                android:src="@drawable/lock_5_128" />
 
             <TextView
                 android:id="@+id/textView1"
@@ -547,7 +544,7 @@
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/wrench_128" />
+                android:src="@drawable/wrench_128" />
 
             <TextView
                 android:id="@+id/textView2"
@@ -607,7 +604,7 @@
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/message_2_128" />
+                android:src="@drawable/message_2_128" />
 
             <TextView
                 android:id="@+id/textView3"
@@ -661,7 +658,7 @@
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/stack_128" />
+                android:src="@drawable/stack_128" />
 
             <TextView
                 android:id="@+id/textView4"
