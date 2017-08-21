@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "550641390483",
+    "firebase_url": "https://netmefy-e4ba8.firebaseio.com",
+    "project_id": "netmefy-e4ba8",
+    "storage_bucket": "netmefy-e4ba8.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:550641390483:android:c12c8c59b1ddf3d4",
+        "android_client_info": {
+          "package_name": "ar.com.netmefy.netmefy"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "550641390483-46jl0vme0m11qbl2dpr32jcfoq8msh0b.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA60gjIQvzK6_MBxCAaQYiVi5cVwkPOM50"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
