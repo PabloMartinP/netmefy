@@ -14,9 +14,8 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
-
-
+        android:theme="@style/AppTheme"
+        android:name=".services.App">
 
         <activity
             android:name=".SplashScreen"
@@ -67,7 +66,6 @@
         <activity android:name=".router.activities.RestartActivity" />
         <activity android:name=".router.activities.DevicesConnectedActivity" />
         <activity android:name=".router.activities.ChangeWifiActivity" />
-        <activity android:name=".MainGoogleActivity" />
         <activity android:name=".router.activities.TestBlockByMacActivity" />
         <activity android:name=".router.activities.TestBlockByUrlActivity" />
         <activity android:name=".router.activities.TestWifiSignalActivity" />

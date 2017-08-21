@@ -30,12 +30,12 @@
         android:layout_width="368dp"
         android:layout_height="30dp"
         android:layout_marginBottom="8dp"
-        app:layout_constraintBottom_toTopOf="@+id/btnDevicesConnected"
-        app:layout_constraintTop_toTopOf="parent"
+        App:layout_constraintBottom_toTopOf="@+id/btnDevicesConnected"
+        App:layout_constraintTop_toTopOf="parent"
         android:layout_marginTop="8dp"
-        app:layout_constraintVertical_bias="0.017"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent" />
+        App:layout_constraintVertical_bias="0.017"
+        App:layout_constraintLeft_toLeftOf="parent"
+        App:layout_constraintRight_toRightOf="parent" />
 -->
 
 

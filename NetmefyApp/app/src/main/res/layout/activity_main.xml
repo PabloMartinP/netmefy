@@ -10,7 +10,8 @@
         android:layout_width="match_parent"
         android:layout_height="0dip"
         android:layout_weight="6"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:baselineAligned="false">
 
         <android.support.constraint.ConstraintLayout
             android:layout_width="0dip"
@@ -30,14 +31,15 @@
                 android:layout_marginLeft="8dp"
                 android:layout_marginRight="8dp"
                 android:layout_marginTop="16dp"
+                android:contentDescription="@string/router_white"
+                android:visibility="visible"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintHorizontal_bias="0.625"
+                app:layout_constraintHorizontal_bias="0.604"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_bias="0.437"
-                app:srcCompat="@drawable/router_2_128_white"
-                android:contentDescription="@string/router_white" />
+                app:srcCompat="@drawable/router_2_128_white" />
             <ImageView
                 android:id="@+id/iv_router_yellow"
                 android:layout_width="80dp"
@@ -165,6 +167,7 @@
                 android:layout_marginTop="8dp"
                 android:background="@android:color/transparent"
                 android:scaleType="fitXY"
+                android:visibility="visible"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toRightOf="@+id/et_wifi_password"
                 app:layout_constraintTop_toTopOf="parent"
@@ -179,6 +182,7 @@
                 android:layout_marginTop="33dp"
                 android:background="@android:color/transparent"
                 android:scaleType="fitXY"
+                android:visibility="visible"
                 app:layout_constraintLeft_toRightOf="@+id/et_wifi_name"
                 app:layout_constraintTop_toTopOf="parent"
                 app:srcCompat="@drawable/ok_128" />
@@ -192,7 +196,7 @@
                 android:layout_marginTop="76dp"
                 android:text="Cargando..."
                 android:textColor="@android:color/background_light"
-                app:layout_constraintHorizontal_bias="0.929"
+                app:layout_constraintHorizontal_bias="0.97"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -208,7 +212,7 @@
                 android:text="cargando..."
                 android:textColor="@android:color/background_light"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintHorizontal_bias="0.929"
+                app:layout_constraintHorizontal_bias="0.97"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
@@ -223,11 +227,13 @@
                 android:layout_marginTop="7dp"
                 android:background="@android:color/transparent"
                 android:scaleType="fitCenter"
+                android:visibility="visible"
                 app:layout_constraintHorizontal_bias="1.0"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/logout_128" />
+                app:srcCompat="@drawable/logout_128"
+                android:contentDescription="@string/logout" />
 
         </android.support.constraint.ConstraintLayout>
 
@@ -257,11 +263,13 @@
                 android:layout_marginTop="5dp"
                 android:background="@android:color/transparent"
                 android:scaleType="fitCenter"
+                android:visibility="visible"
                 app:layout_constraintHorizontal_bias="0.974"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/reset_128" />
+                app:srcCompat="@drawable/reset_128"
+                android:contentDescription="@string/reset" />
 
             <ImageButton
                 android:id="@+id/ib_load"
@@ -272,11 +280,13 @@
                 android:layout_marginTop="5dp"
                 android:background="@android:color/transparent"
                 android:scaleType="fitCenter"
+                android:visibility="visible"
                 app:layout_constraintHorizontal_bias="0.511"
                 app:layout_constraintLeft_toRightOf="@+id/ib_save"
                 app:layout_constraintRight_toLeftOf="@+id/ib_reset"
                 app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/download_128" />
+                app:srcCompat="@drawable/download_128"
+                android:contentDescription="@string/download" />
 
             <ImageButton
                 android:id="@+id/ib_save"
@@ -287,11 +297,13 @@
                 android:layout_marginTop="5dp"
                 android:background="@android:color/transparent"
                 android:scaleType="fitCenter"
+                android:visibility="visible"
                 app:layout_constraintHorizontal_bias="0.236"
                 app:layout_constraintLeft_toRightOf="@+id/ib_info"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/save_128" />
+                app:srcCompat="@drawable/save_128"
+                android:contentDescription="@string/save" />
 
             <ImageButton
                 android:id="@+id/ib_info"
@@ -302,11 +314,13 @@
                 android:layout_marginTop="5dp"
                 android:background="@android:color/transparent"
                 android:scaleType="fitCenter"
+                android:visibility="visible"
                 app:layout_constraintHorizontal_bias="0.13"
                 app:layout_constraintLeft_toRightOf="@+id/imageButton7"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/info_128" />
+                app:srcCompat="@drawable/info_128"
+                android:contentDescription="@string/info" />
 
             <ImageButton
                 android:id="@+id/imageButton7"
@@ -317,11 +331,13 @@
                 android:layout_marginTop="5dp"
                 android:background="@android:color/transparent"
                 android:scaleType="fitCenter"
+                android:visibility="visible"
                 app:layout_constraintHorizontal_bias="0.025"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/search_128" />
+                app:srcCompat="@drawable/search_128"
+                android:contentDescription="@string/search" />
 
             <TextView
                 android:id="@+id/textView18"
@@ -331,7 +347,7 @@
                 android:layout_marginLeft="8dp"
                 android:layout_marginRight="8dp"
                 android:layout_marginTop="8dp"
-                android:text="Reset"
+                android:text="@string/reset"
                 android:textColor="@android:color/background_light"
                 android:textSize="12sp"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -349,16 +365,15 @@
                 android:layout_marginLeft="8dp"
                 android:layout_marginRight="8dp"
                 android:layout_marginTop="8dp"
-                android:text="Cargar"
+                android:text="@string/cargar"
                 android:textColor="@android:color/background_light"
                 android:textSize="12sp"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintHorizontal_bias="0.263"
+                app:layout_constraintHorizontal_bias="0.267"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/ib_load"
                 app:layout_constraintVertical_bias="1.0"
-                app:layout_constraintLeft_toRightOf="@+id/textView21"
-                tools:layout_editor_absoluteY="33dp" />
+                app:layout_constraintLeft_toRightOf="@+id/textView21" />
 
             <TextView
                 android:id="@+id/textView21"
@@ -368,7 +383,7 @@
                 android:layout_marginLeft="8dp"
                 android:layout_marginRight="8dp"
                 android:layout_marginTop="8dp"
-                android:text="Guardar"
+                android:text="@string/guardar"
                 android:textColor="@android:color/background_light"
                 android:textSize="12sp"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -386,7 +401,7 @@
                 android:layout_marginLeft="8dp"
                 android:layout_marginRight="8dp"
                 android:layout_marginTop="8dp"
-                android:text="Info."
+                android:text="@string/info"
                 android:textColor="@android:color/background_light"
                 android:textSize="12sp"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -404,7 +419,7 @@
                 android:layout_marginLeft="8dp"
                 android:layout_marginRight="8dp"
                 android:layout_marginTop="8dp"
-                android:text="Buscar"
+                android:text="@string/buscar"
                 android:textColor="@android:color/background_light"
                 android:textSize="12sp"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -435,7 +450,8 @@
         android:layout_width="match_parent"
         android:layout_height="0dip"
         android:layout_weight="2"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:baselineAligned="false">
 
         <android.support.constraint.ConstraintLayout
             android:layout_width="0dip"
@@ -454,7 +470,8 @@
         android:layout_width="match_parent"
         android:layout_height="0dip"
         android:layout_weight="5"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:baselineAligned="false">
 
         <android.support.constraint.ConstraintLayout
             android:layout_width="0dip"
@@ -473,10 +490,11 @@
                 android:layout_marginLeft="8dp"
                 android:layout_marginRight="8dp"
                 android:layout_marginTop="16dp"
+                android:visibility="visible"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/lock_128" />
+                app:srcCompat="@drawable/lock_5_128" />
 
             <TextView
                 android:id="@+id/textView1"
@@ -525,6 +543,7 @@
                 android:layout_marginLeft="8dp"
                 android:layout_marginRight="8dp"
                 android:layout_marginTop="16dp"
+                android:visibility="visible"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
@@ -584,10 +603,11 @@
                 android:layout_marginLeft="8dp"
                 android:layout_marginRight="8dp"
                 android:layout_marginTop="16dp"
+                android:visibility="visible"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/message_128" />
+                app:srcCompat="@drawable/message_2_128" />
 
             <TextView
                 android:id="@+id/textView3"
@@ -637,6 +657,7 @@
                 android:layout_marginLeft="8dp"
                 android:layout_marginRight="8dp"
                 android:layout_marginTop="16dp"
+                android:visibility="visible"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
@@ -679,7 +700,7 @@
     <!--android:onClick="goToNotifications"-->
 <!--<?xml version="1.0" encoding="utf-8"?>-->
 <!--<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
-    <!--xmlns:app="http://schemas.android.com/apk/res-auto"-->
+    <!--xmlns:App="http://schemas.android.com/apk/res-auto"-->
     <!--xmlns:tools="http://schemas.android.com/tools"-->
     <!--android:layout_width="match_parent"-->
     <!--android:layout_height="match_parent"-->
@@ -693,12 +714,12 @@
         <!--android:layout_marginRight="8dp"-->
         <!--android:layout_marginTop="8dp"-->
         <!--android:orientation="vertical"-->
-        <!--app:layout_constraintBottom_toBottomOf="parent"-->
-        <!--app:layout_constraintHorizontal_bias="0.0"-->
-        <!--app:layout_constraintLeft_toLeftOf="parent"-->
-        <!--app:layout_constraintRight_toRightOf="parent"-->
-        <!--app:layout_constraintTop_toTopOf="parent"-->
-        <!--app:layout_constraintVertical_bias="0.0">-->
+        <!--App:layout_constraintBottom_toBottomOf="parent"-->
+        <!--App:layout_constraintHorizontal_bias="0.0"-->
+        <!--App:layout_constraintLeft_toLeftOf="parent"-->
+        <!--App:layout_constraintRight_toRightOf="parent"-->
+        <!--App:layout_constraintTop_toTopOf="parent"-->
+        <!--App:layout_constraintVertical_bias="0.0">-->
 
         <!--<Button-->
             <!--android:id="@+id/button3"-->
@@ -706,9 +727,9 @@
             <!--android:layout_height="wrap_content"-->
             <!--android:onClick="goToTPLinkTests"-->
             <!--android:text="Pruebas TPLink"-->
-            <!--app:layout_constraintLeft_toLeftOf="parent"-->
-            <!--app:layout_constraintRight_toRightOf="parent"-->
-            <!--app:layout_constraintTop_toBottomOf="@+id/bt_send_id" />-->
+            <!--App:layout_constraintLeft_toLeftOf="parent"-->
+            <!--App:layout_constraintRight_toRightOf="parent"-->
+            <!--App:layout_constraintTop_toBottomOf="@+id/bt_send_id" />-->
 
         <!--<ProgressBar-->
             <!--android:id="@+id/progressBar2"-->
