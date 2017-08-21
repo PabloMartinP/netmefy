@@ -1,33 +1,27 @@
 {
   "project_info": {
-    "project_number": "953618802941",
-    "project_id": "firebase-netmefy"
+    "project_number": "550641390483",
+    "firebase_url": "https://netmefy-e4ba8.firebaseio.com",
+    "project_id": "netmefy-e4ba8",
+    "storage_bucket": "netmefy-e4ba8.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:953618802941:android:c12c8c59b1ddf3d4",
+        "mobilesdk_app_id": "1:550641390483:android:c12c8c59b1ddf3d4",
         "android_client_info": {
           "package_name": "ar.com.netmefy.netmefy"
         }
       },
       "oauth_client": [
         {
-          "client_id": "953618802941-qmtt3chmmtkj97071is6j522hh52jms8.apps.googleusercontent.com",
+          "client_id": "550641390483-46jl0vme0m11qbl2dpr32jcfoq8msh0b.apps.googleusercontent.com",
           "client_type": 3
-        },
-        {
-          "client_id": "953618802941-ap6l3iba1ofg9bhldrdo9k76nvocp5df.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "ar.com.netmefy.netmefy",
-            "certificate_hash": "c3efbb9a171581861835b6f8a1a532f86976f3c7"
-          }
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyDcj6RQjvv0Of9X1OVOxeTZnnQYlYPi6JI"
+          "current_key": "AIzaSyA60gjIQvzK6_MBxCAaQYiVi5cVwkPOM50"
         }
       ],
       "services": {
@@ -39,7 +33,7 @@
           "other_platform_oauth_client": []
         },
         "ads_service": {
-          "status": 1
+          "status": 2
         }
       }
     }
