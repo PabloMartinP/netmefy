@@ -191,7 +191,7 @@
                 android:layout_marginLeft="8dp"
                 android:layout_marginRight="8dp"
                 android:layout_marginTop="76dp"
-                android:text="Cargando..."
+                android:text="@string/cargando"
                 android:textColor="@android:color/background_light"
                 app:layout_constraintHorizontal_bias="0.97"
                 app:layout_constraintLeft_toLeftOf="parent"
@@ -206,7 +206,7 @@
                 android:layout_marginLeft="8dp"
                 android:layout_marginRight="8dp"
                 android:layout_marginTop="8dp"
-                android:text="cargando..."
+                android:text="@string/cargando"
                 android:textColor="@android:color/background_light"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintHorizontal_bias="0.97"
@@ -476,7 +476,7 @@
             android:layout_margin="3dp"
             android:layout_weight="1"
             android:background="@android:color/holo_green_light"
-            android:onClick="goToNotifications"
+            android:onClick="goToParentalControl"
             android:orientation="vertical">
 
 
@@ -530,7 +530,7 @@
             android:layout_margin="3dp"
             android:layout_weight="1"
             android:background="@android:color/holo_orange_light"
-            android:onClick="goToNotifications"
+            android:onClick="goToSetOfTest"
             android:orientation="vertical">
 
             <ImageView
@@ -589,8 +589,8 @@
             android:layout_height="match_parent"
             android:layout_margin="3dp"
             android:layout_weight="1"
-            android:background="@android:color/holo_red_dark"
-            android:onClick="goToNotifications"
+            android:background="@android:color/holo_red_light"
+            android:onClick="goToGestiones"
             android:orientation="vertical">
 
             <ImageView

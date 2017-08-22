@@ -26,6 +26,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
+import ar.com.netmefy.netmefy.cliente.ControlParentalActivity;
 import ar.com.netmefy.netmefy.login.UserIdActivity;
 import ar.com.netmefy.netmefy.services.login.LikesToFacebook;
 import ar.com.netmefy.netmefy.services.login.Session;
@@ -58,5 +59,25 @@ public class MainActivity extends AppCompatActivity {
                 finish();
             }
         });
+    }
+
+    public void goToNotifications(View view){
+       /* Intent notifications = new Intent(MainActivity.this, NotificationsActivity.class);
+        startActivity(notifications);*/
+    }
+
+    public void goToSetOfTest(View view){
+       /* Intent tests = new Intent(MainActivity.this, TestConnectivityActivity.class);
+        startActivity(tests);*/
+    }
+
+    public void goToGestiones(View view){
+        Intent gestiones = new Intent(MainActivity.this, GestionesActivity.class);
+        startActivity(gestiones);
+    }
+
+    public void goToParentalControl(View view){
+        Intent parentalControl = new Intent(MainActivity.this, ControlParentalActivity.class);
+        startActivity(parentalControl);
     }
 }

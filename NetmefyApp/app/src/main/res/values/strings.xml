@@ -55,5 +55,10 @@
     <string name="download">download</string>
     <string name="save">save</string>
     <string name="search">search</string>
+    <string name="cargando">Cargando...</string>
+    <string name="solicitudes">Solicitudes</string>
+    <string name="reclamos">Reclamos</string>
+    <string name="fallas_en_servicios">Fallas en servicios</string>
+    <string name="upgrades">Upgrades</string>
 
 </resources>
