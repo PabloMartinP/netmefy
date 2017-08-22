@@ -3,7 +3,9 @@ package ar.com.netmefy.netmefy.services;
 
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 import ar.com.netmefy.netmefy.router.Device;
@@ -14,6 +16,8 @@ import ar.com.netmefy.netmefy.router.Device;
  */
 
 public class Utils {
+
+
 
     public static String getTextBetween(String text, String textBefore, String textAfter, String textOnError){
         int find = text.indexOf(textBefore );

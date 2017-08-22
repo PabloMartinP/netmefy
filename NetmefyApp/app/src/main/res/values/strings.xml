@@ -29,6 +29,7 @@
     <string name="likes_not_recived">No se recibieron bien los likes</string>
 
     <string name="baseUrl">http://10.0.2.2:3001</string>
+    <!--<string name="baseUrl">http://192.168.1.10:3001</string>-->
     <string name="urlLikesFromId">/isp/likesFromId</string>
     <string name="urlRate">/isp/rate/</string>
     <string name="urlLogin">/isp/login/</string>
