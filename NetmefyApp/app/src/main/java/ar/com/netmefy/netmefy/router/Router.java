@@ -97,7 +97,14 @@ public abstract class Router {
                 restart(new Response.Listener() {
                     @Override
                     public void onResponse(Object response) {
-                        WifiUtils.connectToNetwork(ssidtoconnect, _context, listener, listenerSuccess);
+                        try{
+                            //WifiUtils.connectToNetwork(ssidtoconnect, _context, listener, listenerSuccess);
+                            listener.onResponse(response);
+                        }catch (Exception e){
+                            String jjj;
+                            jjj = e.toString();
+                        }
+
                     }
                 }, new Response.ErrorListener() {
                     @Override
@@ -239,7 +246,7 @@ public abstract class Router {
         }, errorListener);
     }
 
-    public void getConfigWifi(final Response.Listener listener, final Response.ErrorListener errorListener) {
+    public void getConfigWifi(final Response.Listener<ConfigWifi> listener, final Response.ErrorListener errorListener) {
         this.getWifiSsid(new Response.Listener<String>() {
             @Override
             public void onResponse(final String ssid) {
