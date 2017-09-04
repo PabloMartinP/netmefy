@@ -19,6 +19,7 @@ import ar.com.netmefy.netmefy.cliente.ControlParentalActivity;
 import ar.com.netmefy.netmefy.login.UserIdActivity;
 import ar.com.netmefy.netmefy.router.ConfigWifi;
 import ar.com.netmefy.netmefy.router.Router;
+import ar.com.netmefy.netmefy.services.Utils;
 import ar.com.netmefy.netmefy.services.WifiUtils;
 import ar.com.netmefy.netmefy.services.login.LikesToFacebook;
 import ar.com.netmefy.netmefy.services.login.Session;
@@ -42,8 +43,11 @@ public class MainActivity extends AppCompatActivity  {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         session = new Session(getApplicationContext());
-        LikesToFacebook likesToFacebook = new LikesToFacebook();
-        likesToFacebook.run();
+
+        //TODO: oculto esto porque rompe cuando pruebo con un router conectado porque no tiene internet,
+        //TODO: hay que validar que si no hay internet que no rompa
+        //LikesToFacebook likesToFacebook = new LikesToFacebook();
+        //likesToFacebook.run();
         logout = (ImageButton) findViewById(R.id.ib_logout);
         logout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -69,11 +73,90 @@ public class MainActivity extends AppCompatActivity  {
         iv_router_red = (ImageView) findViewById(R.id.iv_router_red);
 
 
-        //loadInfoRouter();
+        loadInfoRouter();
+    }
+    public void changeWifiSsid(View v){
+        final String newSsid = et_wifi_name.getText().toString();
+        final ProgressDialog progressBar = Utils.getProgressBar(this, "Cambiando nombre  ...");
+        progressBar.show();
+        changeRouterToRed();
+
+        router.setWifiSsid(newSsid, new Response.Listener() {
+            @Override
+            public void onResponse(Object response) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if( isRed() )
+                            changeRouterToYellow();
+                        else
+                            changeRouterToRed();
+                    }
+                });
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                progressBar.hide();
+                progressBar.dismiss();
+            }
+        }, new Response.Listener() {
+            @Override
+            public void onResponse(Object response) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        changeRouterToGreen();
+                        progressBar.hide();
+                        progressBar.dismiss();
+                    }
+                });
+            }
+        });
+
+    }
+    public void changeWifiPassword(View v){
+        final String newSsid = et_wifi_password.getText().toString();
+        final ProgressDialog progressBar = Utils.getProgressBar(this, "Cambiando password ...");
+        progressBar.show();
+        changeRouterToRed();
+
+        router.setWifiPassword(newSsid, new Response.Listener() {
+            @Override
+            public void onResponse(Object response) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if( isRed() )
+                            changeRouterToYellow();
+                        else
+                            changeRouterToRed();
+                    }
+                });
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                progressBar.hide();
+                progressBar.dismiss();
+            }
+        }, new Response.Listener() {
+            @Override
+            public void onResponse(Object response) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        changeRouterToGreen();
+                        progressBar.hide();
+                        progressBar.dismiss();
+                    }
+                });
+            }
+        });
     }
 
     private void loadInfoRouter(){
-        
+
         try{
             router.createTPLink();
             router = Router.getInstance(getApplicationContext());
@@ -119,6 +202,13 @@ public class MainActivity extends AppCompatActivity  {
         iv_router_green.setVisibility(View.INVISIBLE);
         iv_router_red.setVisibility(View.INVISIBLE);
     }
+    private void changeRouterToWhite(){
+        iv_router_white.setVisibility(View.VISIBLE);
+        iv_router_yellow.setVisibility(View.INVISIBLE);
+        iv_router_green.setVisibility(View.INVISIBLE);
+        iv_router_red.setVisibility(View.INVISIBLE);
+    }
+
 
     public void goToNotifications(View view){
        /* Intent notifications = new Intent(MainActivity.this, NotificationsActivity.class);
@@ -152,65 +242,45 @@ public class MainActivity extends AppCompatActivity  {
     }
 
     public void reset(View view){
-        //final ProgressDialog pd = initProgressbar();
+        final ProgressDialog progressBar = Utils.getProgressBar(this, "Restarteando ...");
+        progressBar.show();
+        changeRouterToRed();
 
-        /*final ProgressDialog progressBar = new ProgressDialog(MainActivity.this);
-        progressBar.setMessage("Restarteando");
-        progressBar.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        progressBar.setCancelable(false);
-        progressBar.show();*/
-
-        try{
-            final Context _context = getApplicationContext();
-            //changeRouterToRed();
-            router.restartAndWaitUntilConnected(new Response.Listener() {
+        router.restartAndWaitUntilConnected(new Response.Listener() {
                 @Override
                 public void onResponse(Object response) {
 
-                    try{
-
-                        WifiUtils.connectToNetwork("NMFTPLink", _context, new Response.Listener() {
-                            @Override
-                            public void onResponse(Object response) {
-
-                                if( isRed() )
-                                    changeRouterToYellow();
-                                else if(isYellow())
-                                    changeRouterToRed();
-                                else
-                                    changeRouterToGreen();
-                            }
-                        }, new Response.Listener() {
-                            @Override
-                            public void onResponse(Object response) {
-
-                            }
-                        });
-                    }catch (Exception e){
-                        int j =0;
-                        j++;
-                        String jj = String.valueOf(j);
-                    }
-
-
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            if( isRed() )
+                                changeRouterToYellow();
+                            else
+                                changeRouterToRed();
+                        }
+                    });
                 }
             }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
-
+                    progressBar.hide();
+                    progressBar.dismiss();
                 }
             }, new Response.Listener() {
                 @Override
                 public void onResponse(Object response) {
-                    //pd.dismiss();
-                    //progressBar.dismiss();
-                    changeRouterToGreen();
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            changeRouterToGreen();
+                            progressBar.hide();
+                            progressBar.dismiss();
+                        }
+                    });
                 }
             });
-        }catch (Exception e){
-            String jj;
-            jj = e.toString();
-        }
+
+
 
     }
 }

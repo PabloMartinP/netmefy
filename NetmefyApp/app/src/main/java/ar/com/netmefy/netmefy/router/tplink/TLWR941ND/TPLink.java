@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import ar.com.netmefy.netmefy.router.ConfigWifi;
 import ar.com.netmefy.netmefy.router.Device;
 import ar.com.netmefy.netmefy.router.RequestQueueSingleton;
 
@@ -50,21 +51,22 @@ public class TPLink extends Router {
     }
 
     @Override
-    public void _setWifiSsid(final String newSsid, final Response.Listener progressListener, final Response.ErrorListener errorListener, final Response.Listener successListener){
-        setValue(newSsid, _routerConstants.get(eUrl.WIFI_SET_SSID), new Response.Listener() {
+    public void _setWifiSsid(final ConfigWifi newSsid, final Response.Listener progressListener, final Response.ErrorListener errorListener, final Response.Listener successListener){
+        setValue(newSsid.getSsid(), _routerConstants.get(eUrl.WIFI_SET_SSID), new Response.Listener() {
             @Override
             public void onResponse(Object response) {
-                _ssid = newSsid;
+                _ssid = newSsid.getSsid();
                 restartAndWaitUntilConnected(progressListener, errorListener, successListener);
             }
         }, errorListener);
     }
 
     @Override
-    public void _setWifiPassword(final String newPassword, final Response.Listener progressListener, final Response.ErrorListener errorListener, final Response.Listener successListener){
-        setValue(newPassword, _routerConstants.get(eUrl.WIFI_SET_PASSWORD), new Response.Listener() {
+    public void _setWifiPassword(final ConfigWifi newPassword, final Response.Listener progressListener, final Response.ErrorListener errorListener, final Response.Listener successListener){
+        setValue(newPassword.getPassword(), _routerConstants.get(eUrl.WIFI_SET_PASSWORD), new Response.Listener() {
             @Override
             public void onResponse(Object response) {
+                _password = newPassword.getPassword();
                 restartAndWaitUntilConnected(progressListener, errorListener, successListener);
             }
         }, errorListener);

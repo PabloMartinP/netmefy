@@ -23,11 +23,13 @@ import org.jsoup.nodes.Document;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 
+import ar.com.netmefy.netmefy.router.ConfigWifi;
 import ar.com.netmefy.netmefy.router.RestartTry;
 import ar.com.netmefy.netmefy.router.models.InternetSpeed;
 import ar.com.netmefy.netmefy.router.models.WifiSignalResult;
@@ -205,10 +207,13 @@ public class WifiUtils {
         WifiManager wifiManager = (WifiManager)context.getSystemService(Context.WIFI_SERVICE);
         for (WifiConfiguration network:wifiManager.getConfiguredNetworks()) {
             if (network.SSID.replace("\"", "").equalsIgnoreCase(ssid)) {
-                wifiManager.enableNetwork(network.networkId, true);
-                wifiManager.saveConfiguration();
-                wifiManager.setWifiEnabled(true);
-                return true;
+                boolean ok1 = wifiManager.enableNetwork(network.networkId, true);
+                boolean ok2 = wifiManager.saveConfiguration();
+                boolean ok3 = wifiManager.setWifiEnabled(true);
+
+                String actualSsid = getWifiName(context);
+                if(actualSsid!="")
+                    return true;
             }
         }
         return false;
@@ -235,18 +240,48 @@ public class WifiUtils {
             return "";
         }
     }
+
+    /*
+    * devuelve el Id de la red actualmente conectada*/
+    public static int getNetworkId(WifiManager manager) {
+        try {
+            //WifiManager manager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+            if (manager.isWifiEnabled()) {
+                WifiInfo wifiInfo = manager.getConnectionInfo();
+                if (wifiInfo != null) {
+                    NetworkInfo.DetailedState state = WifiInfo.getDetailedStateOf(wifiInfo.getSupplicantState());
+                    if (state == NetworkInfo.DetailedState.CONNECTED || state == NetworkInfo.DetailedState.OBTAINING_IPADDR) {
+                        //return wifiInfo.getSSID().replace("\"", "");
+                        return wifiInfo.getNetworkId();
+                    }
+                }
+            }
+            return -1;
+        }catch (Exception ex){
+            ex.printStackTrace();
+            return -2;
+        }
+    }
+
     public static void disconnectFromWifi(String ssid, Context context){
         WifiManager manager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
         manager.disconnect();
     }
 
-    public static void connectToNetwork(final String ssidtoconnect, final Context context, final Response.Listener listener, final Response.Listener listenerSuccess){
+    public static void connectToNetwork(final ConfigWifi configWifi, final Context context, final Response.Listener listener, final Response.Listener listenerSuccess){
 
+        final String ssidtoconnect = configWifi.getSsid();
 
         disconnectFromWifi(ssidtoconnect, context);
 
-        final int DELAY_RESTART_SECS = 10;
-        final int DELAY_BETWEEN_INTENT_TO_RECONNCET_SECS = 5;
+        //elimino el wifi actual y lo agrego de nuevo,
+        //TODO: solo hace falta cuando se cambia la password o ssid, en otros casos no hace falta
+        removeWifiWithEqualSsid(configWifi.getSsid(), context);
+
+        addWifiConfig(configWifi.getSsid(), configWifi.getPassword(), context);
+
+        final int DELAY_RESTART_SECS = 5;
+        final int DELAY_BETWEEN_INTENT_TO_RECONNCET_SECS = 2;
 
         Timer timer = new Timer();
         timer.schedule(new TimerTask()
@@ -257,6 +292,7 @@ public class WifiUtils {
             @Override
             public void run()
             {
+                boolean termino  = false;
                 i++;
                 RestartTry restartTry;
                 if (tryConnectToNetwork(ssidtoconnect, context)){
@@ -270,6 +306,7 @@ public class WifiUtils {
 
                         if(actualSsid !="") {
                             this.cancel();
+                            termino = true;
                             listenerSuccess.onResponse("ok");
                         }
                         else
@@ -282,13 +319,34 @@ public class WifiUtils {
                     //info = "HHHHH-"+Integer.toString(i);;
                     restartTry  = new RestartTry(false, i, "SSID ["+ssidtoconnect+"] no encontrado");
                 }
-
-                listener.onResponse((Object) restartTry);
+                if(!termino)
+                    listener.onResponse((Object) restartTry);
             }
         }, DELAY_RESTART_SECS*1000, DELAY_BETWEEN_INTENT_TO_RECONNCET_SECS*1000);
     }
 
+
+    private static void removeWifiWithEqualSsid(String ssidToRemove, Context context){
+        WifiManager wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+
+        //elimino todos menos el actualmente conectado
+        //int actualNetworkdId = getNetworkId(wifiManager);
+
+        List<WifiConfiguration> list = wifiManager.getConfiguredNetworks();
+        for( WifiConfiguration i : list ) {
+
+            //if(i.networkId != actualNetworkdId) {
+                if(i.SSID.replace("\"", "").equals(ssidToRemove)){
+                    wifiManager.removeNetwork(i.networkId);
+                    wifiManager.saveConfiguration();
+                }
+            //}
+
+        }
+
+    }
     public static void addWifiConfig(String ssid,String password, Context context) {
+
 
         final String NETWORK_ADDITIONAL_SECURITY_TKIP = "tkip";
         final String NETWORK_ADDITIONAL_SECURITY_AES = "aes";
@@ -358,12 +416,13 @@ public class WifiUtils {
             conf.allowedPairwiseCiphers.set(WifiConfiguration.PairwiseCipher.NONE);
         }
         WifiManager wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+        //removeWifiWithEqualSsid(ssid, wifiManager);
 
         int newNetworkId = wifiManager.addNetwork(conf);
 
         if(newNetworkId == -1){
 
-            String j = null;
+            String j = null;//TODO: Esto es para que tire excepcion
             j.toLowerCase();
         }
 

@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import ar.com.netmefy.netmefy.router.ConfigWifi;
 import ar.com.netmefy.netmefy.router.Device;
 import ar.com.netmefy.netmefy.router.RequestQueueSingleton;
 import ar.com.netmefy.netmefy.router.Router;
@@ -102,22 +103,23 @@ public class Nucom extends Router {
 
 
     @Override
-    public void _setWifiSsid(final String newSsid, final Response.Listener progressListener, final Response.ErrorListener errorListener, final Response.Listener successListener) {
-        _ssid = newSsid;
-        setValueWithSessionKeyAndReconnect(newSsid,
+    public void _setWifiSsid(final ConfigWifi newSsid, final Response.Listener progressListener, final Response.ErrorListener errorListener, final Response.Listener successListener) {
+        _ssid = newSsid.getSsid();
+        setValueWithSessionKeyAndReconnect(_ssid,
                 eUrl.WIFI_SET_SSID_TO_GET_SESSIONKEY,
                 _routerConstants.get(eUrl.WIFI_SET_SSID),
                 progressListener, errorListener, successListener);
     }
 
     @Override
-    public void _setWifiPassword(final String newPassword, final Response.Listener progressListener, final Response.ErrorListener errorListener, final Response.Listener successListener) {
-        setValueWithSessionKeyAndReconnect(newPassword,
+    public void _setWifiPassword(final ConfigWifi newPassword, final Response.Listener progressListener, final Response.ErrorListener errorListener, final Response.Listener successListener) {
+        _password = newPassword.getPassword();
+        setValueWithSessionKeyAndReconnect(_password,
                 eUrl.WIFI_SET_PASSWORD_TO_GET_SESSIONKEY,
                 _routerConstants.get(eUrl.WIFI_SET_PASSWORD),
                 progressListener, errorListener, successListener);
-
     }
+
     @Override
     public String getName(){
         return "NucomR500UNv2";

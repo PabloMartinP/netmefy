@@ -165,11 +165,12 @@
                 android:layout_marginLeft="-8dp"
                 android:layout_marginTop="124dp"
                 android:background="@android:color/transparent"
+                android:onClick="changeWifiPassword"
                 android:scaleType="fitXY"
+                android:src="@drawable/ok_128"
                 android:visibility="visible"
                 app:layout_constraintLeft_toRightOf="@+id/et_wifi_password"
-                app:layout_constraintTop_toTopOf="parent"
-                android:src="@drawable/ok_128" />
+                app:layout_constraintTop_toTopOf="parent" />
 
             <ImageButton
                 android:id="@+id/ib_change_wifi_name"
@@ -178,11 +179,12 @@
                 android:layout_marginLeft="0dp"
                 android:layout_marginTop="33dp"
                 android:background="@android:color/transparent"
+                android:onClick="changeWifiSsid"
                 android:scaleType="fitXY"
+                android:src="@drawable/ok_128"
                 android:visibility="visible"
                 app:layout_constraintLeft_toRightOf="@+id/et_wifi_name"
-                app:layout_constraintTop_toTopOf="parent"
-                android:src="@drawable/ok_128" />
+                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/tv_user_number"

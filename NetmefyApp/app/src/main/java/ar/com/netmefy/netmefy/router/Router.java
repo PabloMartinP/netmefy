@@ -1,6 +1,7 @@
 package ar.com.netmefy.netmefy.router;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -27,6 +28,8 @@ public abstract class Router {
     protected RequestQueue _queue ;
 
     protected String _ssid = "";
+    protected String _password = "";
+
 
     private static RouterConstants.eRouter type = RouterConstants.eRouter.none;
     private static Router _router = null;
@@ -85,21 +88,22 @@ public abstract class Router {
     }
 
 
-    public void restartAndWaitUntilConnected(final Response.Listener listener, final Response.ErrorListener errorListener, final Response.Listener listenerSuccess) {
+    public void restartAndWaitUntilConnected( final Response.Listener listener, final Response.ErrorListener errorListener, final Response.Listener listenerSuccess) {
         //antes de hacer el restart obtengo el ssid,
         // para que al reconectar sepa a que ssid tengo que conectarme
         //esto es porque los cells por default al perder conexion con un AP
         //se conectan a otro que tenga configurado y este al alcance
-        getWifiSsid(new Response.Listener<String>() {
+
+        getConfigWifi(new Response.Listener<ConfigWifi>() {
             @Override
-            public void onResponse(String ssid) {
-                final String ssidtoconnect = ssid;
+            public void onResponse(final ConfigWifi configWifi) {
+                //final String ssidtoconnect = ssid;
                 restart(new Response.Listener() {
                     @Override
                     public void onResponse(Object response) {
                         try{
-                            //WifiUtils.connectToNetwork(ssidtoconnect, _context, listener, listenerSuccess);
-                            listener.onResponse(response);
+                            WifiUtils.connectToNetwork(configWifi, _context, listener, listenerSuccess);
+                            //listener.onResponse(response);
                         }catch (Exception e){
                             String jjj;
                             jjj = e.toString();
@@ -119,6 +123,7 @@ public abstract class Router {
                 errorListener.onErrorResponse(error);
             }
         });
+
     }
 
     public abstract StringRequest newStringRequest(UrlRouter urlRouter,
@@ -138,8 +143,6 @@ public abstract class Router {
             listener.onResponse(_ssid);
         }
     }
-
-
     protected void getValueFromHtmlResponse(final UrlRouter urlRouter,final Response.Listener listener, final Response.ErrorListener errorListener) {
         executeRequest(urlRouter, new Response.Listener<String>() {
             @Override
@@ -149,10 +152,19 @@ public abstract class Router {
             }
         }, errorListener);
     }
-
     public void getWifiPassword(final Response.Listener listener, final Response.ErrorListener errorListener) {
-        //final UrlRouter constants = _routerConstants.get(eUrl.WIFI_GET_PASSWORD);
-        getValueFromHtmlResponse(_routerConstants.get(eUrl.WIFI_GET_PASSWORD), listener, errorListener);
+        //getValueFromHtmlResponse(_routerConstants.get(eUrl.WIFI_GET_PASSWORD), listener, errorListener);
+        if(_password.isEmpty()){
+            getValueFromHtmlResponse(_routerConstants.get(eUrl.WIFI_GET_PASSWORD), new Response.Listener() {
+                @Override
+                public void onResponse(Object response) {
+                    _password = response.toString();
+                    listener.onResponse(_password);
+                }
+            }, errorListener);
+        }else{
+            listener.onResponse(_password);
+        }
     }
 
     protected void setValue(String newValue, final UrlRouter urlRouter, final Response.Listener listener, final Response.ErrorListener errorListener){
@@ -167,7 +179,7 @@ public abstract class Router {
 
 
 
-    public abstract void _setWifiSsid(final String newSsid, final Response.Listener progressListener, final Response.ErrorListener errorListener, final Response.Listener successListener) ;
+    public abstract void _setWifiSsid(final ConfigWifi configWifi, final Response.Listener progressListener, final Response.ErrorListener errorListener, final Response.Listener successListener) ;
     /*
     * Agrega a la lista de redes conocidas del android a la nueva red
     * */
@@ -177,15 +189,16 @@ public abstract class Router {
             @Override
             public void onResponse(String password) {
                 final ConfigWifi configWifi = new ConfigWifi(newSsid, password);
-                saveWifiChanges(configWifi);
+                //saveWifiChanges(configWifi);
                 //listener.onResponse("ok");
                 //listener.onResponse(newSsid);
-                 _setWifiSsid(newSsid, listener, errorListener, listenerSuccess);
+                 _setWifiSsid(configWifi, listener, errorListener, listenerSuccess);
+
             }
         }, errorListener);
     }
 
-    public abstract void _setWifiPassword(final String newPassword, final Response.Listener progressListener, final Response.ErrorListener errorListener, final Response.Listener successListener) ;
+    public abstract void _setWifiPassword(final ConfigWifi configWifi, final Response.Listener progressListener, final Response.ErrorListener errorListener, final Response.Listener successListener) ;
     /*
     * Agrega a la lista de redes conocidas del android a la nueva red y devuelve el ssid
     * */
@@ -194,8 +207,10 @@ public abstract class Router {
             @Override
             public void onResponse(String ssid) {
                 final ConfigWifi configWifi = new ConfigWifi(ssid, newPassword);
-                saveWifiChanges(configWifi);
-                _setWifiPassword(newPassword, progressListener, errorListener, successListener );
+                //saveWifiChanges(configWifi);
+                _setWifiPassword(configWifi, progressListener, errorListener, successListener );
+
+
             }
         }, errorListener);
     }
@@ -285,16 +300,22 @@ public abstract class Router {
     public abstract void removeBlockByMac(final String mac, final Response.Listener progressListener, final Response.ErrorListener errorListener, final Response.Listener successListener);
 
     protected abstract List<Device> parseHtmlMacListBlocked(String html);
-    protected void setValueAndReconnect(final String newValue, final UrlRouter urlRouter, final Response.Listener progress, final Response.ErrorListener error, final Response.Listener success){
-        setValue(newValue, urlRouter, new Response.Listener() {
+    protected void setValueAndReconnect(final String newValue,  final UrlRouter urlRouter, final Response.Listener progress, final Response.ErrorListener error, final Response.Listener success){
+        getConfigWifi(new Response.Listener<ConfigWifi>() {
             @Override
-            public void onResponse(Object response) {
-                WifiUtils.connectToNetwork(
-                        _ssid,
-                        _context,
-                        progress, success);
+            public void onResponse(final ConfigWifi configWifi) {
+                setValue(newValue, urlRouter, new Response.Listener() {
+                    @Override
+                    public void onResponse(Object response) {
+                        WifiUtils.connectToNetwork(
+                                configWifi,
+                                _context,
+                                progress, success);
+                    }
+                }, error);
             }
         }, error);
+
     }
 
     public void getMacListBlocked(final Response.Listener<List<Device>> success, final Response.ErrorListener error){
@@ -307,6 +328,8 @@ public abstract class Router {
     }
 
     public void saveWifiChanges(ConfigWifi configWifi ) {
+
+
         WifiUtils.addWifiConfig(configWifi.getSsid(), configWifi.getPassword(), _context);
     }
 

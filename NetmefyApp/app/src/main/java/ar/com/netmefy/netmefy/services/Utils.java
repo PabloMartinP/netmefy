@@ -2,12 +2,16 @@ package ar.com.netmefy.netmefy.services;
 
 
 
+import android.app.Activity;
+import android.app.ProgressDialog;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 
+import ar.com.netmefy.netmefy.MainActivity;
 import ar.com.netmefy.netmefy.router.Device;
 
 
@@ -18,6 +22,13 @@ import ar.com.netmefy.netmefy.router.Device;
 public class Utils {
 
 
+    public static ProgressDialog getProgressBar(Activity activity, String message){
+        ProgressDialog progressBar = new ProgressDialog(activity);
+        progressBar.setMessage(message);
+        progressBar.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        progressBar.setCancelable(false);
+        return progressBar;
+    }
 
     public static String getTextBetween(String text, String textBefore, String textAfter, String textOnError){
         int find = text.indexOf(textBefore );

@@ -30,8 +30,8 @@ public class TPLinkTestsActivity extends AppCompatActivity {
 
         //router = new Nucom(getApplicationContext());
         //este create se ejecuta una vez sola, despues hay que llamar siempre a getInstance
-        Router.createNucom();
-        //Router.createTPLink();
+        //Router.createNucom();
+        Router.createTPLink();
 
         router = Router.getInstance(getApplicationContext());
 
