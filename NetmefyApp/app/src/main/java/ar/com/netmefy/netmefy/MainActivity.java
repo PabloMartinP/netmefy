@@ -14,6 +14,7 @@ import android.widget.Toast;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.facebook.login.LoginManager;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import ar.com.netmefy.netmefy.cliente.ControlParentalActivity;
 import ar.com.netmefy.netmefy.login.UserIdActivity;
@@ -21,6 +22,7 @@ import ar.com.netmefy.netmefy.router.ConfigWifi;
 import ar.com.netmefy.netmefy.router.Router;
 import ar.com.netmefy.netmefy.services.Utils;
 import ar.com.netmefy.netmefy.services.WifiUtils;
+import ar.com.netmefy.netmefy.services.api.Api;
 import ar.com.netmefy.netmefy.services.login.LikesToFacebook;
 import ar.com.netmefy.netmefy.services.login.Session;
 
@@ -37,6 +39,7 @@ public class MainActivity extends AppCompatActivity  {
     private ImageView iv_router_green;
     private ImageView iv_router_red;
 
+    private Api api;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,8 +49,8 @@ public class MainActivity extends AppCompatActivity  {
 
         //TODO: oculto esto porque rompe cuando pruebo con un router conectado porque no tiene internet,
         //TODO: hay que validar que si no hay internet que no rompa
-        //LikesToFacebook likesToFacebook = new LikesToFacebook();
-        //likesToFacebook.run();
+        LikesToFacebook likesToFacebook = new LikesToFacebook();
+        likesToFacebook.run();
         logout = (ImageButton) findViewById(R.id.ib_logout);
         logout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -72,9 +75,31 @@ public class MainActivity extends AppCompatActivity  {
         iv_router_green = (ImageView) findViewById(R.id.iv_router_green);
         iv_router_red = (ImageView) findViewById(R.id.iv_router_red);
 
+        api = Api.getInstance(getApplicationContext());
 
         loadInfoRouter();
+        saveToken();
     }
+
+
+    private void saveToken(){
+        try {
+            api.saveFirebaseToken(session.getUserId(), session.getUserType(), FirebaseInstanceId.getInstance().getToken(), new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    response = response.toString();
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    String j= error.toString();
+                }
+            });
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+    }
+
     public void changeWifiSsid(View v){
         final String newSsid = et_wifi_name.getText().toString();
         final ProgressDialog progressBar = Utils.getProgressBar(this, "Cambiando nombre  ...");

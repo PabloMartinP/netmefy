@@ -15,6 +15,7 @@ import java.util.Map;
 
 import ar.com.netmefy.netmefy.services.api.entity.SaveToken;
 import ar.com.netmefy.netmefy.services.api.entity.Token;
+import ar.com.netmefy.netmefy.services.api.entity.tipoUsuarioApp;
 import ar.com.netmefy.netmefy.services.api.stringRequests.JsonRequestApi;
 import ar.com.netmefy.netmefy.services.api.stringRequests.RequestQueueSingletonApi;
 
@@ -25,6 +26,8 @@ import ar.com.netmefy.netmefy.services.api.stringRequests.RequestQueueSingletonA
 
 public  class Api {
     public static Token token;
+    public static tipoUsuarioApp tipoUsuarioApp ;
+    /////////////////////////////////////////////////////////////////////
     static RequestQueue _queue;
     private Api(Context context){
         _queue = RequestQueueSingletonApi.getInstance(context).getRequestQueue();
@@ -67,6 +70,22 @@ public  class Api {
         });
         execute(rq);
 
+    }
+
+    public void getTypeOfUser(String username, final Response.Listener<tipoUsuarioApp> success, Response.ErrorListener error ){
+
+        String url = "http://200.82.0.24/api/tipoUsuarioApp?username=" +username;
+        JsonRequestApi rq = new JsonRequestApi(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                //String rr = response.toString();
+                tipoUsuarioApp tipo ;
+                Gson gson = new Gson();
+                tipo= gson.fromJson(response.toString(), tipoUsuarioApp.class);
+                success.onResponse(tipo);
+            }
+        }, error);
+        execute(rq);
     }
 
     public void getInfoUser(int id, final Response.Listener<String> success, Response.ErrorListener error ){

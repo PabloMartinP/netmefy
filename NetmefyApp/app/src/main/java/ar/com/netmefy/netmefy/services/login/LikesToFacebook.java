@@ -56,9 +56,14 @@ public class LikesToFacebook implements Runnable {
                     public void onCompleted(GraphResponse response) {
                         /* handle the result */
                         try {
-                            jsonLikes = response.getJSONObject().getJSONArray("data");
-                            jsonNext = response.getJSONObject().getJSONObject("paging").getString("next");
-                            addUserLikes(jsonLikes, jsonNext);
+                            if(response.getError() != null){
+                                //hubo un error al conectar con FB
+                            }else{
+                                jsonLikes = response.getJSONObject().getJSONArray("data");
+                                jsonNext = response.getJSONObject().getJSONObject("paging").getString("next");
+                                addUserLikes(jsonLikes, jsonNext);
+                            }
+
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }

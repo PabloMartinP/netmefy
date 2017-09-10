@@ -28,13 +28,16 @@ public class TecnicoActivity extends AppCompatActivity {
         session = new Session(getApplicationContext());
         techLogOut = (Button) findViewById(R.id.tech_log_out);
 
-        api = Api.getInstance(getApplicationContext());
-        api.LogIn("netmefy", "yfemten", new Response.Listener<String>() {
+        //api = Api.getInstance(getApplicationContext());
+        /*api.LogIn("netmefy", "yfemten", new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 saveToken();
             }
-        });
+        });*/
+        api = Api.getInstance(getApplicationContext());
+
+        saveToken();
 
     }
 
@@ -48,9 +51,7 @@ public class TecnicoActivity extends AppCompatActivity {
             }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
-                    String j;
-                    j = error.toString();
-
+                    String j= error.toString();
                 }
             });
         } catch (IllegalAccessException e) {

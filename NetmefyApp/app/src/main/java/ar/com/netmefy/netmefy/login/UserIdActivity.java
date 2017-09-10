@@ -16,6 +16,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -25,6 +26,8 @@ import java.io.IOException;
 import ar.com.netmefy.netmefy.MainActivity;
 import ar.com.netmefy.netmefy.R;
 import ar.com.netmefy.netmefy.router.activities.TPLinkTestsActivity;
+import ar.com.netmefy.netmefy.services.api.Api;
+import ar.com.netmefy.netmefy.services.api.entity.tipoUsuarioApp;
 import ar.com.netmefy.netmefy.services.login.Session;
 import ar.com.netmefy.netmefy.tecnico.TecnicoActivity;
 
@@ -35,7 +38,7 @@ public class UserIdActivity extends AppCompatActivity {
     private Button btSendUserId;
     private ProgressBar pbUserId;
     private Session session;
-
+    Api api;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,6 +49,9 @@ public class UserIdActivity extends AppCompatActivity {
         btSendUserId = (Button) findViewById(R.id.bt_send_id);
         pbUserId = (ProgressBar) findViewById(R.id.pb_user_id);
         session = new Session(getApplicationContext());
+
+        api = Api.getInstance(getApplicationContext());
+
     }
 
 
@@ -61,7 +67,52 @@ public class UserIdActivity extends AppCompatActivity {
     }
 
     private void sendUserIdToISP() {
-        String url = getResources().getString(R.string.baseUrl) + getResources().getString(R.string.urlLogin) + etUserId.getText().toString() + "/" + etPassword.getText().toString();
+
+        final String username =etUserId.getText().toString();
+        String password = etPassword.getText().toString();
+
+        api.LogIn(username, password, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+
+
+                if(response.equalsIgnoreCase("ok")){
+                    //response = response.toLowerCase();
+                    api.getTypeOfUser(username, new Response.Listener<tipoUsuarioApp>() {
+                        @Override
+                        public void onResponse(tipoUsuarioApp tipoUsuarioApp) {
+                            Api.tipoUsuarioApp = tipoUsuarioApp;
+
+                            if(Api.tipoUsuarioApp.esCliente()){
+                                redirectToUser("");
+                            }else{
+                                redirectToTech();
+                            }
+
+                        }
+                    }, new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            tvErrorDni.setVisibility(View.VISIBLE);
+                            etUserId.setEnabled(true);
+                            etPassword.setEnabled(true);
+                            btSendUserId.setVisibility(View.VISIBLE);
+                            pbUserId.setVisibility(View.GONE);
+                            tvErrorDni.setText("Error al conectar con el servidor");
+                        }
+                    });
+
+                }else {
+                    tvErrorDni.setVisibility(View.VISIBLE);
+                    etUserId.setEnabled(true);
+                    etPassword.setEnabled(true);
+                    btSendUserId.setVisibility(View.VISIBLE);
+                    pbUserId.setVisibility(View.GONE);
+                    tvErrorDni.setText("El usuario o clave son incorrectos");
+                }
+            }
+        });
+        /*String url = getResources().getString(R.string.baseUrl) + getResources().getString(R.string.urlLogin) + etUserId.getText().toString() + "/" + etPassword.getText().toString();
         RequestQueue queue = Volley.newRequestQueue(this);
         JsonObjectRequest jsObjRequest = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
             @Override
@@ -93,15 +144,19 @@ public class UserIdActivity extends AppCompatActivity {
             }
         });
         queue.add(jsObjRequest);
+        */
     }
 
     private void redirectToTech() {
+        session.setUserType("tech");
         session.setUserId(etUserId.getText().toString());
         Intent userPass = new Intent(UserIdActivity.this,TecnicoActivity.class);
         startActivity(userPass);
     }
 
     private void redirectToUser(String supportNumber) {
+        session.setUserType("user");
+
         if (!supportNumber.isEmpty()){
             Intent userPass = new Intent(UserIdActivity.this,RateSupportActivity.class);
             session.setUserId(etUserId.getText().toString());
