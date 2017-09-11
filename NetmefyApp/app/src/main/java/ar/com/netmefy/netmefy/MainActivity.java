@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Response;
@@ -23,6 +24,8 @@ import ar.com.netmefy.netmefy.router.Router;
 import ar.com.netmefy.netmefy.services.Utils;
 import ar.com.netmefy.netmefy.services.WifiUtils;
 import ar.com.netmefy.netmefy.services.api.Api;
+import ar.com.netmefy.netmefy.services.api.entity.clientInfo;
+import ar.com.netmefy.netmefy.services.api.entity.tipoUsuarioApp;
 import ar.com.netmefy.netmefy.services.login.LikesToFacebook;
 import ar.com.netmefy.netmefy.services.login.Session;
 
@@ -38,6 +41,9 @@ public class MainActivity extends AppCompatActivity  {
     private ImageView iv_router_yellow;
     private ImageView iv_router_green;
     private ImageView iv_router_red;
+    private TextView tv_user_number;
+    private TextView tv_internet_speed;
+
 
     private Api api;
 
@@ -75,7 +81,38 @@ public class MainActivity extends AppCompatActivity  {
         iv_router_green = (ImageView) findViewById(R.id.iv_router_green);
         iv_router_red = (ImageView) findViewById(R.id.iv_router_red);
 
+        tv_user_number = (TextView) findViewById(R.id.tv_user_number);
+        tv_internet_speed = (TextView) findViewById(R.id.tv_internet_speed);
+
+        ////////////////////////////////////////////////////////////
         api = Api.getInstance(getApplicationContext());
+        if(Api.tipoUsuarioApp !=null){
+            api.getInfoUser(Api.tipoUsuarioApp.username, new Response.Listener<clientInfo>() {
+                @Override
+                public void onResponse(final clientInfo response) {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            tv_user_number.setText(response.nombre);
+                            tv_internet_speed.setText(String.valueOf(response.mb_contratado)+"MB");
+                        }
+                    });
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            tv_user_number.setText("[Sin conexión]");
+                            tv_internet_speed.setText("[Sin conexión]");
+                        }
+                    });
+
+                }
+            });
+        }
+
 
         loadInfoRouter();
         saveToken();
@@ -202,6 +239,8 @@ public class MainActivity extends AppCompatActivity  {
                     //progress.dismiss();
                 }
             });
+
+
 
         }catch (Exception e){
             Toast.makeText(getApplicationContext(), "Error", Toast.LENGTH_LONG).show();

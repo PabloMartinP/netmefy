@@ -15,6 +15,7 @@ import java.util.Map;
 
 import ar.com.netmefy.netmefy.services.api.entity.SaveToken;
 import ar.com.netmefy.netmefy.services.api.entity.Token;
+import ar.com.netmefy.netmefy.services.api.entity.clientInfo;
 import ar.com.netmefy.netmefy.services.api.entity.tipoUsuarioApp;
 import ar.com.netmefy.netmefy.services.api.stringRequests.JsonRequestApi;
 import ar.com.netmefy.netmefy.services.api.stringRequests.RequestQueueSingletonApi;
@@ -88,8 +89,24 @@ public  class Api {
         execute(rq);
     }
 
-    public void getInfoUser(int id, final Response.Listener<String> success, Response.ErrorListener error ){
-        String url = "http://200.82.0.24/api/usuarios" + "/" + String.valueOf(id);
+    public void getInfoUser(String username, final Response.Listener<clientInfo> success, Response.ErrorListener error ){
+        String url = "http://200.82.0.24/api/clientes?username=" +username;
+        JsonRequestApi rq = new JsonRequestApi(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                String rr;
+                rr = response.toString();
+                clientInfo client ;
+                Gson gson = new Gson();
+                client = gson.fromJson(response.toString(), clientInfo.class);
+                String jj;
+
+                jj = client.nombre;
+                success.onResponse(client);
+            }
+        }, error);
+        execute(rq);
+        /*String url = "http://200.82.0.24/api/usuarios" + "/" + String.valueOf(id);
         JsonRequestApi rq = new JsonRequestApi(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
@@ -97,7 +114,7 @@ public  class Api {
                 rr = response.toString();
             }
         }, error);
-        execute(rq);
+        execute(rq);*/
     }
 
     public void saveFirebaseToken(String userId, String userType, String token,final Response.Listener<String> success, Response.ErrorListener error) throws IllegalAccessException {

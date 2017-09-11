@@ -74,9 +74,10 @@ public class UserIdActivity extends AppCompatActivity {
         api.LogIn(username, password, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-
-
                 if(response.equalsIgnoreCase("ok")){
+                    session.setUserId(etUserId.getText().toString());
+                    session.setPassword(etPassword.getText().toString());
+
                     //response = response.toLowerCase();
                     api.getTypeOfUser(username, new Response.Listener<tipoUsuarioApp>() {
                         @Override
@@ -84,8 +85,10 @@ public class UserIdActivity extends AppCompatActivity {
                             Api.tipoUsuarioApp = tipoUsuarioApp;
 
                             if(Api.tipoUsuarioApp.esCliente()){
+                                session.setUserType("client");
                                 redirectToUser("");
                             }else{
+                                session.setUserType("tech");
                                 redirectToTech();
                             }
 
@@ -148,8 +151,6 @@ public class UserIdActivity extends AppCompatActivity {
     }
 
     private void redirectToTech() {
-        session.setUserType("tech");
-        session.setUserId(etUserId.getText().toString());
         Intent userPass = new Intent(UserIdActivity.this,TecnicoActivity.class);
         startActivity(userPass);
     }
@@ -159,7 +160,7 @@ public class UserIdActivity extends AppCompatActivity {
 
         if (!supportNumber.isEmpty()){
             Intent userPass = new Intent(UserIdActivity.this,RateSupportActivity.class);
-            session.setUserId(etUserId.getText().toString());
+
             userPass.putExtra("userId",etUserId.getText());
             userPass.putExtra("supportNumber",supportNumber);
             startActivity(userPass);

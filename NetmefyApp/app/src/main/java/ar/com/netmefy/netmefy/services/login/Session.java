@@ -28,7 +28,12 @@ public class Session {
     public void setUserId(String userId) {
         prefs.edit().putString("userId", userId).apply();
     }
-
+    public void setPassword(String password){
+        prefs.edit().putString("password", password).apply();
+    }
+    public String getPassword(){
+        return prefs.getString("password", "");
+    }
     public String getUserId() {
         String userId = prefs.getString("userId","");
         return userId;
