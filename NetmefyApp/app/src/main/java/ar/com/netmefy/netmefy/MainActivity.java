@@ -17,6 +17,8 @@ import com.android.volley.VolleyError;
 import com.facebook.login.LoginManager;
 import com.google.firebase.iid.FirebaseInstanceId;
 
+import java.util.ArrayList;
+
 import ar.com.netmefy.netmefy.cliente.ControlParentalActivity;
 import ar.com.netmefy.netmefy.login.UserIdActivity;
 import ar.com.netmefy.netmefy.router.ConfigWifi;
@@ -25,6 +27,7 @@ import ar.com.netmefy.netmefy.services.Utils;
 import ar.com.netmefy.netmefy.services.WifiUtils;
 import ar.com.netmefy.netmefy.services.api.Api;
 import ar.com.netmefy.netmefy.services.api.entity.clientInfo;
+import ar.com.netmefy.netmefy.services.api.entity.paginasLikeadas;
 import ar.com.netmefy.netmefy.services.api.entity.tipoUsuarioApp;
 import ar.com.netmefy.netmefy.services.login.LikesToFacebook;
 import ar.com.netmefy.netmefy.services.login.Session;
@@ -43,9 +46,9 @@ public class MainActivity extends AppCompatActivity  {
     private ImageView iv_router_red;
     private TextView tv_user_number;
     private TextView tv_internet_speed;
+    public TextView tvFacebookStatus;
 
-
-    private Api api;
+    public Api api;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,7 +58,13 @@ public class MainActivity extends AppCompatActivity  {
 
         //TODO: oculto esto porque rompe cuando pruebo con un router conectado porque no tiene internet,
         //TODO: hay que validar que si no hay internet que no rompa
-        LikesToFacebook likesToFacebook = new LikesToFacebook();
+
+        api = Api.getInstance(getApplicationContext());
+
+
+        tvFacebookStatus  = (TextView)findViewById(R.id.tv_facebookState);
+        tvFacebookStatus.setText("?");
+        LikesToFacebook likesToFacebook = new LikesToFacebook(this);
         likesToFacebook.run();
         logout = (ImageButton) findViewById(R.id.ib_logout);
         logout.setOnClickListener(new View.OnClickListener() {
@@ -85,7 +94,8 @@ public class MainActivity extends AppCompatActivity  {
         tv_internet_speed = (TextView) findViewById(R.id.tv_internet_speed);
 
         ////////////////////////////////////////////////////////////
-        api = Api.getInstance(getApplicationContext());
+        //api = Api.getInstance(getApplicationContext());
+
         if(Api.tipoUsuarioApp !=null){
             api.getInfoUser(Api.tipoUsuarioApp.username, new Response.Listener<clientInfo>() {
                 @Override
@@ -108,11 +118,9 @@ public class MainActivity extends AppCompatActivity  {
                             tv_internet_speed.setText("[Sin conexión]");
                         }
                     });
-
                 }
             });
         }
-
 
         loadInfoRouter();
         saveToken();

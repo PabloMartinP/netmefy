@@ -1,6 +1,7 @@
 package ar.com.netmefy.netmefy.services.api;
 
 import android.content.Context;
+import android.util.ArrayMap;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -10,12 +11,14 @@ import com.google.gson.Gson;
 
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 import ar.com.netmefy.netmefy.services.api.entity.SaveToken;
 import ar.com.netmefy.netmefy.services.api.entity.Token;
 import ar.com.netmefy.netmefy.services.api.entity.clientInfo;
+import ar.com.netmefy.netmefy.services.api.entity.paginasLikeadas;
 import ar.com.netmefy.netmefy.services.api.entity.tipoUsuarioApp;
 import ar.com.netmefy.netmefy.services.api.stringRequests.JsonRequestApi;
 import ar.com.netmefy.netmefy.services.api.stringRequests.RequestQueueSingletonApi;
@@ -28,6 +31,8 @@ import ar.com.netmefy.netmefy.services.api.stringRequests.RequestQueueSingletonA
 public  class Api {
     public static Token token;
     public static tipoUsuarioApp tipoUsuarioApp ;
+    public  static int cliente_sk;
+    public static int usuario_sk;
     /////////////////////////////////////////////////////////////////////
     static RequestQueue _queue;
     private Api(Context context){
@@ -115,6 +120,40 @@ public  class Api {
             }
         }, error);
         execute(rq);*/
+    }
+
+
+
+    public void sendLikes(paginasLikeadas paginasLikeadas, final Response.Listener<String> success){
+        String url = "http://200.82.0.24/api/paginas";
+
+        /*paginasLikeadas paginasLikeadas = new paginasLikeadas();
+        paginasLikeadas.cliente_sk = 1;
+        paginasLikeadas.usuario_sk = 1;
+        paginasLikeadas.paginas = likes;*/
+
+        Map<String, String> data  = null;
+        try {
+            data = paginasLikeadas.toMap();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+
+        final String dataok = data.toString();
+
+        JsonRequestApi rq = new JsonRequestApi(Request.Method.POST, url, data, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                success.onResponse("ok:"+dataok);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                //Map<String, String> data1 = data    ;
+                success.onResponse("error:"+dataok);
+            }
+        });
+        execute(rq);
     }
 
     public void saveFirebaseToken(String userId, String userType, String token,final Response.Listener<String> success, Response.ErrorListener error) throws IllegalAccessException {

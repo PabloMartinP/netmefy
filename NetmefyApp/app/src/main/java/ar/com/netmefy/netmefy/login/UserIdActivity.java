@@ -174,5 +174,4 @@ public class UserIdActivity extends AppCompatActivity {
         }
     }
 
-
 }

@@ -24,6 +24,10 @@ public class Session {
         String userType = prefs.getString("userType","");
         return userType;
     }
+    public void setLog(String id, String value)
+    {
+        prefs.edit().putString(id, value).apply();
+    }
 
     public void setUserId(String userId) {
         prefs.edit().putString("userId", userId).apply();
@@ -42,6 +46,7 @@ public class Session {
     public void setUserName(String userName) {
         prefs.edit().putString("userName", userName).apply();
     }
+
 
     public String getUserName() {
         String userName = prefs.getString("userName","");
