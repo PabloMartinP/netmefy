@@ -61,6 +61,31 @@ public class MainActivity extends AppCompatActivity  {
 
         api = Api.getInstance(getApplicationContext());
 
+        /*paginasLikeadas paginasLikeadas = new paginasLikeadas();
+        paginasLikeadas.cliente_sk = 1;
+        paginasLikeadas.usuario_sk = 1;
+        paginasLikeadas.paginas = new ArrayList<>();
+        paginasLikeadas.paginas.add("'mtlslig'");
+        paginasLikeadas.paginas.add("'123456'");
+
+        api.sendLikes(paginasLikeadas, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+
+            }
+        });*/
+
+        /*api.getTypeOfUser("101", new Response.Listener<tipoUsuarioApp>() {
+            @Override
+            public void onResponse(tipoUsuarioApp response) {
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+            }
+        });*/
 
         tvFacebookStatus  = (TextView)findViewById(R.id.tv_facebookState);
         tvFacebookStatus.setText("?");
@@ -122,8 +147,8 @@ public class MainActivity extends AppCompatActivity  {
             });
         }
 
-        loadInfoRouter();
-        saveToken();
+        //loadInfoRouter();
+        //saveToken();
     }
 
 

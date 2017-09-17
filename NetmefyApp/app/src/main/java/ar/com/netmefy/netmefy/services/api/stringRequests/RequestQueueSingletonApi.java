@@ -44,6 +44,8 @@ public class RequestQueueSingletonApi {
         if (mInstance == null) {
             mInstance = new RequestQueueSingletonApi(context);
         }
+        //mInstance = new RequestQueueSingletonApi(context);
+
         return mInstance;
     }
 

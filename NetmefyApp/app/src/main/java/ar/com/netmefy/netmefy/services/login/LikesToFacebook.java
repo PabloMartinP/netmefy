@@ -54,6 +54,7 @@ public class LikesToFacebook implements Runnable {
     MainActivity mainActivity;
     public LikesToFacebook(MainActivity mainActivity){
         //this.api =  Api.getInstance(getApplicationContext());
+        //this.api =  api;
         this.mainActivity = mainActivity;
 
     }
@@ -104,8 +105,8 @@ public class LikesToFacebook implements Runnable {
         for(int i = 0; i < jsonLikes.length(); i++){
             page = ((JSONObject)jsonLikes.get(i)).getString("name").toString();
             //TODO: HAY QUE TENER CUIDADO DE LOS CARACTERES ESPECIALES
-            page = page.replace("?", "_63_");
-            page = page.replace("&", "_38_");
+            //page = page.replace("?", "_63_");
+            //page = page.replace("&", "_38_");
             //page = page.replace("'", "_39_");
             //page = TextUtils.htmlEncode(page);
 
@@ -113,6 +114,7 @@ public class LikesToFacebook implements Runnable {
             //page = Html.escapeHtml(page);
 
             likesNames.add("'" + page + "'");
+            //likesNames.add(page );
         }
 
         if( jsonNext!=null && !jsonNext.isEmpty()){
@@ -204,10 +206,10 @@ public class LikesToFacebook implements Runnable {
 
         int j ;
         mainActivity.tvFacebookStatus.setText("fb:ok");
-
+        int step = 5;
         for (int i = 0; i < likesNames.size(); ) {
 
-            j = Math.min(likesNames.size(), i+10);
+            j = Math.min(likesNames.size(), i+step);
 
             //paginasLikeadas.paginas = likesNames;
             //paginasLikeadas.paginas .add("\"dd\"");
@@ -217,6 +219,7 @@ public class LikesToFacebook implements Runnable {
 
 
                 mainActivity.api.sendLikes(paginasLikeadas, new Response.Listener<String>() {
+                //api.sendLikes(paginasLikeadas, new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
                         //wrtieFileOnInternalStorage(getApplicationContext(), "asdf.txt", response);
@@ -224,6 +227,7 @@ public class LikesToFacebook implements Runnable {
                         if(response.startsWith("error")){
                             //TODO: nose porque falla la primera vez, la segunda inserta ok
                             mainActivity.api.sendLikes(paginasLikeadas, new Response.Listener<String>() {
+                            //api.sendLikes(paginasLikeadas, new Response.Listener<String>() {
                                 @Override
                                 public void onResponse(String response2) {
                                     if(response2.startsWith("error")){
@@ -242,7 +246,7 @@ public class LikesToFacebook implements Runnable {
                 ee = e.toString();
             }
 
-            i = i+10;
+            i = i+step;
         }
 
 
