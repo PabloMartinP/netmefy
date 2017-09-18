@@ -47,14 +47,22 @@ public class LoginActivity extends AppCompatActivity {
                         Log.e(TAG,object.toString());
                         Log.e(TAG,response.toString());
                         callMainActivity();
-                        finish();
+                        //finish();
 
                     }
                 });
-                Bundle parameters = new Bundle();
-                parameters.putString("fields", "id, first_name, last_name, email, birthday, gender , location");
-                request.setParameters(parameters);
-                request.executeAsync();
+
+                try{
+                    Bundle parameters = new Bundle();
+                    parameters.putString("fields", "id, first_name, last_name, email, birthday, gender , location");
+                    request.setParameters(parameters);
+                    request.executeAsync();
+                    //request.executeAndWait();
+                }catch (Exception ex){
+                    ex.printStackTrace();
+                }
+
+
             }
 
             @Override
