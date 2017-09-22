@@ -8,14 +8,16 @@ public class DeviceItem {
     private String mac;
     private String name;
     private int resId;
+    private String tipoDeDispostivo;
     private Boolean blocked;
 
     public DeviceItem() {
     }
 
-    public DeviceItem(String mac, String name, int resId, Boolean blocked) {
+    public DeviceItem(String mac, String name, int resId, String tipoDeDispostivo, Boolean blocked) {
         this.mac = mac;
         this.name = name;
+        this.tipoDeDispostivo = tipoDeDispostivo;
         this.resId = resId;
         this.blocked = blocked;
     }
@@ -50,5 +52,13 @@ public class DeviceItem {
 
     public void setBlocked(Boolean blocked) {
         this.blocked = blocked;
+    }
+
+    public String getTipoDeDispostivo() {
+        return tipoDeDispostivo;
+    }
+
+    public void setTipoDeDispostivo(String tipoDeDispostivo) {
+        this.tipoDeDispostivo = tipoDeDispostivo;
     }
 }

@@ -479,7 +479,7 @@
                 android:layout_marginRight="16dp"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="4dp"
                 android:onClick="goToDeviceList"/>
 
             <TextView
@@ -501,37 +501,41 @@
                 android:id="@+id/textView25"
                 android:layout_width="56dp"
                 android:layout_height="20dp"
-                android:layout_marginRight="115dp"
-                android:layout_marginTop="0dp"
+                android:layout_marginRight="23dp"
+                android:layout_marginTop="-1dp"
                 android:gravity="center"
                 android:text="@string/user"
                 android:textSize="12sp"
-                app:layout_constraintRight_toLeftOf="@+id/textView23"
+                app:layout_constraintRight_toLeftOf="@+id/textView24"
                 app:layout_constraintTop_toBottomOf="@+id/circleImageView2" />
 
             <TextView
                 android:id="@+id/textView24"
                 android:layout_width="56dp"
                 android:layout_height="20dp"
-                android:layout_marginRight="22dp"
+                android:layout_marginRight="8dp"
                 android:layout_marginTop="0dp"
                 android:gravity="center"
                 android:text="@string/user"
                 android:textSize="12sp"
-                app:layout_constraintRight_toLeftOf="@+id/textView23"
-                app:layout_constraintTop_toBottomOf="@+id/circleImageView3" />
+                app:layout_constraintTop_toBottomOf="@+id/circleImageView3"
+                android:layout_marginLeft="8dp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent" />
 
             <TextView
                 android:id="@+id/textView23"
                 android:layout_width="56dp"
                 android:layout_height="20dp"
-                android:layout_marginRight="-8dp"
+                android:layout_marginRight="0dp"
                 android:layout_marginTop="-1dp"
                 android:gravity="center"
                 android:text="@string/user"
                 android:textSize="12sp"
                 app:layout_constraintRight_toLeftOf="@+id/textView17"
-                app:layout_constraintTop_toBottomOf="@+id/circleImageView5" />
+                app:layout_constraintTop_toBottomOf="@+id/circleImageView5"
+                app:layout_constraintLeft_toRightOf="@+id/textView24"
+                android:layout_marginLeft="8dp" />
 
             <TextView
                 android:id="@+id/textView17"
@@ -548,37 +552,41 @@
                 android:id="@+id/circleImageView4"
                 android:layout_width="35dp"
                 android:layout_height="35dp"
-                android:layout_marginLeft="50dp"
+                android:layout_marginLeft="8dp"
                 android:layout_marginTop="9dp"
                 android:src="@drawable/guest_w_128"
                 app:layout_constraintLeft_toRightOf="@+id/circleImageView3"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintRight_toLeftOf="@+id/circleImageView5"
                 android:layout_marginRight="8dp"
-                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintHorizontal_bias="0.577"
                 android:layout_marginBottom="8dp"
                 app:layout_constraintBottom_toTopOf="@+id/tv_ver_todos"
-                app:layout_constraintVertical_bias="0.0" />
+                app:layout_constraintVertical_bias="0.416" />
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/circleImageView3"
                 android:layout_width="35dp"
                 android:layout_height="35dp"
-                android:layout_marginLeft="56dp"
+                android:layout_marginLeft="8dp"
                 android:layout_marginTop="5dp"
                 android:src="@drawable/guest_w_128"
-                app:layout_constraintLeft_toRightOf="@+id/circleImageView2"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                android:layout_marginRight="8dp"
+                app:layout_constraintRight_toRightOf="parent" />
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/circleImageView2"
                 android:layout_width="35dp"
                 android:layout_height="35dp"
-                android:layout_marginLeft="55dp"
+                android:layout_marginLeft="8dp"
                 android:layout_marginTop="5dp"
                 android:src="@drawable/guest_w_128"
                 app:layout_constraintLeft_toRightOf="@+id/circleImageView"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintRight_toLeftOf="@+id/circleImageView3"
+                android:layout_marginRight="8dp" />
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/circleImageView"

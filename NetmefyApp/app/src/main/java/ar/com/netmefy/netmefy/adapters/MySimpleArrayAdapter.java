@@ -40,9 +40,9 @@ public class MySimpleArrayAdapter extends ArrayAdapter<DeviceItem> {
         // Change the icon for Windows and iPhone
         Boolean blocked = values[position].getBlocked();
         if (blocked) {
-            rowView.setBackgroundColor(Color.parseColor("#ff99cc00"));
-        } else {
             rowView.setBackgroundColor(Color.parseColor("#ffff4444"));
+        } else {
+            rowView.setBackgroundColor(Color.parseColor("#ff99cc00"));
         }
 
         return rowView;
