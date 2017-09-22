@@ -476,10 +476,11 @@
                 android:layout_height="35dp"
                 android:id="@+id/circleImageView5"
                 android:src="@drawable/eye_w_128"
-                app:layout_constraintTop_toTopOf="parent"
-                android:layout_marginTop="5dp"
                 android:layout_marginRight="16dp"
-                app:layout_constraintRight_toRightOf="parent" />
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_marginTop="8dp"
+                android:onClick="goToDeviceList"/>
 
             <TextView
                 android:id="@+id/tv_ver_todos"

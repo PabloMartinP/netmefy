@@ -35,25 +35,25 @@ dependencies {
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
+    //compile 'com.google.android.gms:play-services-auth:9.0.0'
+    // this line must be included to integrate with Firebase
+    compile files('libs/CircleImageView-master/gradle/wrapper/gradle-wrapper.jar')
     compile 'com.android.support:appcompat-v7:25.3.1'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile 'com.android.support:design:25.3.1'
     compile 'com.facebook.android:facebook-android-sdk:[4,5)'
-    //compile 'com.google.android.gms:play-services-auth:9.0.0'
     compile 'com.google.android.gms:play-services-auth:9.2.0'
     compile 'com.android.volley:volley:1.0.0'
     compile 'org.jsoup:jsoup:1.10.3'
     compile 'fr.bmartel:jspeedtest:1.31.1'
     compile 'com.google.firebase:firebase-core:9.2.0'
-    // this line must be included to integrate with Firebase
     compile 'com.google.firebase:firebase-messaging:9.2.0'
     compile 'com.fasterxml.jackson.core:jackson-core:2.5.3'
     compile 'com.fasterxml.jackson.core:jackson-annotations:2.5.3'
     compile 'com.fasterxml.jackson.core:jackson-databind:2.5.3'
     compile 'com.google.code.gson:gson:2.3.1'
-    testCompile 'junit:junit:4.12'
-    compile files('libs/CircleImageView-master/gradle/wrapper/gradle-wrapper.jar')
     compile 'de.hdodenhof:circleimageview:2.1.0'
+    testCompile 'junit:junit:4.12'
 }
 
 apply plugin: 'com.google.gms.google-services'

@@ -327,6 +327,11 @@ public class MainActivity extends AppCompatActivity  {
         startActivity(parentalControl);
     }
 
+    public void goToDeviceList(View view){
+        Intent deviceList = new Intent(MainActivity.this, DeviceListActivity.class);
+        startActivity(deviceList);
+    }
+
 
     private boolean isRed(){
         return iv_router_red.getVisibility() == View.VISIBLE;
