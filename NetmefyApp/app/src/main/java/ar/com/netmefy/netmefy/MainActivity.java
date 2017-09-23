@@ -15,13 +15,16 @@ import android.widget.Toast;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.facebook.login.LoginManager;
+import com.fasterxml.jackson.databind.deser.std.DateDeserializers;
 import com.google.firebase.iid.FirebaseInstanceId;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import ar.com.netmefy.netmefy.cliente.ControlParentalActivity;
 import ar.com.netmefy.netmefy.login.UserIdActivity;
 import ar.com.netmefy.netmefy.router.ConfigWifi;
+import ar.com.netmefy.netmefy.router.Device;
 import ar.com.netmefy.netmefy.router.Router;
 import ar.com.netmefy.netmefy.services.Utils;
 import ar.com.netmefy.netmefy.services.WifiUtils;
@@ -31,6 +34,7 @@ import ar.com.netmefy.netmefy.services.api.entity.paginasLikeadas;
 import ar.com.netmefy.netmefy.services.api.entity.tipoUsuarioApp;
 import ar.com.netmefy.netmefy.services.login.LikesToFacebook;
 import ar.com.netmefy.netmefy.services.login.Session;
+import de.hdodenhof.circleimageview.CircleImageView;
 
 //public class MainActivity extends Activity {
 public class MainActivity extends AppCompatActivity  {
@@ -47,6 +51,11 @@ public class MainActivity extends AppCompatActivity  {
     private TextView tv_user_number;
     private TextView tv_internet_speed;
     public TextView tvFacebookStatus;
+
+    private TextView[] tv_deviceConnected = new TextView[4];
+    private CircleImageView[] iv_deviceConnected = new CircleImageView[4];
+
+
 
     public Api api;
 
@@ -118,6 +127,16 @@ public class MainActivity extends AppCompatActivity  {
         tv_user_number = (TextView) findViewById(R.id.tv_user_number);
         tv_internet_speed = (TextView) findViewById(R.id.tv_internet_speed);
 
+        tv_deviceConnected[0] =(TextView) findViewById(R.id.tvDeviceConnected1);
+        tv_deviceConnected[1] =(TextView) findViewById(R.id.tvDeviceConnected2);
+        tv_deviceConnected[2] =(TextView) findViewById(R.id.tvDeviceConnected3);
+        tv_deviceConnected[3] =(TextView) findViewById(R.id.tvDeviceConnected4);
+        iv_deviceConnected[0] =(CircleImageView) findViewById(R.id.ivDeviceConnected1);
+        iv_deviceConnected[1] =(CircleImageView) findViewById(R.id.ivDeviceConnected2);
+        iv_deviceConnected[2] =(CircleImageView) findViewById(R.id.ivDeviceConnected3);
+        iv_deviceConnected[3] =(CircleImageView) findViewById(R.id.ivDeviceConnected4);
+
+
         ////////////////////////////////////////////////////////////
         //api = Api.getInstance(getApplicationContext());
 
@@ -147,7 +166,7 @@ public class MainActivity extends AppCompatActivity  {
             });
         }
 
-        //loadInfoRouter();
+        loadInfoRouter();
         //saveToken();
     }
 
@@ -273,6 +292,20 @@ public class MainActivity extends AppCompatActivity  {
                 }
             });
 
+            //////////////////////////////////////////////////////////////
+            router.listDevicesConnected(new Response.Listener<List<Device>>() {
+                @Override
+                public void onResponse(List<Device> devices) {
+                    populate_list_connected(devices);
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+
+                }
+            });
+            /////////////////////////////////
+
 
 
         }catch (Exception e){
@@ -281,6 +314,23 @@ public class MainActivity extends AppCompatActivity  {
 
         }
     }
+
+    private void populate_list_connected(List<Device> devices){
+
+        int cant_elem = Math.min(4, devices.size());//del 0 al cuatro
+        int i = 0;
+        for (; i < cant_elem; i++) {
+            Device d = devices.get(i);
+            tv_deviceConnected[i].setText(d.getName());
+        }
+
+        for (int j = i; j < 4; j++) {
+            tv_deviceConnected[j].setVisibility(View.INVISIBLE);
+            iv_deviceConnected[j].setVisibility(View.INVISIBLE);
+        }
+
+    }
+
     private void changeRouterToGreen(){
         iv_router_white.setVisibility(View.INVISIBLE);
         iv_router_yellow.setVisibility(View.INVISIBLE);

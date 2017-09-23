@@ -6,7 +6,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import ar.com.netmefy.netmefy.R;
@@ -33,7 +32,7 @@ public class MySimpleArrayAdapter extends ArrayAdapter<DeviceItem> {
         View rowView = inflater.inflate(R.layout.user_layout, parent, false);
         TextView textView1 = (TextView) rowView.findViewById(R.id.firstLine);
         TextView textView2 = (TextView) rowView.findViewById(R.id.secondLine);
-        de.hdodenhof.circleimageview.CircleImageView imageView = (de.hdodenhof.circleimageview.CircleImageView) rowView.findViewById(R.id.circleImageView2);
+        de.hdodenhof.circleimageview.CircleImageView imageView = (de.hdodenhof.circleimageview.CircleImageView) rowView.findViewById(R.id.tvDeviceConnected2);
         textView1.setText(values[position].getName());
         textView2.setText(values[position].getMac());
         imageView.setImageResource(values[position].getResId());

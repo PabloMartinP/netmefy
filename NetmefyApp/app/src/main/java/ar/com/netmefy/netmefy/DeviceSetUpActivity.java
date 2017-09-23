@@ -9,6 +9,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import ar.com.netmefy.netmefy.adapters.elements.DeviceItem;
+import ar.com.netmefy.netmefy.router.Router;
 
 public class DeviceSetUpActivity extends AppCompatActivity {
 
@@ -17,14 +18,18 @@ public class DeviceSetUpActivity extends AppCompatActivity {
     TextView textView15;
     TextView textView16;
     Button button2;
-
+    Router router;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_device_set_up);
+
+        router = Router.getInstance(getApplicationContext());
+
         int position= getIntent().getIntExtra("position",0);
-        DeviceItem[] values = new DeviceItem[] { new DeviceItem("11:22:33:44:55:66","Pepe",R.drawable.guest_w_128, "TV", Boolean.FALSE),
+        DeviceItem[] values =router.getDeviceConnectedStored();
+        /*DeviceItem[] values = new DeviceItem[] { new DeviceItem("11:22:33:44:55:66","Pepe",R.drawable.guest_w_128, "TV", Boolean.FALSE),
                 new DeviceItem("11:22:33:44:55:66","Android",R.drawable.download_128, "TV",  Boolean.FALSE),
                 new DeviceItem("11:22:33:44:55:66","iPhone",R.drawable.info_128, "TV",  Boolean.TRUE),
                 new DeviceItem("11:22:33:44:55:66","WindowsMobile",R.drawable.add_link_128, "TV",  Boolean.FALSE),
@@ -34,8 +39,9 @@ public class DeviceSetUpActivity extends AppCompatActivity {
                 new DeviceItem("11:22:33:44:55:66","Windows7",R.drawable.lock_5_128, "TV",  Boolean.TRUE),
                 new DeviceItem("11:22:33:44:55:66","OS/2",R.drawable.save_128, "TV",  Boolean.FALSE),
                 new DeviceItem("11:22:33:44:55:66","Max OS X",R.drawable.search_128, "TV",  Boolean.TRUE)};
+        */
 
-        circleImageView2 = (de.hdodenhof.circleimageview.CircleImageView) findViewById(R.id.circleImageView2);
+        circleImageView2 = (de.hdodenhof.circleimageview.CircleImageView) findViewById(R.id.tvDeviceConnected2);
         textView15 = (TextView) findViewById(R.id.textView15);
         textView16 = (TextView) findViewById(R.id.textView16);
         editText2 = (EditText) findViewById(R.id.editText2);
@@ -49,7 +55,7 @@ public class DeviceSetUpActivity extends AppCompatActivity {
             button2.setText("Desbloquear");
             button2.setBackgroundColor(Color.parseColor("#ff99cc00"));
         }else{
-            button2.setText("Blockear");
+            button2.setText("Bloquear");
             button2.setBackgroundColor(Color.parseColor("#ffff4444"));
         }
 

@@ -1,5 +1,7 @@
 package ar.com.netmefy.netmefy.router;
 
+import ar.com.netmefy.netmefy.adapters.elements.DeviceItem;
+
 /**
  * Created by fiok on 24/06/2017.
  */
@@ -9,6 +11,7 @@ public class Device {
     private String ip;
     private String mac;
     private int id;
+    private boolean blocked;
 
     public int getId() {
         return id;
@@ -55,5 +58,23 @@ public class Device {
 
     public void setMac(String mac) {
         this.mac = mac.toUpperCase();
+    }
+
+    public DeviceItem toDeviceItem() {
+        DeviceItem d = new DeviceItem();
+        d.setName(this.getName());
+        d.setBlocked(this.isBlocked());
+        d.setMac(this.getMac());
+        d.setTipoDeDispostivo("un tipo 123");
+        d.setResId(2130837670);
+        return  d;
+    }
+
+    public boolean isBlocked() {
+        return blocked;
+    }
+
+    public void setBlocked(boolean blocked) {
+        this.blocked = blocked;
     }
 }

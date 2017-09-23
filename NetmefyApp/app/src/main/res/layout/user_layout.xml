@@ -7,8 +7,8 @@
 
 
     <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/circleImageView2"
-        app:layout_constraintLeft_toRightOf="@+id/circleImageView"
+        android:id="@+id/tvDeviceConnected2"
+        app:layout_constraintLeft_toRightOf="@+id/ivDeviceConnected1"
         app:layout_constraintTop_toTopOf="parent"
         android:layout_width="45dp"
         android:layout_height="45dp"
@@ -24,8 +24,8 @@
         android:layout_alignParentBottom="true"
         android:layout_marginLeft="13dp"
         android:layout_marginStart="13dp"
-        android:layout_toEndOf="@+id/circleImageView2"
-        android:layout_toRightOf="@+id/circleImageView2"
+        android:layout_toEndOf="@+id/tvDeviceConnected2"
+        android:layout_toRightOf="@+id/tvDeviceConnected2"
         android:ellipsize="marquee"
         android:maxLines="1"
         android:text="Description"
@@ -43,7 +43,7 @@
         android:layout_alignParentTop="true"
         android:layout_alignStart="@+id/secondLine"
         android:layout_alignWithParentIfMissing="true"
-        android:layout_toEndOf="@+id/circleImageView2"
+        android:layout_toEndOf="@+id/tvDeviceConnected2"
         android:gravity="center_vertical"
         android:text="Example application"
         android:textColor="@android:color/background_light"

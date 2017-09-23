@@ -11,6 +11,7 @@ import com.android.volley.toolbox.StringRequest;
 
 import java.util.List;
 
+import ar.com.netmefy.netmefy.adapters.elements.DeviceItem;
 import ar.com.netmefy.netmefy.router.nucom.R5000UNv2.Nucom;
 import ar.com.netmefy.netmefy.router.tplink.TLWR941ND.TPLink;
 import ar.com.netmefy.netmefy.services.Utils;
@@ -21,7 +22,13 @@ import ar.com.netmefy.netmefy.services.WifiUtils;
  */
 
 public abstract class Router {
-
+    private static DeviceItem[] deviceConnected ;
+    public DeviceItem[] getDeviceConnectedStored(){
+        return deviceConnected;
+    }
+    public void setDeviceConnected(DeviceItem[] deviceItems){
+        deviceConnected = deviceItems;
+    }
 
     protected RouterConstants _routerConstants;
     protected  Context _context;
