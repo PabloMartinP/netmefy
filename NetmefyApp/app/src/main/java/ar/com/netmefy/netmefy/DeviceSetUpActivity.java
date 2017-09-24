@@ -62,6 +62,9 @@ public class DeviceSetUpActivity extends AppCompatActivity {
     }
 
     public void saveAndExit(View view){
+
+
+
         this.finish();
     }
 }

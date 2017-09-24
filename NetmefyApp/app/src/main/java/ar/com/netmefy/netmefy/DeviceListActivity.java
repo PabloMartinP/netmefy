@@ -75,9 +75,9 @@ public class DeviceListActivity extends AppCompatActivity {
 
             }
         });
+    }
 
-
-
+    public void block(View view){
 
     }
 }

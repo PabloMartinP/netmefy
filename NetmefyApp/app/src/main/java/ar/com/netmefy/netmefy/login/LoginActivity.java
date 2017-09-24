@@ -15,6 +15,7 @@ import com.facebook.GraphResponse;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import ar.com.netmefy.netmefy.MainActivity;
@@ -46,6 +47,26 @@ public class LoginActivity extends AppCompatActivity {
                     public void onCompleted(JSONObject object, GraphResponse response) {
                         Log.e(TAG,object.toString());
                         Log.e(TAG,response.toString());
+
+                        String fb_nombre = "";
+                        String fb_apellido = "";
+                        String fb_sexo = "";
+                        String fb_nacimiento = "";
+                        String fb_email = "";
+                        String fb_id ;
+                        try {
+                            fb_id = object.getString("id");
+                            fb_nombre = object.getString("first_name");
+                            fb_apellido = object.getString("last_name");
+                            fb_email = object.getString("email");
+                            fb_nacimiento = object.getString("birthday");
+                            fb_sexo = object.getString("gender");
+
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
                         callMainActivity();
                         //finish();
 

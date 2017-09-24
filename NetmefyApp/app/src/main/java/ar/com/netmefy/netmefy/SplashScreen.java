@@ -28,6 +28,7 @@ public class SplashScreen extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_screen);
         session = new Session(getApplicationContext());
+
         api = Api.getInstance(getApplicationContext());
 
         if(session.getUserId().isEmpty()) {
@@ -69,7 +70,10 @@ public class SplashScreen extends Activity {
         if(Profile.getCurrentProfile() != null) {
             //se logeo antes con facebook
 
+
+
             goToActivity(MainActivity.class);
+
         }else if (session.getUserType().equalsIgnoreCase("user")){
             //es usuario
             goToActivity(LoginActivity.class);

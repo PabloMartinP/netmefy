@@ -4,6 +4,11 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
+import com.google.gson.Gson;
+
+import ar.com.netmefy.netmefy.services.api.Api;
+import ar.com.netmefy.netmefy.services.api.entity.clientInfo;
+
 /**
  * Created by ignac on 18/6/2017.
  */
@@ -15,6 +20,8 @@ public class Session {
         // TODO Auto-generated constructor stub
         prefs = PreferenceManager.getDefaultSharedPreferences(cntx);
     }
+
+
 
     public void setUserType(String userType) {
         prefs.edit().putString("userType", userType).apply();
@@ -40,10 +47,29 @@ public class Session {
     }
     public String getUserId() {
         String userId = prefs.getString("userId","");
+
         return userId;
     }
 
+    public void setClientInfo(){
+
+        Gson gson = new Gson();
+        String json = gson.toJson(Api.clientInfo);
+
+        prefs.edit().putString("clientInfo", json).apply();
+    }
+    public void getClientInfo(){
+        Gson gson = new Gson();
+        String clientInfoJson = prefs.getString("clientInfo","");
+
+        clientInfo clientInfo = gson.fromJson(clientInfoJson, clientInfo.class);
+        Api.clientInfo = clientInfo;
+
+    }
+
+
     public void setUserName(String userName) {
+
         prefs.edit().putString("userName", userName).apply();
     }
 

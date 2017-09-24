@@ -5,6 +5,7 @@ package ar.com.netmefy.netmefy.services;
 import android.app.Activity;
 import android.app.ProgressDialog;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -21,6 +22,21 @@ import ar.com.netmefy.netmefy.router.Device;
 
 public class Utils {
 
+    public static Map<String, String> toMap(Object object) throws IllegalAccessException {
+        Map<String, String> map = new HashMap<String, String>();
+
+        Object someObject = object;
+        for (Field field : someObject.getClass().getDeclaredFields()) {
+            field.setAccessible(true); // You might want to set modifier to public first.
+            Object value = field.get(someObject);
+            //if (value != null) {
+//                System.out.println(field.getName() + "=" + value);
+//            }
+            if(value !=null && !field.getName().equalsIgnoreCase("serialVersionUID"))
+                map.put(field.getName(), value.toString());
+        }
+        return map;
+    }
 
     public static ProgressDialog getProgressBar(Activity activity, String message){
         ProgressDialog progressBar = new ProgressDialog(activity);

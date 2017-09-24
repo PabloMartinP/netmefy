@@ -11,11 +11,15 @@ import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
 
 import org.json.JSONObject;
+import org.jsoup.Connection;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import ar.com.netmefy.netmefy.router.Device;
+import ar.com.netmefy.netmefy.services.Utils;
+import ar.com.netmefy.netmefy.services.api.entity.DeviceModel;
 import ar.com.netmefy.netmefy.services.api.entity.SaveToken;
 import ar.com.netmefy.netmefy.services.api.entity.Token;
 import ar.com.netmefy.netmefy.services.api.entity.clientInfo;
@@ -34,6 +38,7 @@ public  class Api {
     public static tipoUsuarioApp tipoUsuarioApp ;
     public  static int cliente_sk;
     public static int usuario_sk;
+    public  static clientInfo clientInfo;
     /////////////////////////////////////////////////////////////////////
     private RequestQueue _queue;
     private Api(Context context){
@@ -102,8 +107,6 @@ public  class Api {
         JsonRequestApi rq = new JsonRequestApi(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                String rr;
-                rr = response.toString();
                 clientInfo client ;
                 Gson gson = new Gson();
                 client = gson.fromJson(response.toString(), clientInfo.class);
@@ -126,6 +129,34 @@ public  class Api {
     }
 
 
+    public void addDevice(final DeviceModel device, final Response.Listener success){
+        String url = "http://200.82.0.24/api/dispositivos";
+        Map<String, String> data  = null;
+        try {
+            data = Utils.toMap(device);
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+
+        final String dataok = data.toString();
+
+        JsonRequestApi rq = new JsonRequestApi(Request.Method.POST, url, data, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                //success.onResponse("ok:"+dataok);
+                success.onResponse(device);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                //Map<String, String> data1 = data    ;
+                //success.onResponse("error:"+dataok);
+                success.onResponse(null);
+            }
+        });
+        execute(rq);
+
+    }
 
     public void sendLikes(paginasLikeadas paginasLikeadas, final Response.Listener<String> success){
         String url = "http://200.82.0.24/api/paginas";

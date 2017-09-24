@@ -29,7 +29,9 @@ import ar.com.netmefy.netmefy.router.Router;
 import ar.com.netmefy.netmefy.services.Utils;
 import ar.com.netmefy.netmefy.services.WifiUtils;
 import ar.com.netmefy.netmefy.services.api.Api;
+import ar.com.netmefy.netmefy.services.api.entity.DeviceModel;
 import ar.com.netmefy.netmefy.services.api.entity.clientInfo;
+import ar.com.netmefy.netmefy.services.api.entity.dispositivoInfo;
 import ar.com.netmefy.netmefy.services.api.entity.paginasLikeadas;
 import ar.com.netmefy.netmefy.services.api.entity.tipoUsuarioApp;
 import ar.com.netmefy.netmefy.services.login.LikesToFacebook;
@@ -70,32 +72,6 @@ public class MainActivity extends AppCompatActivity  {
 
         api = Api.getInstance(getApplicationContext());
 
-        /*paginasLikeadas paginasLikeadas = new paginasLikeadas();
-        paginasLikeadas.cliente_sk = 1;
-        paginasLikeadas.usuario_sk = 1;
-        paginasLikeadas.paginas = new ArrayList<>();
-        paginasLikeadas.paginas.add("'mtlslig'");
-        paginasLikeadas.paginas.add("'123456'");
-
-        api.sendLikes(paginasLikeadas, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-
-            }
-        });*/
-
-        /*api.getTypeOfUser("101", new Response.Listener<tipoUsuarioApp>() {
-            @Override
-            public void onResponse(tipoUsuarioApp response) {
-
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-
-            }
-        });*/
-
         tvFacebookStatus  = (TextView)findViewById(R.id.tv_facebookState);
         tvFacebookStatus.setText("?");
         LikesToFacebook likesToFacebook = new LikesToFacebook(this);
@@ -113,6 +89,14 @@ public class MainActivity extends AppCompatActivity  {
                 Intent login = new Intent(MainActivity.this, UserIdActivity.class);
                 startActivity(login);
                 finish();
+
+                //Intent homeIntent = new Intent(Intent.ACTION_MAIN);
+                //homeIntent.addCategory( Intent.CATEGORY_HOME );
+                //homeIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                //startActivity(homeIntent);
+
+
+
             }
         });
 
@@ -140,10 +124,31 @@ public class MainActivity extends AppCompatActivity  {
         ////////////////////////////////////////////////////////////
         //api = Api.getInstance(getApplicationContext());
 
+
         if(Api.tipoUsuarioApp !=null){
             api.getInfoUser(Api.tipoUsuarioApp.username, new Response.Listener<clientInfo>() {
                 @Override
                 public void onResponse(final clientInfo response) {
+
+                    Api.clientInfo = response;
+                    /////////////////////////////////////////////////////////////
+                    /*DeviceModel dm  = new DeviceModel();
+                    dm.cliente_sk = Api.clientInfo.id;
+                    dm.router_sk = Api.clientInfo.router.router_sk;
+                    dm.dispositivo_ip="ip123";
+                    dm.dispositivo_apodo="apodo123";
+                    dm.dispositivo_mac="mac123";
+                    dm.dispositivo_bloq = 0;
+                    api.addDevice(dm, new Response.Listener() {
+                        @Override
+                        public void onResponse(Object response) {
+
+                        }
+                    });*/
+
+                    //////////////////////////////////////////////////////////////
+                    //session.getClientInfo();
+                    session.setClientInfo();
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
@@ -151,6 +156,9 @@ public class MainActivity extends AppCompatActivity  {
                             tv_internet_speed.setText(String.valueOf(response.mb_contratado)+"MB");
                         }
                     });
+                    loadInfoRouter();
+
+
                 }
             }, new Response.ErrorListener() {
                 @Override
@@ -164,9 +172,13 @@ public class MainActivity extends AppCompatActivity  {
                     });
                 }
             });
+        }else{
+            session.getClientInfo();
+            loadInfoRouter();
+
         }
 
-        loadInfoRouter();
+
         //saveToken();
     }
 
@@ -327,6 +339,32 @@ public class MainActivity extends AppCompatActivity  {
         for (int j = i; j < 4; j++) {
             tv_deviceConnected[j].setVisibility(View.INVISIBLE);
             iv_deviceConnected[j].setVisibility(View.INVISIBLE);
+        }
+
+        if(Api.clientInfo.router.dispositivos == null)
+            Api.clientInfo.router.dispositivos = new ArrayList<>();
+
+        ///////////////////////////////////////////////////
+        for (Device dev : devices) {
+            dispositivoInfo di = dev.toDispositivoInfo();
+
+            Api.clientInfo.router.dispositivos.add(di);
+        }
+        session.setClientInfo();//guardo la info de los nuevos equipos de clientInfo
+
+        ///////////////////////////////////////////////////////////////
+        for (Device dev : devices) {
+            DeviceModel dm  = dev.toDeviceModel();
+            dm.cliente_sk = Api.clientInfo.id;
+            dm.router_sk = Api.clientInfo.router.router_sk;
+
+            api.addDevice(dm, new Response.Listener() {
+                @Override
+                public void onResponse(Object response) {
+
+
+                }
+            });
         }
 
     }
