@@ -6,20 +6,22 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
 import android.widget.TextView;
 
 import ar.com.netmefy.netmefy.R;
 import ar.com.netmefy.netmefy.adapters.elements.DeviceItem;
+import ar.com.netmefy.netmefy.adapters.elements.WebPageToBlockItem;
 
 /**
  * Created by ignac on 21/9/2017.
  */
 
-public class MySimpleArrayAdapter extends ArrayAdapter<DeviceItem> {
+public class MySimpleWebPageArrayAdapter extends ArrayAdapter<WebPageToBlockItem> {
     private final Context context;
-    private final DeviceItem[] values;
+    private final WebPageToBlockItem[] values;
 
-    public MySimpleArrayAdapter(Context context, DeviceItem[] values) {
+    public MySimpleWebPageArrayAdapter(Context context, WebPageToBlockItem[] values) {
         super(context, R.layout.user_layout, values);
         this.context = context;
         this.values = values;
@@ -29,19 +31,16 @@ public class MySimpleArrayAdapter extends ArrayAdapter<DeviceItem> {
     public View getView(int position, View convertView, ViewGroup parent) {
         LayoutInflater inflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View rowView = inflater.inflate(R.layout.user_layout, parent, false);
+        View rowView = inflater.inflate(R.layout.webpage_layout, parent, false);
         TextView textView1 = (TextView) rowView.findViewById(R.id.firstLine);
         TextView textView2 = (TextView) rowView.findViewById(R.id.secondLine);
-        de.hdodenhof.circleimageview.CircleImageView imageView = (de.hdodenhof.circleimageview.CircleImageView) rowView.findViewById(R.id.tvDeviceConnected2);
+        CheckBox checkBox = (CheckBox) rowView.findViewById(R.id.checkBox);
+        de.hdodenhof.circleimageview.CircleImageView imageView = (de.hdodenhof.circleimageview.CircleImageView) rowView.findViewById(R.id.circleImageView2);
         textView1.setText(values[position].getName());
-        textView2.setText(values[position].getMac());
+        textView2.setText(values[position].getUrl());
         imageView.setImageResource(values[position].getResId());
         Boolean blocked = values[position].getBlocked();
-        if (blocked) {
-            rowView.setBackgroundColor(Color.parseColor("#ffff4444"));
-        } else {
-            rowView.setBackgroundColor(Color.parseColor("#ff99cc00"));
-        }
+        checkBox.setChecked(blocked);
 
         return rowView;
     }
