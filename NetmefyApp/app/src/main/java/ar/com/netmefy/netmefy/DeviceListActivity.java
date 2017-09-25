@@ -18,6 +18,8 @@ import ar.com.netmefy.netmefy.adapters.MySimpleArrayAdapter;
 import ar.com.netmefy.netmefy.adapters.elements.DeviceItem;
 import ar.com.netmefy.netmefy.router.Device;
 import ar.com.netmefy.netmefy.router.Router;
+import ar.com.netmefy.netmefy.services.NMF_Info;
+import ar.com.netmefy.netmefy.services.api.entity.dispositivoInfo;
 
 public class DeviceListActivity extends AppCompatActivity {
 
@@ -42,7 +44,52 @@ public class DeviceListActivity extends AppCompatActivity {
                 new DeviceItem("11:22:33:44:55:66","OS/2",R.drawable.save_128, "TV",  Boolean.FALSE),
                 new DeviceItem("11:22:33:44:55:66","Max OS X",R.drawable.search_128, "TV",  Boolean.TRUE)};
         */
+        final Activity _this = this;
+        router.listDevicesConnected(new Response.Listener<List<Device>>() {
+            @Override
+            public void onResponse(List<Device> devices) {
+                NMF_Info.updateDevicesConnected(devices, getApplicationContext());
 
+                List<dispositivoInfo> list_connected = NMF_Info.getDevicesConnected();
+
+                final DeviceItem[] values ;
+                values = new DeviceItem[list_connected.size()];
+                int i = 0;
+                for (dispositivoInfo d : list_connected) {
+                    values[i] = d.toDeviceItem();
+                    i++;
+                }
+
+
+                MySimpleArrayAdapter adapter = new MySimpleArrayAdapter(_this, values);
+                devicesListView.setAdapter(adapter);
+                devicesListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        Intent device = new Intent(DeviceListActivity.this, DeviceSetUpActivity.class).putExtra("mac", values[position].getMac());
+                        //startActivity(device);
+                        //Intent intent = new Intent(this, SyncActivity.class);
+                        //intent.putExtra("someData", "Here is some data");
+                        startActivityForResult(device, 1);
+
+
+                    }
+                });
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+            }
+        });
+
+
+
+
+
+/*
         final Activity activity = this;
         router.listDevicesConnected(new Response.Listener<List<Device>>() {
             @Override
@@ -75,9 +122,19 @@ public class DeviceListActivity extends AppCompatActivity {
 
             }
         });
+        */
     }
 
     public void block(View view){
 
+    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(resultCode==RESULT_OK){
+            Intent refresh = new Intent(this, DeviceListActivity.class);
+            startActivity(refresh);
+            this.finish();
+        }
     }
 }

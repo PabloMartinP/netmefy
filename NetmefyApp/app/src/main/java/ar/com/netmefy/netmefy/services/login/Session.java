@@ -6,8 +6,10 @@ import android.preference.PreferenceManager;
 
 import com.google.gson.Gson;
 
+import ar.com.netmefy.netmefy.services.NMF_Info;
 import ar.com.netmefy.netmefy.services.api.Api;
 import ar.com.netmefy.netmefy.services.api.entity.clientInfo;
+import ar.com.netmefy.netmefy.services.api.entity.usuarioInfo;
 
 /**
  * Created by ignac on 18/6/2017.
@@ -51,11 +53,9 @@ public class Session {
         return userId;
     }
 
-    public void setClientInfo(){
-
+    public void setClientInfo() {
         Gson gson = new Gson();
-        String json = gson.toJson(Api.clientInfo);
-
+        String json = gson.toJson(NMF_Info.clientInfo);
         prefs.edit().putString("clientInfo", json).apply();
     }
     public void getClientInfo(){
@@ -63,7 +63,7 @@ public class Session {
         String clientInfoJson = prefs.getString("clientInfo","");
 
         clientInfo clientInfo = gson.fromJson(clientInfoJson, clientInfo.class);
-        Api.clientInfo = clientInfo;
+        NMF_Info.clientInfo = clientInfo;
 
     }
 
@@ -94,5 +94,19 @@ public class Session {
     public String getLoginWay() {
         String loginWay = prefs.getString("loginWay","");
         return loginWay;
+    }
+
+    public void setUsuarioInfo() {
+        Gson gson = new Gson();
+        String json = gson.toJson(NMF_Info.usuarioInfo);
+        prefs.edit().putString("usuarioInfo", json).apply();
+    }
+    public void getUsuarioInfo(){
+        Gson gson = new Gson();
+        String usuarioInfoJson = prefs.getString("usuarioInfo","");
+
+        usuarioInfo usuarioInfo = gson.fromJson(usuarioInfoJson, usuarioInfo.class);
+        NMF_Info.usuarioInfo = usuarioInfo;
+
     }
 }

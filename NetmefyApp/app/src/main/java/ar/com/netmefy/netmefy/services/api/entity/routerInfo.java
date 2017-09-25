@@ -7,7 +7,7 @@ public  class routerInfo{
     public String modelo;
     public String ssid;
     public String password;
-    public List<dispositivoInfo> dispositivos;
+    public List<dispositivoInfo> devices;
 
     public List<webModel> webs_bloqueadas;
 }

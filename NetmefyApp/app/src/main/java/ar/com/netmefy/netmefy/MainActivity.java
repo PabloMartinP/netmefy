@@ -1,5 +1,6 @@
 package ar.com.netmefy.netmefy;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -26,6 +27,7 @@ import ar.com.netmefy.netmefy.login.UserIdActivity;
 import ar.com.netmefy.netmefy.router.ConfigWifi;
 import ar.com.netmefy.netmefy.router.Device;
 import ar.com.netmefy.netmefy.router.Router;
+import ar.com.netmefy.netmefy.services.NMF_Info;
 import ar.com.netmefy.netmefy.services.Utils;
 import ar.com.netmefy.netmefy.services.WifiUtils;
 import ar.com.netmefy.netmefy.services.api.Api;
@@ -74,8 +76,7 @@ public class MainActivity extends AppCompatActivity  {
 
         tvFacebookStatus  = (TextView)findViewById(R.id.tv_facebookState);
         tvFacebookStatus.setText("?");
-        LikesToFacebook likesToFacebook = new LikesToFacebook(this);
-        likesToFacebook.run();
+
         logout = (ImageButton) findViewById(R.id.ib_logout);
         logout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -124,29 +125,20 @@ public class MainActivity extends AppCompatActivity  {
         ////////////////////////////////////////////////////////////
         //api = Api.getInstance(getApplicationContext());
 
+        if(NMF_Info.usuarioInfo == null)//
+            session.getUsuarioInfo();
 
-        if(Api.tipoUsuarioApp !=null){
-            api.getInfoUser(Api.tipoUsuarioApp.username, new Response.Listener<clientInfo>() {
+        final MainActivity _this = this;
+
+        if(NMF_Info.tipoUsuarioApp !=null){
+            api.getInfoUser(NMF_Info.tipoUsuarioApp.username, new Response.Listener<clientInfo>() {
                 @Override
                 public void onResponse(final clientInfo response) {
+                    NMF_Info.clientInfo = response;
 
-                    Api.clientInfo = response;
-                    /////////////////////////////////////////////////////////////
-                    /*DeviceModel dm  = new DeviceModel();
-                    dm.cliente_sk = Api.clientInfo.id;
-                    dm.router_sk = Api.clientInfo.router.router_sk;
-                    dm.dispositivo_ip="ip123";
-                    dm.dispositivo_apodo="apodo123";
-                    dm.dispositivo_mac="mac123";
-                    dm.dispositivo_bloq = 0;
-                    api.addDevice(dm, new Response.Listener() {
-                        @Override
-                        public void onResponse(Object response) {
+                    LikesToFacebook likesToFacebook = new LikesToFacebook(_this);
+                    likesToFacebook.run();
 
-                        }
-                    });*/
-
-                    //////////////////////////////////////////////////////////////
                     //session.getClientInfo();
                     session.setClientInfo();
                     runOnUiThread(new Runnable() {
@@ -177,8 +169,6 @@ public class MainActivity extends AppCompatActivity  {
             loadInfoRouter();
 
         }
-
-
         //saveToken();
     }
 
@@ -284,7 +274,8 @@ public class MainActivity extends AppCompatActivity  {
     private void loadInfoRouter(){
 
         try{
-            router.createTPLink();
+            //router.createTPLink();
+            router.createNucom();
             router = Router.getInstance(getApplicationContext());
 
             router.getConfigWifi(new Response.Listener<ConfigWifi>() {
@@ -327,44 +318,21 @@ public class MainActivity extends AppCompatActivity  {
         }
     }
 
-    private void populate_list_connected(List<Device> devices){
+    public void populate_list_connected(List<Device> devices){
+        NMF_Info.updateDevicesConnected(devices, getApplicationContext());
 
-        int cant_elem = Math.min(4, devices.size());//del 0 al cuatro
+        ///////////////////////////////////////////////
+        List<dispositivoInfo> list_connected = NMF_Info.getDevicesConnected();
+
+        int cant_elem = Math.min(4, list_connected.size());//del 0 al cuatro
         int i = 0;
         for (; i < cant_elem; i++) {
-            Device d = devices.get(i);
-            tv_deviceConnected[i].setText(d.getName());
+            dispositivoInfo d = list_connected.get(i);
+            tv_deviceConnected[i].setText(d.apodo);
         }
-
         for (int j = i; j < 4; j++) {
             tv_deviceConnected[j].setVisibility(View.INVISIBLE);
             iv_deviceConnected[j].setVisibility(View.INVISIBLE);
-        }
-
-        if(Api.clientInfo.router.dispositivos == null)
-            Api.clientInfo.router.dispositivos = new ArrayList<>();
-
-        ///////////////////////////////////////////////////
-        for (Device dev : devices) {
-            dispositivoInfo di = dev.toDispositivoInfo();
-
-            Api.clientInfo.router.dispositivos.add(di);
-        }
-        session.setClientInfo();//guardo la info de los nuevos equipos de clientInfo
-
-        ///////////////////////////////////////////////////////////////
-        for (Device dev : devices) {
-            DeviceModel dm  = dev.toDeviceModel();
-            dm.cliente_sk = Api.clientInfo.id;
-            dm.router_sk = Api.clientInfo.router.router_sk;
-
-            api.addDevice(dm, new Response.Listener() {
-                @Override
-                public void onResponse(Object response) {
-
-
-                }
-            });
         }
 
     }
@@ -419,7 +387,6 @@ public class MainActivity extends AppCompatActivity  {
         Intent deviceList = new Intent(MainActivity.this, DeviceListActivity.class);
         startActivity(deviceList);
     }
-
 
     private boolean isRed(){
         return iv_router_red.getVisibility() == View.VISIBLE;

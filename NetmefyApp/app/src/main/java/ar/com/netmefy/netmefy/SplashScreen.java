@@ -13,8 +13,10 @@ import com.facebook.Profile;
 
 import ar.com.netmefy.netmefy.login.LoginActivity;
 import ar.com.netmefy.netmefy.login.UserIdActivity;
+import ar.com.netmefy.netmefy.services.NMF_Info;
 import ar.com.netmefy.netmefy.services.api.Api;
 import ar.com.netmefy.netmefy.services.api.entity.tipoUsuarioApp;
+import ar.com.netmefy.netmefy.services.api.entity.usuarioInfo;
 import ar.com.netmefy.netmefy.services.login.Session;
 import ar.com.netmefy.netmefy.tecnico.TecnicoActivity;
 
@@ -43,7 +45,7 @@ public class SplashScreen extends Activity {
                         api.getTypeOfUser(session.getUserId(), new Response.Listener<tipoUsuarioApp>() {
                             @Override
                             public void onResponse(tipoUsuarioApp response) {
-                                Api.tipoUsuarioApp = response;
+                                NMF_Info.tipoUsuarioApp = response;
                                 gotoNextActivity();
                             }
                         }, new Response.ErrorListener() {
@@ -69,8 +71,6 @@ public class SplashScreen extends Activity {
     private void gotoNextActivity() {
         if(Profile.getCurrentProfile() != null) {
             //se logeo antes con facebook
-
-
 
             goToActivity(MainActivity.class);
 

@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.android.volley.Response;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
@@ -20,16 +21,25 @@ import org.json.JSONObject;
 
 import ar.com.netmefy.netmefy.MainActivity;
 import ar.com.netmefy.netmefy.R;
+import ar.com.netmefy.netmefy.services.NMF_Info;
+import ar.com.netmefy.netmefy.services.api.Api;
+import ar.com.netmefy.netmefy.services.api.entity.usuarioInfo;
+import ar.com.netmefy.netmefy.services.login.Session;
 
 
 public class LoginActivity extends AppCompatActivity {
     private CallbackManager callbackManager;
     private LoginButton loginButton;
     private String TAG = "LoginActivity";
+    private Session session;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        session = new Session(getApplicationContext());
+
+
         FacebookSdk.sdkInitialize(this);
         setContentView(R.layout.activity_login);
         callbackManager = CallbackManager.Factory.create();
@@ -67,7 +77,19 @@ public class LoginActivity extends AppCompatActivity {
                             e.printStackTrace();
                         }
 
-                        callMainActivity();
+                        Api api = Api.getInstance(getApplicationContext());
+                        api.findUser(fb_email, new Response.Listener() {
+                            @Override
+                            public void onResponse(Object response) {
+                                usuarioInfo userInfo = (usuarioInfo) response;
+                                NMF_Info.usuarioInfo = userInfo;
+                                session.setUsuarioInfo();
+
+
+                                callMainActivity();
+                            }
+                        });
+
                         //finish();
 
                     }

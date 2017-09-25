@@ -3,9 +3,11 @@ package ar.com.netmefy.netmefy.services.api;
 import android.content.Context;
 import android.util.ArrayMap;
 
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+import com.android.volley.RetryPolicy;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
@@ -23,8 +25,10 @@ import ar.com.netmefy.netmefy.services.api.entity.DeviceModel;
 import ar.com.netmefy.netmefy.services.api.entity.SaveToken;
 import ar.com.netmefy.netmefy.services.api.entity.Token;
 import ar.com.netmefy.netmefy.services.api.entity.clientInfo;
+import ar.com.netmefy.netmefy.services.api.entity.dispositivoInfo;
 import ar.com.netmefy.netmefy.services.api.entity.paginasLikeadas;
 import ar.com.netmefy.netmefy.services.api.entity.tipoUsuarioApp;
+import ar.com.netmefy.netmefy.services.api.entity.usuarioInfo;
 import ar.com.netmefy.netmefy.services.api.stringRequests.JsonRequestApi;
 import ar.com.netmefy.netmefy.services.api.stringRequests.RequestQueueSingletonApi;
 
@@ -35,14 +39,14 @@ import ar.com.netmefy.netmefy.services.api.stringRequests.RequestQueueSingletonA
 
 public  class Api {
     public static Token token;
-    public static tipoUsuarioApp tipoUsuarioApp ;
-    public  static int cliente_sk;
-    public static int usuario_sk;
-    public  static clientInfo clientInfo;
+
+
     /////////////////////////////////////////////////////////////////////
     private RequestQueue _queue;
+    public Context _context;
     private Api(Context context){
         _queue = RequestQueueSingletonApi.getInstance(context).getRequestQueue();
+        _context = context;
         //_queue = Volley.newRequestQueue(context);
 
     }
@@ -58,6 +62,9 @@ public  class Api {
     }
 
     private  void execute(Request rq){
+        int socketTimeout = 30000;//30 seconds - change to what you want
+        RetryPolicy policy = new DefaultRetryPolicy(socketTimeout, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
+        rq.setRetryPolicy(policy);
         _queue.add(rq);
     }
     public  void LogIn(String username, String password, final Response.Listener<String> success){
@@ -129,6 +136,42 @@ public  class Api {
     }
 
 
+    public void updateDevice(final DeviceModel device, final Response.Listener success){
+        String url = "http://200.82.0.24/api/dispositivos";
+        Map<String, String> data  = null;
+        try {
+            data = Utils.toMap(device);
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+
+        final String dataok = data.toString();
+
+        JsonRequestApi rq = new JsonRequestApi(Request.Method.POST, url, data, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                //success.onResponse("ok:"+dataok);
+                dispositivoInfo dispositivoInfo ;
+                Gson gson = new Gson();
+                dispositivoInfo= gson.fromJson(response.toString(), dispositivoInfo.class);
+                //SOLO ME INTERESA LA SK, LOS DEMAS CAMPOS NO SE CARGAN PORQUE SE LLAMAN DISTINTO
+
+                device.dispositivo_sk    =dispositivoInfo.dispositivo_sk;
+                success.onResponse(device);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                //Map<String, String> data1 = data    ;
+                //success.onResponse("error:"+dataok);
+                success.onResponse(null);
+            }
+        });
+        execute(rq);
+
+
+    }
+
     public void addDevice(final DeviceModel device, final Response.Listener success){
         String url = "http://200.82.0.24/api/dispositivos";
         Map<String, String> data  = null;
@@ -144,6 +187,12 @@ public  class Api {
             @Override
             public void onResponse(JSONObject response) {
                 //success.onResponse("ok:"+dataok);
+                dispositivoInfo dispositivoInfo ;
+                Gson gson = new Gson();
+                dispositivoInfo= gson.fromJson(response.toString(), dispositivoInfo.class);
+                //SOLO ME INTERESA LA SK, LOS DEMAS CAMPOS NO SE CARGAN PORQUE SE LLAMAN DISTINTO
+
+                device.dispositivo_sk    =dispositivoInfo.dispositivo_sk;
                 success.onResponse(device);
             }
         }, new Response.ErrorListener() {
@@ -213,6 +262,27 @@ public  class Api {
             @Override
             public void onErrorResponse(VolleyError error) {
 
+            }
+        });
+        execute(rq);
+    }
+
+    public void findUser(String email, final Response.Listener success) {
+        String url = "http://200.82.0.24/api/usuarios?email="+email;
+
+        JsonRequestApi rq = new JsonRequestApi(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                usuarioInfo usuarioInfo ;
+                Gson gson = new Gson();
+                usuarioInfo = gson.fromJson(response.toString(), usuarioInfo.class);
+                success.onResponse(usuarioInfo);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                //Map<String, String> data1 = data    ;
+                success.onResponse(null);
             }
         });
         execute(rq);

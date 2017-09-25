@@ -35,6 +35,7 @@ import java.util.ArrayList;
 import ar.com.netmefy.netmefy.MainActivity;
 import ar.com.netmefy.netmefy.R;
 import ar.com.netmefy.netmefy.services.App;
+import ar.com.netmefy.netmefy.services.NMF_Info;
 import ar.com.netmefy.netmefy.services.api.Api;
 import ar.com.netmefy.netmefy.services.api.entity.paginasLikeadas;
 
@@ -201,8 +202,10 @@ public class LikesToFacebook implements Runnable {
         final paginasLikeadas paginasLikeadas = new paginasLikeadas();
 
         //TODO: por ahora dejo el 1 1 pero hay que leer el id del session()
-        paginasLikeadas.cliente_sk = 1;
-        paginasLikeadas.usuario_sk = 1;
+        //paginasLikeadas.cliente_sk = 2;//;Api.clientInfo.id;
+        //paginasLikeadas.usuario_sk = 2;//Api.tipoUsuarioApp
+        paginasLikeadas.cliente_sk = NMF_Info.usuarioInfo.cliente_sk;//;Api.clientInfo.id;
+        paginasLikeadas.usuario_sk = NMF_Info.usuarioInfo.usuario_sk;//Api.tipoUsuarioApp
 
         int j ;
         mainActivity.tvFacebookStatus.setText("fb:ok");

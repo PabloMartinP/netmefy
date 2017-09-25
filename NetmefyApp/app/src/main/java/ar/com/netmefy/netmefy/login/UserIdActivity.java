@@ -26,6 +26,7 @@ import java.io.IOException;
 import ar.com.netmefy.netmefy.MainActivity;
 import ar.com.netmefy.netmefy.R;
 import ar.com.netmefy.netmefy.router.activities.TPLinkTestsActivity;
+import ar.com.netmefy.netmefy.services.NMF_Info;
 import ar.com.netmefy.netmefy.services.api.Api;
 import ar.com.netmefy.netmefy.services.api.entity.tipoUsuarioApp;
 import ar.com.netmefy.netmefy.services.login.Session;
@@ -82,9 +83,9 @@ public class UserIdActivity extends AppCompatActivity {
                     api.getTypeOfUser(username, new Response.Listener<tipoUsuarioApp>() {
                         @Override
                         public void onResponse(tipoUsuarioApp tipoUsuarioApp) {
-                            Api.tipoUsuarioApp = tipoUsuarioApp;
+                            NMF_Info.tipoUsuarioApp = tipoUsuarioApp;
 
-                            if(Api.tipoUsuarioApp.esCliente()){
+                            if(NMF_Info.tipoUsuarioApp.esCliente()){
                                 session.setUserType("client");
                                 redirectToUser("");
                             }else{

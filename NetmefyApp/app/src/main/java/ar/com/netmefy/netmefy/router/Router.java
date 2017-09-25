@@ -22,13 +22,6 @@ import ar.com.netmefy.netmefy.services.WifiUtils;
  */
 
 public abstract class Router {
-    private static DeviceItem[] deviceConnected ;
-    public DeviceItem[] getDeviceConnectedStored(){
-        return deviceConnected;
-    }
-    public void setDeviceConnected(DeviceItem[] deviceItems){
-        deviceConnected = deviceItems;
-    }
 
     protected RouterConstants _routerConstants;
     protected  Context _context;
