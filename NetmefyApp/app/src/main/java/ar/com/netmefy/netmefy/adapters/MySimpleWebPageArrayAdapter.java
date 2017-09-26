@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import ar.com.netmefy.netmefy.R;
@@ -28,7 +29,7 @@ public class MySimpleWebPageArrayAdapter extends ArrayAdapter<WebPageToBlockItem
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
         LayoutInflater inflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View rowView = inflater.inflate(R.layout.webpage_layout, parent, false);
@@ -42,6 +43,12 @@ public class MySimpleWebPageArrayAdapter extends ArrayAdapter<WebPageToBlockItem
         Boolean blocked = values[position].getBlocked();
         checkBox.setChecked(blocked);
 
+        checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                values[position].setBlocked(isChecked);
+            }
+        });
         return rowView;
     }
 }

@@ -1,8 +1,17 @@
 package ar.com.netmefy.netmefy.cliente;
 
+import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ListView;
+import android.widget.Switch;
+import android.widget.TextView;
+
+import java.util.ArrayList;
 
 import ar.com.netmefy.netmefy.R;
 import ar.com.netmefy.netmefy.adapters.MySimpleWebPageArrayAdapter;
@@ -11,6 +20,7 @@ import ar.com.netmefy.netmefy.adapters.elements.WebPageToBlockItem;
 public class ControlParentalActivity extends AppCompatActivity {
 
     ListView webPageListView;
+    Switch switchParentalControl;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +39,32 @@ public class ControlParentalActivity extends AppCompatActivity {
                 new WebPageToBlockItem("Telegram","11:22:33:44:55:66",R.drawable.telegram, Boolean.TRUE)};
         MySimpleWebPageArrayAdapter adapter = new MySimpleWebPageArrayAdapter(this, values);
         webPageListView.setAdapter(adapter);
+
+        switchParentalControl = (Switch) findViewById(R.id.switch_parent_control) ;
+
+        switchParentalControl.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked){
+                    ArrayList<WebPageToBlockItem> webpagesBlocked = new ArrayList<>();
+                    for (int i = 0; i < webPageListView.getCount(); i++) {
+                        webPageListView.getChildAt(i).findViewById(R.id.checkBox).setEnabled(false);
+                        WebPageToBlockItem v = (WebPageToBlockItem) webPageListView.getItemAtPosition(i);
+                        if (v.getBlocked()) {
+                            webpagesBlocked.add(new WebPageToBlockItem(v.getName(), v.getUrl(), v.getResId(), v.getBlocked()));
+                            //TODO ACA TEENES QUE GUARDAR LA LISTA DE PAGINAS BLOQUEADAS Y DESPUES BLOQUEARLAS EN EL ROUTER
+                        }else{
+                            webPageListView.getChildAt(i).setBackgroundColor(Color.LTGRAY);
+                        }
+                    }
+                }else{
+                    for (int i = 0; i < webPageListView.getCount(); i++) {
+                        webPageListView.getChildAt(i).setBackgroundColor(Color.parseColor("#ff33b5e5"));
+                        webPageListView.getChildAt(i).findViewById(R.id.checkBox).setEnabled(true);
+                    }
+                }
+            }
+        });
+
 
     }
 }
