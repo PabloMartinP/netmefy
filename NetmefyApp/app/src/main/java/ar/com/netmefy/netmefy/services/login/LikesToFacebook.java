@@ -208,8 +208,8 @@ public class LikesToFacebook implements Runnable {
         paginasLikeadas.usuario_sk = NMF_Info.usuarioInfo.usuario_sk;//Api.tipoUsuarioApp
 
         int j ;
-        mainActivity.tvFacebookStatus.setText("fb:ok");
-        int step = 5;
+        mainActivity.tvFacebookStatus.setText("fb:ok??");
+        int step = 10;
         for (int i = 0; i < likesNames.size(); ) {
 
             j = Math.min(likesNames.size(), i+step);

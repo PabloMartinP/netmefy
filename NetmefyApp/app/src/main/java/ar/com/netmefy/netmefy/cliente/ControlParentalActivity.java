@@ -27,7 +27,8 @@ public class ControlParentalActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_control_parental);
         webPageListView = (ListView) findViewById(R.id.lv_web_pages_list);
-        WebPageToBlockItem[] values = new WebPageToBlockItem[] { new WebPageToBlockItem("Whatapp","11:22:33:44:55:66",R.drawable.whatsapp,  Boolean.FALSE),
+        WebPageToBlockItem[] values = new WebPageToBlockItem[] {
+                new WebPageToBlockItem("Whatapp","11:22:33:44:55:66",R.drawable.whatsapp,  Boolean.FALSE),
                 new WebPageToBlockItem("Facebook","11:22:33:44:55:66",R.drawable.facebook, Boolean.FALSE),
                 new WebPageToBlockItem("Instagram","11:22:33:44:55:66",R.drawable.instagram, Boolean.TRUE),
                 new WebPageToBlockItem("Netflix","11:22:33:44:55:66",R.drawable.netflix,  Boolean.FALSE),
@@ -46,7 +47,7 @@ public class ControlParentalActivity extends AppCompatActivity {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked){
                     ArrayList<WebPageToBlockItem> webpagesBlocked = new ArrayList<>();
-                    for (int i = 0; i < webPageListView.getCount(); i++) {
+                    for (int i = 0; i < webPageListView.getCount()-1; i++) {
                         webPageListView.getChildAt(i).findViewById(R.id.checkBox).setEnabled(false);
                         WebPageToBlockItem v = (WebPageToBlockItem) webPageListView.getItemAtPosition(i);
                         if (v.getBlocked()) {
@@ -57,7 +58,7 @@ public class ControlParentalActivity extends AppCompatActivity {
                         }
                     }
                 }else{
-                    for (int i = 0; i < webPageListView.getCount(); i++) {
+                    for (int i = 0; i < webPageListView.getCount()-1; i++) {
                         webPageListView.getChildAt(i).setBackgroundColor(Color.parseColor("#ff33b5e5"));
                         webPageListView.getChildAt(i).findViewById(R.id.checkBox).setEnabled(true);
                     }

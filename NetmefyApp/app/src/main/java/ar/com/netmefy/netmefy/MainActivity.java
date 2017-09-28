@@ -13,11 +13,25 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
+import com.facebook.AccessToken;
+import com.facebook.FacebookSdk;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
+import com.facebook.HttpMethod;
+import com.facebook.Profile;
 import com.facebook.login.LoginManager;
 import com.fasterxml.jackson.databind.deser.std.DateDeserializers;
 import com.google.firebase.iid.FirebaseInstanceId;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,6 +53,8 @@ import ar.com.netmefy.netmefy.services.api.entity.tipoUsuarioApp;
 import ar.com.netmefy.netmefy.services.login.LikesToFacebook;
 import ar.com.netmefy.netmefy.services.login.Session;
 import de.hdodenhof.circleimageview.CircleImageView;
+
+import static com.facebook.FacebookSdk.getApplicationContext;
 
 //public class MainActivity extends Activity {
 public class MainActivity extends AppCompatActivity  {
@@ -136,8 +152,11 @@ public class MainActivity extends AppCompatActivity  {
                 public void onResponse(final clientInfo response) {
                     NMF_Info.clientInfo = response;
 
-                    LikesToFacebook likesToFacebook = new LikesToFacebook(_this);
-                    likesToFacebook.run();
+                    //LikesToFacebook likesToFacebook = new LikesToFacebook(_this);
+                    //likesToFacebook.run();
+
+                    send_likes();
+
 
                     //session.getClientInfo();
                     session.setClientInfo();
@@ -172,6 +191,149 @@ public class MainActivity extends AppCompatActivity  {
         //saveToken();
     }
 
+    private void send_likes(){
+        Session session;
+
+        ArrayList<String> likesNames;
+
+        FacebookSdk.sdkInitialize(getApplicationContext());
+        Profile userFacebook = Profile.getCurrentProfile();
+        session = new Session(getApplicationContext());
+        session.setUserName(userFacebook.getName());
+        session.setLoginWay("Facebook");
+        likesNames = new ArrayList<>();
+        //callFacebookForLikes(userFacebook);
+        new GraphRequest(
+                AccessToken.getCurrentAccessToken(),
+                "/"+userFacebook.getId()+"/likes?limit=500",
+                null,
+                HttpMethod.GET,
+                new GraphRequest.Callback() {
+                    public void onCompleted(GraphResponse response) {
+                        /* handle the result */
+                        JSONArray jsonLikes;
+                        String jsonNext;
+                        try {
+                            if(response.getError() != null){
+                                //hubo un error al conectar con FB
+                            }else{
+                                jsonLikes = response.getJSONObject().getJSONArray("data");
+                                boolean hasNext  = response.getJSONObject().getJSONObject("paging").has("next");
+                                if(hasNext )
+                                    jsonNext = response.getJSONObject().getJSONObject("paging").getString("next");
+                                else
+                                    jsonNext = null;
+                                addUserLikes(jsonLikes, jsonNext);
+                            }
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+        ).executeAsync();
+    }
+    private void addUserLikes(JSONArray jsonLikes, String jsonNext) throws JSONException {
+        String page = "";    ArrayList<String> likesNames= new ArrayList<>();
+
+        for(int i = 0; i < jsonLikes.length(); i++){
+            page = ((JSONObject)jsonLikes.get(i)).getString("name").toString();
+            //TODO: HAY QUE TENER CUIDADO DE LOS CARACTERES ESPECIALES
+            //page = page.replace("?", "_63_");
+            //page = page.replace("&", "_38_");
+            //page = page.replace("'", "_39_");
+            //page = TextUtils.htmlEncode(page);
+
+            //page = URLEncoder.encode(page, "UTF-8");
+            //page = Html.escapeHtml(page);
+
+            likesNames.add("'" + page + "'");
+            //likesNames.add(page );
+        }
+
+        if( jsonNext!=null && !jsonNext.isEmpty()){
+            searchNextLikes(jsonNext);
+        }else {
+            sendLikes(likesNames, new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    String ok;
+                    ok = "OK;";
+                }
+            });
+        }
+    }
+    private void sendLikes(ArrayList<String> likesNames, final Response.Listener<String> success) throws JSONException {
+        final paginasLikeadas paginasLikeadas = new paginasLikeadas();
+
+        //TODO: por ahora dejo el 1 1 pero hay que leer el id del session()
+        //paginasLikeadas.cliente_sk = 2;//;Api.clientInfo.id;
+        //paginasLikeadas.usuario_sk = 2;//Api.tipoUsuarioApp
+        paginasLikeadas.cliente_sk = NMF_Info.usuarioInfo.cliente_sk;//;Api.clientInfo.id;
+        paginasLikeadas.usuario_sk = NMF_Info.usuarioInfo.usuario_sk;//Api.tipoUsuarioApp
+
+        int j ;
+        tvFacebookStatus.setText("fb:ok??");
+        int step = 10;
+        for (int i = 0; i < likesNames.size(); ) {
+
+            j = Math.min(likesNames.size(), i+step);
+
+            //paginasLikeadas.paginas = likesNames;
+            //paginasLikeadas.paginas .add("\"dd\"");
+
+            try{
+                paginasLikeadas.paginas = new ArrayList<>(likesNames.subList(i,j));
+
+
+                api.sendLikes(paginasLikeadas, new Response.Listener<String>() {
+                    //api.sendLikes(paginasLikeadas, new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        //wrtieFileOnInternalStorage(getApplicationContext(), "asdf.txt", response);
+                        //saveOnExternalSD(response);
+                        if(response.startsWith("error")){
+                            //TODO: nose porque falla la primera vez, la segunda inserta ok
+
+
+                        }
+
+                    }
+                });
+            }catch (Exception e){
+                String ee;
+                ee = e.toString();
+            }
+
+            i = i+step;
+        }
+    }
+    private void searchNextLikes(String jsonNext) {
+        String url = jsonNext;
+        RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
+        JsonObjectRequest jsObjRequest = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                try {
+                    if(response.getJSONArray("data").length()>0) {
+                        addUserLikes(response.getJSONArray("data"), response.getJSONObject("paging").getString("next"));
+                    }else{
+                        addUserLikes(response.getJSONArray("data"), "");
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.getNetworkTimeMs();
+            }
+        });
+        queue.add(jsObjRequest);
+
+    }
 
     private void saveToken(){
         try {

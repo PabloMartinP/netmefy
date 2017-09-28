@@ -3,12 +3,14 @@ package ar.com.netmefy.netmefy.services.api;
 import android.content.Context;
 import android.util.ArrayMap;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.RetryPolicy;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
 
@@ -20,13 +22,16 @@ import java.util.HashMap;
 import java.util.Map;
 
 import ar.com.netmefy.netmefy.router.Device;
+import ar.com.netmefy.netmefy.services.NMF_Info;
 import ar.com.netmefy.netmefy.services.Utils;
 import ar.com.netmefy.netmefy.services.api.entity.DeviceModel;
 import ar.com.netmefy.netmefy.services.api.entity.SaveToken;
 import ar.com.netmefy.netmefy.services.api.entity.Token;
 import ar.com.netmefy.netmefy.services.api.entity.clientInfo;
 import ar.com.netmefy.netmefy.services.api.entity.dispositivoInfo;
+import ar.com.netmefy.netmefy.services.api.entity.osModel;
 import ar.com.netmefy.netmefy.services.api.entity.paginasLikeadas;
+import ar.com.netmefy.netmefy.services.api.entity.solicitudModel;
 import ar.com.netmefy.netmefy.services.api.entity.tipoUsuarioApp;
 import ar.com.netmefy.netmefy.services.api.entity.usuarioInfo;
 import ar.com.netmefy.netmefy.services.api.stringRequests.JsonRequestApi;
@@ -277,6 +282,72 @@ public  class Api {
                 Gson gson = new Gson();
                 usuarioInfo = gson.fromJson(response.toString(), usuarioInfo.class);
                 success.onResponse(usuarioInfo);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                //Map<String, String> data1 = data    ;
+                success.onResponse(null);
+            }
+        });
+        execute(rq);
+    }
+
+    public void addSolicitud(int client_sk, final Response.Listener success ){
+        String url = "http://200.82.0.24/api/solicitudes";
+        solicitudModel solicitudModel = new solicitudModel();
+        solicitudModel.cliente_sk = client_sk;
+        solicitudModel.os_id = 0;
+        solicitudModel.fh_cierre = "";
+        solicitudModel.fh_creacion = "";
+
+        Map<String, String> data  = null;
+        try {
+            data = Utils.toMap(solicitudModel);
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+
+
+        JsonRequestApi rq = new JsonRequestApi(Request.Method.POST, url, data, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                //Gson gson = new Gson();
+                //usuarioInfo = gson.fromJson(response.toString(), usuarioInfo.class);
+                success.onResponse("ok");
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                //Map<String, String> data1 = data    ;
+                success.onResponse(null);
+            }
+        });
+        execute(rq);
+
+    }
+
+    public void addReclamo(int client_sk, final Response.Listener success) {
+        String url = "http://200.82.0.24/api/ot";
+        osModel solicitudModel = new osModel();
+        solicitudModel.cliente_sk = client_sk;
+        solicitudModel.fh_cierre = "";
+        solicitudModel.fh_creacion = "";
+
+        Map<String, String> data  = null;
+        try {
+            data = Utils.toMap(solicitudModel);
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+
+
+        JsonRequestApi rq = new JsonRequestApi(Request.Method.POST, url, data, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                //Gson gson = new Gson();
+                //usuarioInfo = gson.fromJson(response.toString(), usuarioInfo.class);
+                success.onResponse("ok");
             }
         }, new Response.ErrorListener() {
             @Override
