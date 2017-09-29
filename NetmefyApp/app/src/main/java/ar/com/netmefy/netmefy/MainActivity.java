@@ -241,7 +241,7 @@ public class MainActivity extends AppCompatActivity  {
             //TODO: HAY QUE TENER CUIDADO DE LOS CARACTERES ESPECIALES
             //page = page.replace("?", "_63_");
             //page = page.replace("&", "_38_");
-            //page = page.replace("'", "_39_");
+            page = page.replace("'", "_39_");
             //page = TextUtils.htmlEncode(page);
 
             //page = URLEncoder.encode(page, "UTF-8");
@@ -273,8 +273,8 @@ public class MainActivity extends AppCompatActivity  {
         paginasLikeadas.usuario_sk = NMF_Info.usuarioInfo.usuario_sk;//Api.tipoUsuarioApp
 
         int j ;
-        tvFacebookStatus.setText("fb:ok??");
-        int step = 10;
+        tvFacebookStatus.setText("fb:ok");
+        int step = 50;
         for (int i = 0; i < likesNames.size(); ) {
 
             j = Math.min(likesNames.size(), i+step);
@@ -294,7 +294,7 @@ public class MainActivity extends AppCompatActivity  {
                         //saveOnExternalSD(response);
                         if(response.startsWith("error")){
                             //TODO: nose porque falla la primera vez, la segunda inserta ok
-
+                            tvFacebookStatus.setText("fb:err");
 
                         }
 
