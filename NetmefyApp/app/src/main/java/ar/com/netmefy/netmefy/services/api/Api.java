@@ -14,6 +14,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.jsoup.Connection;
 
@@ -33,6 +34,7 @@ import ar.com.netmefy.netmefy.services.api.entity.osModel;
 import ar.com.netmefy.netmefy.services.api.entity.paginasLikeadas;
 import ar.com.netmefy.netmefy.services.api.entity.solicitudModel;
 import ar.com.netmefy.netmefy.services.api.entity.tipoUsuarioApp;
+import ar.com.netmefy.netmefy.services.api.entity.usuarioAddModel;
 import ar.com.netmefy.netmefy.services.api.entity.usuarioInfo;
 import ar.com.netmefy.netmefy.services.api.stringRequests.JsonRequestApi;
 import ar.com.netmefy.netmefy.services.api.stringRequests.RequestQueueSingletonApi;
@@ -267,6 +269,37 @@ public  class Api {
             @Override
             public void onErrorResponse(VolleyError error) {
 
+            }
+        });
+        execute(rq);
+    }
+
+    public void addUser(usuarioAddModel user, final Response.Listener success){
+        String url = "http://200.82.0.24/api/usuarios";
+        Map<String, String> data  = null;
+        try {
+            data = Utils.toMap(user);
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+
+        JsonRequestApi rq = new JsonRequestApi(Request.Method.POST, url, data, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                String status="";
+                try {
+                    status = response.get("status").toString();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                success.onResponse(status.equals("ok"));
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                //Map<String, String> data1 = data    ;
+                success.onResponse(null);
             }
         });
         execute(rq);

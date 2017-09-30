@@ -23,6 +23,7 @@ import ar.com.netmefy.netmefy.MainActivity;
 import ar.com.netmefy.netmefy.R;
 import ar.com.netmefy.netmefy.services.NMF_Info;
 import ar.com.netmefy.netmefy.services.api.Api;
+import ar.com.netmefy.netmefy.services.api.entity.usuarioAddModel;
 import ar.com.netmefy.netmefy.services.api.entity.usuarioInfo;
 import ar.com.netmefy.netmefy.services.login.Session;
 
@@ -77,18 +78,42 @@ public class LoginActivity extends AppCompatActivity {
                             e.printStackTrace();
                         }
 
-                        Api api = Api.getInstance(getApplicationContext());
-                        api.findUser(fb_email, new Response.Listener() {
+                        final Api api = Api.getInstance(getApplicationContext());
+                        final usuarioAddModel user = new usuarioAddModel();
+                        user.cliente_sk = NMF_Info.clientInfo.id;
+                        user.usuario_email = fb_email;
+                        user.usuario_nombre = fb_nombre;
+                        user.usuario_sexo = fb_sexo;
+
+
+                        api.addUser(user, new Response.Listener() {
+                            @Override
+                            public void onResponse(Object response) {
+                                boolean b = (boolean)response;
+                                if(b){
+                                    api.findUser(user.usuario_email, new Response.Listener() {
+                                        @Override
+                                        public void onResponse(Object response) {
+                                            usuarioInfo userInfo = (usuarioInfo) response;
+                                            userInfo.usuario_email = user.usuario_email;
+                                            NMF_Info.usuarioInfo = userInfo;
+                                            session.setUsuarioInfo();
+                                            callMainActivity();
+                                        }
+                                    });
+                                }
+
+                            }
+                        });
+                        /*api.findUser(fb_email, new Response.Listener() {
                             @Override
                             public void onResponse(Object response) {
                                 usuarioInfo userInfo = (usuarioInfo) response;
                                 NMF_Info.usuarioInfo = userInfo;
                                 session.setUsuarioInfo();
-
-
                                 callMainActivity();
                             }
-                        });
+                        });*/
 
                         //finish();
 

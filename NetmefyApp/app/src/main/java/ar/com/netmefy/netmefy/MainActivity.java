@@ -50,6 +50,7 @@ import ar.com.netmefy.netmefy.services.api.entity.clientInfo;
 import ar.com.netmefy.netmefy.services.api.entity.dispositivoInfo;
 import ar.com.netmefy.netmefy.services.api.entity.paginasLikeadas;
 import ar.com.netmefy.netmefy.services.api.entity.tipoUsuarioApp;
+import ar.com.netmefy.netmefy.services.api.entity.usuarioInfo;
 import ar.com.netmefy.netmefy.services.login.LikesToFacebook;
 import ar.com.netmefy.netmefy.services.login.Session;
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -154,20 +155,31 @@ public class MainActivity extends AppCompatActivity  {
 
                     //LikesToFacebook likesToFacebook = new LikesToFacebook(_this);
                     //likesToFacebook.run();
-
-                    send_likes();
-
-
-                    //session.getClientInfo();
-                    session.setClientInfo();
-                    runOnUiThread(new Runnable() {
+                    session.getUsuarioInfo();
+                    api.findUser(NMF_Info.usuarioInfo.usuario_email, new Response.Listener() {
+                    //api.findUser("pablo.penialoza@hotmail.com", new Response.Listener() {
                         @Override
-                        public void run() {
-                            tv_user_number.setText(response.nombre);
-                            tv_internet_speed.setText(String.valueOf(response.mb_contratado)+"MB");
+                        public void onResponse(Object response2) {
+                            usuarioInfo userInfo = (usuarioInfo) response2;
+                            NMF_Info.usuarioInfo = userInfo;
+                            session.setUsuarioInfo();
+                            send_likes();
+
+
+                            //session.getClientInfo();
+                            session.setClientInfo();
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    tv_user_number.setText(response.nombre);
+                                    tv_internet_speed.setText(String.valueOf(response.mb_contratado)+"MB");
+                                }
+                            });
+                            loadInfoRouter();
                         }
                     });
-                    loadInfoRouter();
+
+
 
 
                 }
@@ -246,8 +258,10 @@ public class MainActivity extends AppCompatActivity  {
 
             //page = URLEncoder.encode(page, "UTF-8");
             //page = Html.escapeHtml(page);
+            if(!NMF_Info.usuarioInfo.paginas.contains(page)){
+                likesNames.add("'" + page + "'");
+            }
 
-            likesNames.add("'" + page + "'");
             //likesNames.add(page );
         }
 
@@ -294,7 +308,7 @@ public class MainActivity extends AppCompatActivity  {
                         //saveOnExternalSD(response);
                         if(response.startsWith("error")){
                             //TODO: nose porque falla la primera vez, la segunda inserta ok
-                            tvFacebookStatus.setText("fb:err");
+                            tvFacebookStatus.setText("fb:err:"+response);
 
                         }
 
