@@ -80,7 +80,7 @@ public class LoginActivity extends AppCompatActivity {
 
                         final Api api = Api.getInstance(getApplicationContext());
                         final usuarioAddModel user = new usuarioAddModel();
-                        user.cliente_sk = NMF_Info.clientInfo.id;
+                        user.cliente_sk = NMF_Info.tipoUsuarioApp.id;
                         user.usuario_email = fb_email;
                         user.usuario_nombre = fb_nombre;
                         user.usuario_sexo = fb_sexo;
