@@ -126,21 +126,6 @@ public class ControlParentalActivity extends AppCompatActivity {
                 MySimpleWebPageArrayAdapter adapter = new MySimpleWebPageArrayAdapter(_this, values, onCompleteHandler);
                 webPageListView.setAdapter(adapter);
 
-
-                webPageListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-                    @Override
-                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        Intent page = new Intent(ControlParentalActivity.this, ControlParentalWebPageSetUp.class).putExtra("url", values[position].getUrl());
-                        //startActivity(device);
-                        //Intent intent = new Intent(this, SyncActivity.class);
-                        //intent.putExtra("someData", "Here is some data");
-                        startActivityForResult(page, 1);
-
-
-                    }
-                });
-
                 ///////////////////////////////////////////////////////////////////
             }
         });
