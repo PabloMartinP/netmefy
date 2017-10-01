@@ -131,11 +131,11 @@ public class ControlParentalActivity extends AppCompatActivity {
 
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        Intent device = new Intent(ControlParentalActivity.this, ControlParentalWebPageSetUp.class).putExtra("mac", values[position].getUrl());
+                        Intent page = new Intent(ControlParentalActivity.this, ControlParentalWebPageSetUp.class).putExtra("url", values[position].getUrl());
                         //startActivity(device);
                         //Intent intent = new Intent(this, SyncActivity.class);
                         //intent.putExtra("someData", "Here is some data");
-                        startActivityForResult(device, 1);
+                        startActivityForResult(page, 1);
 
 
                     }
@@ -208,6 +208,14 @@ public class ControlParentalActivity extends AppCompatActivity {
                 webPageListView.getChildAt(i).findViewById(R.id.checkBox).setEnabled(true);
             }
         }
+    }
+
+    public void newPage(View view){
+        Intent page = new Intent(ControlParentalActivity.this, ControlParentalWebPageSetUp.class).putExtra("url", "");
+        //startActivity(device);
+        //Intent intent = new Intent(this, SyncActivity.class);
+        //intent.putExtra("someData", "Here is some data");
+        startActivityForResult(page, 1);
     }
 
 
