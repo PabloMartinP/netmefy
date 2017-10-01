@@ -2,6 +2,7 @@ package ar.com.netmefy.netmefy.adapters;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,12 +22,16 @@ import ar.com.netmefy.netmefy.adapters.elements.WebPageToBlockItem;
 public class MySimpleWebPageArrayAdapter extends ArrayAdapter<WebPageToBlockItem> {
     private final Context context;
     private final WebPageToBlockItem[] values;
-
-    public MySimpleWebPageArrayAdapter(Context context, WebPageToBlockItem[] values) {
+    private Handler _onCompleteFinish;
+    private boolean _primeraVez;
+    public MySimpleWebPageArrayAdapter(Context context, WebPageToBlockItem[] values, Handler onComplete) {
         super(context, R.layout.user_layout, values);
         this.context = context;
         this.values = values;
+        _onCompleteFinish = onComplete;
+        _primeraVez = true;
     }
+
 
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
@@ -49,6 +54,13 @@ public class MySimpleWebPageArrayAdapter extends ArrayAdapter<WebPageToBlockItem
                 values[position].setBlocked(isChecked);
             }
         });
+
+        if (position == values.length - 1 && _primeraVez) {
+            _primeraVez = false;
+            _onCompleteFinish.sendEmptyMessage(0);
+        }
+
+
         return rowView;
     }
 }

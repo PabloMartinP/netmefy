@@ -5,6 +5,11 @@ package ar.com.netmefy.netmefy.services;
 import android.app.Activity;
 import android.app.ProgressDialog;
 
+import com.google.gson.Gson;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -23,8 +28,11 @@ import ar.com.netmefy.netmefy.router.Device;
 public class Utils {
 
     public static Map<String, String> toMap(Object object) throws IllegalAccessException {
-        Map<String, String> map = new HashMap<String, String>();
 
+
+
+        Map<String, String> map = new HashMap<String, String>();
+        Gson gson = new Gson();
         Object someObject = object;
         for (Field field : someObject.getClass().getDeclaredFields()) {
             field.setAccessible(true); // You might want to set modifier to public first.
@@ -32,8 +40,32 @@ public class Utils {
             //if (value != null) {
 //                System.out.println(field.getName() + "=" + value);
 //            }
-            if(value !=null && !field.getName().equalsIgnoreCase("serialVersionUID"))
-                map.put(field.getName(), value.toString());
+            if(value !=null && !field.getName().equalsIgnoreCase("serialVersionUID")){
+                if(value.getClass().getName().contains("ArrayList")){
+                    int i = 0;
+                    ArrayList list = ((ArrayList) value);
+                    //String valueList = Utils.toMap(list).toString();
+                    ArrayList<String> valueList = new ArrayList<>();
+                    for (Object o : list) {
+                        /*try {
+                            JSONArray array=new JSONArray(Utils.toMap(o).toString());
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }*/
+                        String json = gson.toJson(o);
+
+                        valueList.add(json);
+                    }
+                    //JSONArray jsArray = new JSONArray(valueList);
+                    //map.put(field.getName(), jsArray.toString());
+                    map.put(field.getName(), valueList.toString());
+                    //map.put(field.getName(), value.toString());
+                }else{
+                    map.put(field.getName(), value.toString());
+                }
+
+            }
+
         }
         return map;
     }

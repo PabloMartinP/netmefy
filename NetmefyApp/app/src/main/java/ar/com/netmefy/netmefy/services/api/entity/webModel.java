@@ -8,4 +8,6 @@ public class webModel {
 
     public String ip;
     public String url;
+    public int id;
+    public String nombre;
 }

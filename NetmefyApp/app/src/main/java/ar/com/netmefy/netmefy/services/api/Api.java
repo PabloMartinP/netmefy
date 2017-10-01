@@ -14,12 +14,14 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.jsoup.Connection;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import ar.com.netmefy.netmefy.router.Device;
@@ -31,11 +33,15 @@ import ar.com.netmefy.netmefy.services.api.entity.Token;
 import ar.com.netmefy.netmefy.services.api.entity.clientInfo;
 import ar.com.netmefy.netmefy.services.api.entity.dispositivoInfo;
 import ar.com.netmefy.netmefy.services.api.entity.osModel;
+import ar.com.netmefy.netmefy.services.api.entity.paginaControlParentalModel;
 import ar.com.netmefy.netmefy.services.api.entity.paginasLikeadas;
+import ar.com.netmefy.netmefy.services.api.entity.routerInfo;
 import ar.com.netmefy.netmefy.services.api.entity.solicitudModel;
 import ar.com.netmefy.netmefy.services.api.entity.tipoUsuarioApp;
 import ar.com.netmefy.netmefy.services.api.entity.usuarioAddModel;
 import ar.com.netmefy.netmefy.services.api.entity.usuarioInfo;
+import ar.com.netmefy.netmefy.services.api.entity.webABloquearModel;
+import ar.com.netmefy.netmefy.services.api.entity.webBloqModel;
 import ar.com.netmefy.netmefy.services.api.stringRequests.JsonRequestApi;
 import ar.com.netmefy.netmefy.services.api.stringRequests.RequestQueueSingletonApi;
 
@@ -390,5 +396,108 @@ public  class Api {
             }
         });
         execute(rq);
+    }
+
+    public void getListBlockedPage(final Response.Listener success) {
+        String url = "http://200.82.0.24/api/web";
+
+        StringRequest sr = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                JSONArray listJson = null;
+                try {
+                    listJson = new JSONArray(response);
+                    List<paginaControlParentalModel> result = new ArrayList<>();
+                    Gson gson = new Gson();
+                    for (int i = 0; i < listJson.length(); i++) {
+                        JSONObject jo = listJson.getJSONObject(i);
+                        paginaControlParentalModel p = gson.fromJson(jo.toString(), paginaControlParentalModel.class);
+                        //p.ip = p.ip + ",,";
+                        result.add(p);
+                    }
+                    success.onResponse(result);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                success.onResponse(null);
+            }
+        });
+        execute(sr);
+        /*JsonRequestApi rq = new JsonRequestApi(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                Gson gson = new Gson();
+                List<paginaControlParentalModel> p = gson.fromJson(response.toString(), List.class);
+                success.onResponse(p);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                //Map<String, String> data1 = data    ;
+                success.onResponse(null);
+            }
+        });
+        execute(rq);*/
+    }
+
+    public void BlockPages(int cliente_sk, int router_sk, List<paginaControlParentalModel> paginasModel, final Response.Listener success) {
+        webBloqModel model = new webBloqModel();
+        model.cliente_sk = cliente_sk;
+        model.router_sk = router_sk;
+        webABloquearModel w;
+        model.webs = new ArrayList<>();
+        for (paginaControlParentalModel p : paginasModel) {
+            model.webs.add( p.toWebBlockModel());
+        }
+        Map<String, String> data = null;
+        try {
+            data = Utils.toMap(model);
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+        final Gson gson = new Gson();
+        /*
+        Map<String, String> data  = new HashMap<>();;
+            //data = Utils.toMap(model);
+            String json = gson.toJson(model); //"{\"k1\":\"v1\",\"k2\":\"v2\"}";
+            data = (Map<String,String>) gson.fromJson(json, data.getClass());*/
+
+
+        /////////////////////////////////////////////////////////////
+        String url = "http://200.82.0.24/api/routers";
+        JsonRequestApi rq = new JsonRequestApi(Request.Method.POST, url, data, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                //List<paginaControlParentalModel> p = gson.fromJson(response.toString(), List.class);
+                try {
+                    if(response.get("status").equals("ok")) {
+                        routerInfo router;
+                        Gson gson = new Gson();
+                        router = gson.fromJson(response.get("router").toString(), routerInfo.class);
+                        NMF_Info.clientInfo.router = router;
+                        success.onResponse("ok");
+                    }
+                    else
+                        success.onResponse(null);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                //Map<String, String> data1 = data    ;
+                success.onResponse(null);
+            }
+        });
+        execute(rq);
+
     }
 }
