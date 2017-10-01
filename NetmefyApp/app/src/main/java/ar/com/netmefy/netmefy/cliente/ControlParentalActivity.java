@@ -1,6 +1,7 @@
 package ar.com.netmefy.netmefy.cliente;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Handler;
 import android.os.Message;
@@ -8,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ListView;
@@ -19,6 +21,7 @@ import com.android.volley.Response;
 import java.util.ArrayList;
 import java.util.List;
 
+import ar.com.netmefy.netmefy.ControlParentalWebPageSetUp;
 import ar.com.netmefy.netmefy.R;
 import ar.com.netmefy.netmefy.adapters.MySimpleWebPageArrayAdapter;
 import ar.com.netmefy.netmefy.adapters.elements.WebPageToBlockItem;
@@ -58,7 +61,7 @@ public class ControlParentalActivity extends AppCompatActivity {
                 }
 
                 //cargo la lista que necesita la lista del activity
-                WebPageToBlockItem[] values = new WebPageToBlockItem[paginas.size()];
+                final WebPageToBlockItem[] values = new WebPageToBlockItem[paginas.size()];
                 int i = 0;
                 for (paginaControlParentalModel p : paginas) {
                     values[i] = p.toWebPageToBlockItem();
@@ -124,7 +127,19 @@ public class ControlParentalActivity extends AppCompatActivity {
                 webPageListView.setAdapter(adapter);
 
 
+                webPageListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        Intent device = new Intent(ControlParentalActivity.this, ControlParentalWebPageSetUp.class).putExtra("mac", values[position].getUrl());
+                        //startActivity(device);
+                        //Intent intent = new Intent(this, SyncActivity.class);
+                        //intent.putExtra("someData", "Here is some data");
+                        startActivityForResult(device, 1);
+
+
+                    }
+                });
 
                 ///////////////////////////////////////////////////////////////////
             }
