@@ -23,7 +23,7 @@ public class ControlParentalWebPageSetUp extends AppCompatActivity {
         setContentView(R.layout.activity_control_parental_web_page_set_up);
         router = Router.getInstance(getApplicationContext());
 
-        String mac = getIntent().getStringExtra("mac");
+        String url = getIntent().getStringExtra("url");
 
         tvPageImage = (de.hdodenhof.circleimageview.CircleImageView) findViewById(R.id.tvPageImage);
         etPageConfigApodo = (EditText) findViewById(R.id.et_page_config_apodo);
