@@ -109,7 +109,8 @@
         <activity android:name=".SolicitudesActivity" />
         <activity android:name=".ReclamosActivity" />
         <activity android:name=".DeviceListActivity" />
-        <activity android:name=".DeviceSetUpActivity"></activity>
+        <activity android:name=".DeviceSetUpActivity" />
+        <activity android:name=".ControlParentalWebPageSetUp"></activity>
     </application>
 
 </manifest>
