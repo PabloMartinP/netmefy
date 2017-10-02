@@ -9,7 +9,7 @@ import java.util.Map;
  */
 
 public class SaveToken {
-    public int id_entidad ;
+    public int sk_entidad ;
     public boolean es_cliente ;
     public boolean es_tecnico ;
     public String tokenid;
@@ -22,12 +22,12 @@ public class SaveToken {
         this.tokenid = tokenid;
     }
 
-    public int getId_entidad() {
-        return id_entidad;
+    public int getSk_entidad() {
+        return sk_entidad;
     }
 
-    public void setId_entidad(int id_entidad) {
-        this.id_entidad = id_entidad;
+    public void setSk_entidad(int id_entidad) {
+        this.sk_entidad = id_entidad;
     }
 
     public boolean isEs_cliente() {

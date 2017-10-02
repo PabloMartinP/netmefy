@@ -200,7 +200,7 @@ public class MainActivity extends AppCompatActivity  {
             loadInfoRouter();
 
         }
-        //saveToken();
+        saveToken();
     }
 
     private void send_likes(){
@@ -351,17 +351,20 @@ public class MainActivity extends AppCompatActivity  {
 
     private void saveToken(){
         try {
-            api.saveFirebaseToken(session.getUserId(), session.getUserType(), FirebaseInstanceId.getInstance().getToken(), new Response.Listener<String>() {
-                @Override
-                public void onResponse(String response) {
-                    response = response.toString();
-                }
-            }, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    String j= error.toString();
-                }
-            });
+
+            if(NMF_Info.tipoUsuarioApp!=null){
+                api.saveFirebaseToken(NMF_Info.tipoUsuarioApp.id, session.getUserType(), FirebaseInstanceId.getInstance().getToken(), new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        response = response.toString();
+                    }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        String j= error.toString();
+                    }
+                });
+            }
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         }

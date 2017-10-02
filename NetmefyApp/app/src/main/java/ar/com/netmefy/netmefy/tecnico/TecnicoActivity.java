@@ -13,6 +13,7 @@ import com.google.firebase.iid.FirebaseInstanceId;
 import ar.com.netmefy.netmefy.MainActivity;
 import ar.com.netmefy.netmefy.R;
 import ar.com.netmefy.netmefy.login.UserIdActivity;
+import ar.com.netmefy.netmefy.services.NMF_Info;
 import ar.com.netmefy.netmefy.services.api.Api;
 import ar.com.netmefy.netmefy.services.login.Session;
 
@@ -43,17 +44,21 @@ public class TecnicoActivity extends AppCompatActivity {
 
     private void saveToken(){
         try {
-            api.saveFirebaseToken(session.getUserId(), session.getUserType(), FirebaseInstanceId.getInstance().getToken(), new Response.Listener<String>() {
-                @Override
-                public void onResponse(String response) {
-                    response = response.toString();
-                }
-            }, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    String j= error.toString();
-                }
-            });
+            session.getClientInfo();
+            if(NMF_Info.clientInfo!=null){
+                api.saveFirebaseToken(NMF_Info.clientInfo.id, session.getUserType(), FirebaseInstanceId.getInstance().getToken(), new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        response = response.toString();
+                    }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        String j= error.toString();
+                    }
+                });
+            }
+
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         }

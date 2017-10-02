@@ -252,13 +252,13 @@ public  class Api {
         execute(rq);
     }
 
-    public void saveFirebaseToken(String userId, String userType, String token,final Response.Listener<String> success, Response.ErrorListener error) throws IllegalAccessException {
+    public void saveFirebaseToken(int cliente_sk, String userType, String token,final Response.Listener<String> success, Response.ErrorListener error) throws IllegalAccessException {
         SaveToken st = new SaveToken();
 
         st.es_cliente = userType.equalsIgnoreCase("user");
         st.es_tecnico= !userType.equalsIgnoreCase("tech");
 
-        st.setId_entidad(Integer.valueOf(userId));
+        st.setSk_entidad(cliente_sk);
         st.setTokenid(token);
 
         String url = UrlApi.SaveToken;
