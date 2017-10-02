@@ -35,11 +35,14 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import ar.com.netmefy.netmefy.cliente.ControlParentalActivity;
 import ar.com.netmefy.netmefy.login.UserIdActivity;
 import ar.com.netmefy.netmefy.router.ConfigWifi;
 import ar.com.netmefy.netmefy.router.Device;
+import ar.com.netmefy.netmefy.router.RestartTry;
 import ar.com.netmefy.netmefy.router.Router;
 import ar.com.netmefy.netmefy.services.NMF_Info;
 import ar.com.netmefy.netmefy.services.Utils;
@@ -147,64 +150,71 @@ public class MainActivity extends AppCompatActivity  {
 
         final MainActivity _this = this;
 
-        if(NMF_Info.tipoUsuarioApp !=null){
-            api.getInfoUser(NMF_Info.tipoUsuarioApp.username, new Response.Listener<clientInfo>() {
-                @Override
-                public void onResponse(final clientInfo response) {
-                    NMF_Info.clientInfo = response;
-
-                    //LikesToFacebook likesToFacebook = new LikesToFacebook(_this);
-                    //likesToFacebook.run();
-                    session.getUsuarioInfo();
-                    api.findUser(NMF_Info.usuarioInfo.usuario_email, new Response.Listener() {
-                    //api.findUser("pablo.penialoza@hotmail.com", new Response.Listener() {
-                        @Override
-                        public void onResponse(Object response2) {
-                            usuarioInfo userInfo = (usuarioInfo) response2;
-                            NMF_Info.usuarioInfo = userInfo;
-                            session.setUsuarioInfo();
-                            send_likes();
+        try {
+            if(NMF_Info.tipoUsuarioApp !=null){
 
 
-                            //session.getClientInfo();
-                            session.setClientInfo();
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    tv_user_number.setText(response.nombre);
-                                    tv_internet_speed.setText(String.valueOf(response.mb_contratado)+"MB");
-                                }
-                            });
-                            loadInfoRouter();
-                        }
-                    });
+                api.getInfoUser(NMF_Info.tipoUsuarioApp.username, new Response.Listener<clientInfo>() {
+                    @Override
+                    public void onResponse(final clientInfo response) {
+                        NMF_Info.clientInfo = response;
+                        session.setClientInfo();
+
+                        //LikesToFacebook likesToFacebook = new LikesToFacebook(_this);
+                        //likesToFacebook.run();
+                        session.getUsuarioInfo();
+                        api.findUser(NMF_Info.usuarioInfo.usuario_email, new Response.Listener() {
+                            //api.findUser("pablo.penialoza@hotmail.com", new Response.Listener() {
+                            @Override
+                            public void onResponse(Object response2) {
+                                usuarioInfo userInfo = (usuarioInfo) response2;
+                                NMF_Info.usuarioInfo = userInfo;
+                                session.setUsuarioInfo();
+                                send_likes();
+
+
+                                //session.getClientInfo();
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        tv_user_number.setText(response.nombre);
+                                        tv_internet_speed.setText(String.valueOf(response.mb_contratado)+"MB");
+                                    }
+                                });
+
+
+                                saveToken();
+                                loadInfoRouter();
+                            }
+                        });
 
 
 
 
-                }
-            }, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            tv_user_number.setText("[Sin conexión]");
-                            tv_internet_speed.setText("[Sin conexión]");
-                        }
-                    });
-                }
-            });
-        }else{
-            session.getClientInfo();
-            loadInfoRouter();
+                    }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                tv_user_number.setText("[Sin conexión]");
+                                tv_internet_speed.setText("[Sin conexión]");
+                            }
+                        });
+                    }
+                });
+            }else{
+                session.getClientInfo();
+                loadInfoRouter();
+            }
+        }catch (Exception e){
+            e.printStackTrace();
 
         }
-        saveToken();
     }
 
     private void send_likes(){
-        Session session;
 
         ArrayList<String> likesNames;
 
@@ -350,24 +360,45 @@ public class MainActivity extends AppCompatActivity  {
     }
 
     private void saveToken(){
-        try {
 
-            if(NMF_Info.tipoUsuarioApp!=null){
-                api.saveFirebaseToken(NMF_Info.tipoUsuarioApp.id, session.getUserType(), FirebaseInstanceId.getInstance().getToken(), new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        response = response.toString();
+        Timer timer = new Timer();
+        timer.schedule(new TimerTask()
+        {
+            int i = 0;
+            @Override
+            public void run()
+            {
+                boolean termino  = false;
+                try {
+                    final TimerTask _this = this;
+
+                    if(NMF_Info.tipoUsuarioApp!=null && FirebaseInstanceId.getInstance()!=null && FirebaseInstanceId.getInstance().getToken()!=null){
+                        api.saveFirebaseToken(NMF_Info.tipoUsuarioApp.id, session.getUserType(), FirebaseInstanceId.getInstance().getToken(), new Response.Listener<String>() {
+                            @Override
+                            public void onResponse(String response) {
+                                response = response.toString();
+                                _this.cancel();
+                            }
+                        }, new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                String j= error.toString();
+                            }
+                        });
                     }
-                }, new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        String j= error.toString();
-                    }
-                });
+                } catch (final Exception error) {
+                    error.printStackTrace();
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(getApplicationContext(), "Error:"+error.getMessage(), Toast.LENGTH_LONG).show();
+                        }
+                    });
+                }
             }
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        }
+        }, 5*1000, 5*1000);
+
+
     }
 
     public void changeWifiSsid(View v){
