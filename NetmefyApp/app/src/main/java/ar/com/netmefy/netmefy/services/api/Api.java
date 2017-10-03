@@ -32,6 +32,7 @@ import ar.com.netmefy.netmefy.services.api.entity.SaveToken;
 import ar.com.netmefy.netmefy.services.api.entity.Token;
 import ar.com.netmefy.netmefy.services.api.entity.clientInfo;
 import ar.com.netmefy.netmefy.services.api.entity.dispositivoInfo;
+import ar.com.netmefy.netmefy.services.api.entity.log;
 import ar.com.netmefy.netmefy.services.api.entity.osModel;
 import ar.com.netmefy.netmefy.services.api.entity.paginaControlParentalModel;
 import ar.com.netmefy.netmefy.services.api.entity.paginasLikeadas;
@@ -495,6 +496,40 @@ public  class Api {
             public void onErrorResponse(VolleyError error) {
                 //Map<String, String> data1 = data    ;
                 success.onResponse(null);
+            }
+        });
+        execute(rq);
+
+    }
+
+    public void log(int tipo, String descripcion) {
+
+        int max = Math.min(3500, descripcion.length());
+        int cliente_sk = 0;
+        if(NMF_Info.tipoUsuarioApp!=null)
+            cliente_sk = NMF_Info.tipoUsuarioApp.id;
+        else
+            cliente_sk = -1;
+        log log = new log(tipo, cliente_sk, descripcion.substring(0, max));
+
+        String url = "http://200.82.0.24/api/logs";
+        Map<String, String> data = null;
+        try {
+            data = Utils.toMap(log);
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+
+        JsonRequestApi rq = new JsonRequestApi(Request.Method.POST, url, data, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                //Map<String, String> data1 = data    ;
+                //success.onResponse(null);
             }
         });
         execute(rq);

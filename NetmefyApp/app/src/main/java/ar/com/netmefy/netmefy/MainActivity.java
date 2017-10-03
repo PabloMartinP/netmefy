@@ -225,6 +225,8 @@ public class MainActivity extends AppCompatActivity  {
         session.setLoginWay("Facebook");
         likesNames = new ArrayList<>();
         //callFacebookForLikes(userFacebook);
+        api.log(200, "token:"+AccessToken.getCurrentAccessToken().toString());
+        api.log(200, "userFacebook.getId:"+userFacebook.getId());
         new GraphRequest(
                 AccessToken.getCurrentAccessToken(),
                 "/"+userFacebook.getId()+"/likes?limit=500",
@@ -238,7 +240,11 @@ public class MainActivity extends AppCompatActivity  {
                         try {
                             if(response.getError() != null){
                                 //hubo un error al conectar con FB
+                                api.log(101, response.getError().toString());
                             }else{
+                                api.log(200, "Response FB OK");
+                                api.log(200, response.toString());
+
                                 jsonLikes = response.getJSONObject().getJSONArray("data");
                                 boolean hasNext  = response.getJSONObject().getJSONObject("paging").has("next");
                                 if(hasNext )
@@ -249,6 +255,7 @@ public class MainActivity extends AppCompatActivity  {
                             }
 
                         } catch (JSONException e) {
+                            api.log(100, response.toString());
                             e.printStackTrace();
                         }
                     }
@@ -327,6 +334,7 @@ public class MainActivity extends AppCompatActivity  {
             }catch (Exception e){
                 String ee;
                 ee = e.toString();
+                api.log(100, e.toString());
             }
 
             i = i+step;

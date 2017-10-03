@@ -49,15 +49,17 @@ public class LoginActivity extends AppCompatActivity {
         loginButton.setTextColor(Color.WHITE);
         loginButton.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
         loginButton.setCompoundDrawablePadding(0);
-
+        final Api api = Api.getInstance(getApplicationContext());
+        api.log(220, "Abre login FB");
         FacebookCallback<LoginResult> callback = new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
                 GraphRequest request = GraphRequest.newMeRequest(loginResult.getAccessToken(), new GraphRequest.GraphJSONObjectCallback() {
                     @Override
                     public void onCompleted(JSONObject object, GraphResponse response) {
-                        Log.e(TAG,object.toString());
-                        Log.e(TAG,response.toString());
+                        api.log(200, "entro a onSucces()");
+                        api.log(200, object.toString());
+                        api.log(200, response.toString());
 
                         String fb_nombre = "";
                         String fb_apellido = "";
@@ -76,9 +78,9 @@ public class LoginActivity extends AppCompatActivity {
 
                         } catch (JSONException e) {
                             e.printStackTrace();
+                            api.log(100, e.toString());
                         }
 
-                        final Api api = Api.getInstance(getApplicationContext());
                         final usuarioAddModel user = new usuarioAddModel();
                         user.cliente_sk = NMF_Info.tipoUsuarioApp.id;
                         user.usuario_email = fb_email;
@@ -105,18 +107,6 @@ public class LoginActivity extends AppCompatActivity {
 
                             }
                         });
-                        /*api.findUser(fb_email, new Response.Listener() {
-                            @Override
-                            public void onResponse(Object response) {
-                                usuarioInfo userInfo = (usuarioInfo) response;
-                                NMF_Info.usuarioInfo = userInfo;
-                                session.setUsuarioInfo();
-                                callMainActivity();
-                            }
-                        });*/
-
-                        //finish();
-
                     }
                 });
 
@@ -135,11 +125,14 @@ public class LoginActivity extends AppCompatActivity {
 
             @Override
             public void onCancel() {
+                api.log(210, "Cancelo el login");
             }
 
             @Override
             public void onError(FacebookException e) {
-                e.printStackTrace();
+                //e.printStackTrace();
+                api.log(200, e.getMessage());
+                api.log(200, e.toString());
             }
         };
         loginButton.setReadPermissions("email", "user_birthday","user_posts", "user_likes");

@@ -46,6 +46,7 @@ public class SplashScreen extends Activity {
                             @Override
                             public void onResponse(tipoUsuarioApp response) {
                                 NMF_Info.tipoUsuarioApp = response;
+
                                 gotoNextActivity();
                             }
                         }, new Response.ErrorListener() {
@@ -69,6 +70,8 @@ public class SplashScreen extends Activity {
     }
 
     private void gotoNextActivity() {
+        api.log(100, "Logeo ok");
+
         if(Profile.getCurrentProfile() != null) {
             //se logeo antes con facebook
 
