@@ -628,8 +628,8 @@ public class MainActivity extends AppCompatActivity  {
 
 
     public void goToNotifications(View view){
-       /* Intent notifications = new Intent(MainActivity.this, NotificationsActivity.class);
-        startActivity(notifications);*/
+       Intent notifications = new Intent(MainActivity.this, NotificationListActivity.class);
+        startActivity(notifications);
     }
 
     public void goToSetOfTest(View view){
