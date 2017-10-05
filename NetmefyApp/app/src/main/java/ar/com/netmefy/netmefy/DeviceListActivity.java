@@ -68,9 +68,6 @@ public class DeviceListActivity extends AppCompatActivity {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                         Intent device = new Intent(DeviceListActivity.this, DeviceSetUpActivity.class).putExtra("mac", values[position].getMac());
-                        //startActivity(device);
-                        //Intent intent = new Intent(this, SyncActivity.class);
-                        //intent.putExtra("someData", "Here is some data");
                         startActivityForResult(device, 1);
 
 
