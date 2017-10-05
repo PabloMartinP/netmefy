@@ -559,6 +559,29 @@ public class MainActivity extends AppCompatActivity  {
         }
     }
 
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(resultCode==RESULT_CANCELED){
+            //AL VOLVER TIENE QUE RECARGAR LA LISTA DE DISPO CONECTADOS
+            //Intent refresh = new Intent(this, MainActivity.class);
+            //startActivity(refresh);
+            //this.finish();
+            router.listDevicesConnected(new Response.Listener<List<Device>>() {
+                @Override
+                public void onResponse(List<Device> devices) {
+                    populate_list_connected(devices);
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+
+                }
+            });
+        }
+    }
+
     public void populate_list_connected(List<Device> devices){
         NMF_Info.updateDevicesConnected(devices, getApplicationContext());
 
@@ -625,8 +648,10 @@ public class MainActivity extends AppCompatActivity  {
     }
 
     public void goToDeviceList(View view){
-        Intent deviceList = new Intent(MainActivity.this, DeviceListActivity.class);
-        startActivity(deviceList);
+        //Intent deviceList = new Intent(MainActivity.this, DeviceListActivity.class);
+        //startActivity(deviceList);
+        Intent device = new Intent(MainActivity.this, DeviceListActivity.class);
+        startActivityForResult(device, 1);
     }
 
     private boolean isRed(){
