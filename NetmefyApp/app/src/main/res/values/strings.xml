@@ -64,5 +64,8 @@
     <string name="ver_todos">Ver Todos</string>
     <string name="user">user</string>
     <string name="dispositivos">Dispositivos</string>
+    <string name="Notificaciones">Notificaciones</string>
+    <string name="Notificacion">Notificación</string>
+    <string name="calificar">Calificar</string>
 
 </resources>
