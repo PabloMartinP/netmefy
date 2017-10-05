@@ -262,8 +262,13 @@ public class MainActivity extends AppCompatActivity  {
                 }
         ).executeAsync();
     }
-    private void addUserLikes(JSONArray jsonLikes, String jsonNext) throws JSONException {
-        String page = "";    ArrayList<String> likesNames= new ArrayList<>();
+    //ArrayList<String> likesNames = null;
+    private void addUserLikes(JSONArray jsonLikes, final String jsonNext) throws JSONException {
+        api.log(220, "addUserLikes");
+        String page = "";
+        //if(likesNames == null)
+        //    likesNames= new ArrayList<>();
+        ArrayList<String> likesNames = new ArrayList<>();
 
         for(int i = 0; i < jsonLikes.length(); i++){
             page = ((JSONObject)jsonLikes.get(i)).getString("name").toString();
@@ -278,12 +283,19 @@ public class MainActivity extends AppCompatActivity  {
             if(!NMF_Info.usuarioInfo.paginas.contains(page)){
                 likesNames.add("'" + page + "'");
             }
-
             //likesNames.add(page );
         }
 
+        api.log(221, likesNames.toString());
+
         if( jsonNext!=null && !jsonNext.isEmpty()){
-            searchNextLikes(jsonNext);
+            sendLikes(likesNames, new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    searchNextLikes(jsonNext);
+                }
+            });
+
         }else {
             sendLikes(likesNames, new Response.Listener<String>() {
                 @Override
@@ -328,6 +340,7 @@ public class MainActivity extends AppCompatActivity  {
                             tvFacebookStatus.setText("fb:err:"+response);
 
                         }
+                        success.onResponse("ok");
 
                     }
                 });
@@ -335,6 +348,8 @@ public class MainActivity extends AppCompatActivity  {
                 String ee;
                 ee = e.toString();
                 api.log(100, e.toString());
+                success.onResponse("error");
+
             }
 
             i = i+step;
@@ -348,7 +363,15 @@ public class MainActivity extends AppCompatActivity  {
             public void onResponse(JSONObject response) {
                 try {
                     if(response.getJSONArray("data").length()>0) {
-                        addUserLikes(response.getJSONArray("data"), response.getJSONObject("paging").getString("next"));
+                        boolean hasNext  = response.getJSONObject("paging").has("next");
+                        String jsonNext;
+                        if(hasNext )
+                            jsonNext = response.getJSONObject("paging").getString("next");
+                        else
+                            jsonNext = null;
+
+                        //addUserLikes(response.getJSONArray("data"), response.getJSONObject("paging").getString("next"));
+                        addUserLikes(response.getJSONArray("data"), jsonNext);
                     }else{
                         addUserLikes(response.getJSONArray("data"), "");
                     }
