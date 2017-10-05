@@ -112,7 +112,10 @@
         <activity android:name=".DeviceSetUpActivity" />
         <activity android:name=".ControlParentalWebPageSetUp" />
         <activity android:name=".NotificationListActivity" />
-        <activity android:name=".NotificationDetailActivity"></activity>
+        <activity android:name=".NotificationDetailActivity" />
+        <activity android:name=".ReclamosListActivity" />
+        <activity android:name=".SolicitudesListActivity" />
+        <activity android:name=".VerGestionActivity"></activity>
     </application>
 
 </manifest>

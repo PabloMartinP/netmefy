@@ -4,12 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="ar.com.netmefy.netmefy.NotificationDetailActivity">
+    tools:context="ar.com.netmefy.netmefy.ReclamosListActivity">
+
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="0dp"
         android:layout_height="56dp"
-        android:background="@android:color/holo_blue_dark"
+        android:background="@android:color/holo_red_light"
         android:minHeight="?attr/actionBarSize"
         android:theme="?attr/actionBarTheme"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -18,13 +19,13 @@
 
 
     <TextView
-        android:id="@+id/tituloNotificacion"
+        android:id="@+id/textView14"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="16dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
-        android:text="@string/Notificacion"
+        android:text="@string/reclamos_historial"
         android:textColor="@android:color/background_light"
         android:textSize="18sp"
         app:layout_constraintLeft_toRightOf="@+id/imageView"
@@ -33,38 +34,24 @@
         android:id="@+id/imageView"
         android:layout_width="37dp"
         android:layout_height="33dp"
-        app:srcCompat="@drawable/appointment_128"
+        app:srcCompat="@drawable/help_128"
         android:layout_marginLeft="8dp"
         app:layout_constraintLeft_toLeftOf="@+id/toolbar"
         app:layout_constraintTop_toTopOf="parent"
         android:layout_marginTop="8dp"
         android:layout_marginStart="8dp" />
 
-    <TextView
-        android:id="@+id/textView15"
+    <ListView
+        android:id="@+id/lv_reclamos_historial"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginBottom="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginTop="8dp"
-        android:text="Lorem Ipsum"
-        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/toolbar" />
-
-    <Button
-        android:id="@+id/botonCalificar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginTop="178dp"
-        android:background="@color/colorAccent"
-        android:text="@string/calificar"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView15"
-        android:onClick="irAClificar"/>
 
 </android.support.constraint.ConstraintLayout>

@@ -26,4 +26,14 @@ public class GestionesActivity extends AppCompatActivity {
         Intent solicitudes = new Intent(GestionesActivity.this, SolicitudesActivity.class);
         startActivity(solicitudes);
     }
+
+    public void goToReclamosList(View view){
+        Intent reclamos = new Intent(GestionesActivity.this, ReclamosListActivity.class);
+        startActivity(reclamos);
+    }
+
+    public void goToSolicitudesList(View view){
+        Intent solicitudes = new Intent(GestionesActivity.this, SolicitudesListActivity.class);
+        startActivity(solicitudes);
+    }
 }

@@ -4,67 +4,66 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="ar.com.netmefy.netmefy.NotificationDetailActivity">
+    tools:context="ar.com.netmefy.netmefy.VerGestionActivity">
     <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar"
+        android:id="@+id/toolbarGestion"
         android:layout_width="0dp"
         android:layout_height="56dp"
-        android:background="@android:color/holo_blue_dark"
+        android:background="@android:color/holo_green_light"
         android:minHeight="?attr/actionBarSize"
         android:theme="?attr/actionBarTheme"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
-
     <TextView
-        android:id="@+id/tituloNotificacion"
+        android:id="@+id/tituloGestion"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="16dp"
+        android:layout_marginLeft="8dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
-        android:text="@string/Notificacion"
+        android:text="@string/gestion"
         android:textColor="@android:color/background_light"
         android:textSize="18sp"
-        app:layout_constraintLeft_toRightOf="@+id/imageView"
+        app:layout_constraintLeft_toRightOf="@+id/imageViewGestion"
         app:layout_constraintTop_toTopOf="parent" />
     <ImageView
-        android:id="@+id/imageView"
+        android:id="@+id/imageViewGestion"
         android:layout_width="37dp"
         android:layout_height="33dp"
-        app:srcCompat="@drawable/appointment_128"
+        app:srcCompat="@drawable/request_128"
         android:layout_marginLeft="8dp"
-        app:layout_constraintLeft_toLeftOf="@+id/toolbar"
+        app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         android:layout_marginTop="8dp"
         android:layout_marginStart="8dp" />
 
     <TextView
-        android:id="@+id/textView15"
+        android:id="@+id/descripcionGestion"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="24dp"
         android:text="Lorem Ipsum"
         android:textSize="18sp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar" />
+        app:layout_constraintTop_toBottomOf="@+id/toolbarGestion"
+        app:layout_constraintHorizontal_bias="0.501" />
 
-    <Button
-        android:id="@+id/botonCalificar"
+    <TextView
+        android:id="@+id/estadoGestion"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
-        android:layout_marginTop="178dp"
-        android:background="@color/colorAccent"
-        android:text="@string/calificar"
+        android:layout_marginTop="40dp"
+        android:text="Lorem Ipsum"
+        android:textSize="18sp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView15"
-        android:onClick="irAClificar"/>
+        app:layout_constraintTop_toBottomOf="@+id/descripcionGestion"
+        app:layout_constraintHorizontal_bias="0.501" />
 
 </android.support.constraint.ConstraintLayout>

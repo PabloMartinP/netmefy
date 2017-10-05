@@ -57,8 +57,10 @@
     <string name="save">save</string>
     <string name="search">search</string>
     <string name="cargando">Cargando...</string>
-    <string name="solicitudes">Solicitudes</string>
-    <string name="reclamos">Reclamos</string>
+    <string name="solicitudes">Nueva Solicitud</string>
+    <string name="solicitudes_historial">Historial de Solicitudes</string>
+    <string name="reclamos">Nuevo Reclamo</string>
+    <string name="reclamos_historial">Historia de Reclamos</string>
     <string name="fallas_en_servicios">Fallas en servicios</string>
     <string name="upgrades">Upgrades</string>
     <string name="ver_todos">Ver Todos</string>
@@ -67,5 +69,6 @@
     <string name="Notificaciones">Notificaciones</string>
     <string name="Notificacion">Notificación</string>
     <string name="calificar">Calificar</string>
+    <string name="gestion">Gestion</string>
 
 </resources>
