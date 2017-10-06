@@ -4,6 +4,7 @@ import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -41,4 +42,18 @@ public class PruebasActivity extends AppCompatActivity {
         tvPingAMostrar.setText("145ms"); //TODO: para setear el valor de ping
 
     }
+
+    public void refreshSignal(View view){
+
+    }
+
+    public void refreshSpeed(View view){
+
+    }
+
+    public void refreshPing(View view){
+
+    }
+
+
 }
