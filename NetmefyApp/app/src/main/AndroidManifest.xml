@@ -115,7 +115,8 @@
         <activity android:name=".NotificationDetailActivity" />
         <activity android:name=".ReclamosListActivity" />
         <activity android:name=".SolicitudesListActivity" />
-        <activity android:name=".VerGestionActivity"></activity>
+        <activity android:name=".VerGestionActivity" />
+        <activity android:name=".PruebasActivity"></activity>
     </application>
 
 </manifest>

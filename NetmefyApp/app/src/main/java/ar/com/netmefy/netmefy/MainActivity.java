@@ -633,8 +633,8 @@ public class MainActivity extends AppCompatActivity  {
     }
 
     public void goToSetOfTest(View view){
-       /* Intent tests = new Intent(MainActivity.this, TestConnectivityActivity.class);
-        startActivity(tests);*/
+        Intent tests = new Intent(MainActivity.this, PruebasActivity.class);
+        startActivity(tests);
     }
 
     public void goToGestiones(View view){
