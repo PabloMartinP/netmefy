@@ -7,10 +7,11 @@ import java.util.Date;
  */
 
 public class NotificationItem {
-    private Long id;
+    private int id;
     private String title;
     private String descripcion;
-    private Date fecha;
+    //private Date fecha;
+    private String fecha;
     private int resId;
     private Boolean read;
     private String ordenDeTrabajo;
@@ -18,7 +19,8 @@ public class NotificationItem {
     public NotificationItem() {
     }
 
-    public NotificationItem(Long id,String title, String descripcion, Date fecha, int resId, Boolean read, String ordenDeTrabajo) {
+    //public NotificationItem(Long id,String title, String descripcion, Date fecha, int resId, Boolean read, String ordenDeTrabajo) {
+    public NotificationItem(int id,String title, String descripcion, String fecha, int resId, Boolean read, String ordenDeTrabajo) {
         this.id = id;
         this.title = title;
         this.descripcion = descripcion;
@@ -28,11 +30,11 @@ public class NotificationItem {
         this.ordenDeTrabajo = ordenDeTrabajo;
     }
 
-    public Long getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -52,11 +54,11 @@ public class NotificationItem {
         this.descripcion = descripcion;
     }
 
-    public Date getFecha() {
+    public String getFecha() {
         return fecha;
     }
 
-    public void setFecha(Date fecha) {
+    public void setFecha(String fecha) {
         this.fecha = fecha;
     }
 

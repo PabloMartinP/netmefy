@@ -6,9 +6,17 @@ import android.preference.PreferenceManager;
 
 import com.google.gson.Gson;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import ar.com.netmefy.netmefy.services.NMF_Info;
 import ar.com.netmefy.netmefy.services.api.Api;
 import ar.com.netmefy.netmefy.services.api.entity.clientInfo;
+import ar.com.netmefy.netmefy.services.api.entity.notificacionModel;
 import ar.com.netmefy.netmefy.services.api.entity.usuarioInfo;
 
 /**
@@ -23,7 +31,41 @@ public class Session {
         prefs = PreferenceManager.getDefaultSharedPreferences(cntx);
     }
 
+    public List<notificacionModel> getNotificaciones(){
+        List<notificacionModel> ressult  = new ArrayList<>();
+        notificacionModel nm ;
+        String jsonNotificaciones = prefs.getString("notificaciones","");
 
+        if(!jsonNotificaciones.isEmpty()){
+            JSONArray jsonarray = null;
+            try {
+                jsonarray = new JSONArray(jsonNotificaciones);
+                //JSONArray jsonArray = jsnobject.getJSONArray("locations");
+                for (int i = 0; i < jsonarray.length(); i++) {
+                    JSONObject explrObject = jsonarray.getJSONObject(i);
+                    nm = new notificacionModel();
+                    nm.usuario_sk = explrObject.getInt("usuario_sk");
+                    nm.cliente_sk = explrObject.getInt("cliente_sk");
+                    nm.notificacion_sk = explrObject.getInt("notificacion_sk");
+                    nm.notificacion_desc = explrObject.getString("notificacion_desc");
+                    nm.notificacion_texto = explrObject.getString("notificacion_texto");
+                    nm.tiempo_sk = explrObject.getString("tiempo_sk").substring(0, 10);
+                    nm.leido = explrObject.getBoolean("leido");
+                    ressult.add(nm);
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return  ressult;
+    }
+
+    public void setNotificaciones(List<notificacionModel> notificaciones){
+        Gson gson = new Gson();
+        String json = gson.toJson(notificaciones);
+        prefs.edit().putString("notificaciones", json).apply();
+    }
 
     public void setUserType(String userType) {
         prefs.edit().putString("userType", userType).apply();

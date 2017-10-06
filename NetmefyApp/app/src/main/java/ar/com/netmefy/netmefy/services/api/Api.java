@@ -33,6 +33,7 @@ import ar.com.netmefy.netmefy.services.api.entity.Token;
 import ar.com.netmefy.netmefy.services.api.entity.clientInfo;
 import ar.com.netmefy.netmefy.services.api.entity.dispositivoInfo;
 import ar.com.netmefy.netmefy.services.api.entity.log;
+import ar.com.netmefy.netmefy.services.api.entity.notificacionModel;
 import ar.com.netmefy.netmefy.services.api.entity.osModel;
 import ar.com.netmefy.netmefy.services.api.entity.paginaControlParentalModel;
 import ar.com.netmefy.netmefy.services.api.entity.paginasLikeadas;
@@ -533,6 +534,69 @@ public  class Api {
             }
         });
         execute(rq);
+
+    }
+
+    public void getNotificaciones(int cliente_sk, int usuario_sk, final Response.Listener<List<notificacionModel>> success) {
+
+        cliente_sk = 1;
+        usuario_sk = 0;
+
+        String url = "http://200.82.0.24/api/notificaciones?cliente_sk="+String.valueOf(cliente_sk)+"&usuario_sk="+String.valueOf(usuario_sk);
+
+        final Map<String, String> params = null;
+        StringRequest sr = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                List<notificacionModel> ressult  = new ArrayList<>();
+                notificacionModel nm ;
+                try {
+                    //JSONObject jsnobject = new JSONObject(response);
+                    JSONArray jsonarray = new JSONArray(response);
+                    //JSONArray jsonArray = jsnobject.getJSONArray("locations");
+                    for (int i = 0; i < jsonarray.length(); i++) {
+                        JSONObject explrObject = jsonarray.getJSONObject(i);
+                        nm = new notificacionModel();
+                        nm.usuario_sk = explrObject.getInt("usuario_sk");
+                        nm.cliente_sk = explrObject.getInt("cliente_sk");
+                        nm.notificacion_sk = explrObject.getInt("notificacion_sk");
+                        nm.notificacion_desc = explrObject.getString("notificacion_desc");
+                        nm.notificacion_texto = explrObject.getString("notificacion_texto");
+                        nm.tiempo_sk = explrObject.getString("tiempo_sk").substring(0, 10);
+                        ressult.add(nm);
+                    }
+                    success.onResponse(ressult);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+
+
+
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+            }
+        }){
+            @Override
+            protected Map<String, String> getParams() throws com.android.volley.AuthFailureError {
+                return params;
+            };
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> headers = new HashMap<String, String>();
+                if(Api.token!=null){
+                    headers.put("Authorization", "Bearer " + Api.token.getAccess_token());
+
+                }
+                return headers ;
+            }
+
+        };
+        execute(sr);
 
     }
 }
