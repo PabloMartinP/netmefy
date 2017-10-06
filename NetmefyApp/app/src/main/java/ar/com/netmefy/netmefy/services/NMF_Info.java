@@ -13,6 +13,7 @@ import ar.com.netmefy.netmefy.services.api.Api;
 import ar.com.netmefy.netmefy.services.api.entity.DeviceModel;
 import ar.com.netmefy.netmefy.services.api.entity.clientInfo;
 import ar.com.netmefy.netmefy.services.api.entity.dispositivoInfo;
+import ar.com.netmefy.netmefy.services.api.entity.notificacionModel;
 import ar.com.netmefy.netmefy.services.api.entity.tipoUsuarioApp;
 import ar.com.netmefy.netmefy.services.api.entity.usuarioInfo;
 import ar.com.netmefy.netmefy.services.login.Session;
@@ -26,6 +27,7 @@ public class NMF_Info {
     public  static ar.com.netmefy.netmefy.services.api.entity.clientInfo clientInfo;
     public static ar.com.netmefy.netmefy.services.api.entity.usuarioInfo usuarioInfo;
     public static ar.com.netmefy.netmefy.services.api.entity.tipoUsuarioApp tipoUsuarioApp ;
+    public static List<notificacionModel> notificaciones;
 
     public static void setDevice_sk(String mac, int sk){
         for (dispositivoInfo disp : NMF_Info.clientInfo.router.devices ) {

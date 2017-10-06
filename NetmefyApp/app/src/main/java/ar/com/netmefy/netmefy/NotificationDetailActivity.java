@@ -8,29 +8,53 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import ar.com.netmefy.netmefy.login.RateSupportActivity;
+import ar.com.netmefy.netmefy.services.NMF_Info;
+import ar.com.netmefy.netmefy.services.api.entity.notificacionModel;
+import ar.com.netmefy.netmefy.services.login.Session;
 
 public class NotificationDetailActivity extends AppCompatActivity {
 
     Button calificar;
     TextView tituloNotificacion;
+    TextView tv_notif_texto;
     private String supportNumber;
+    private Session session;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_notification_detail);
+        session = new Session(getApplicationContext());
+
+
         Bundle inBundle = getIntent().getExtras();
         supportNumber =  inBundle.getString("supportNumber");
-        Long notificationId =  inBundle.getLong("notifcation");//TODO: se puede usar para saber el id de la notificacion.
+        int notificationId =  inBundle.getInt("notifcation");//TODO: se puede usar para saber el id de la notificacion.
+        notificacionModel notif = null;
+        for (notificacionModel nm : NMF_Info.notificaciones) {
+            if(nm.notificacion_sk == notificationId){
+                notif = nm;
+                if(supportNumber.isEmpty())//este codigo hace llorar al niño dios
+                    notif.leido = true;
+                break;
+            }
+        }
+
+
 
         tituloNotificacion = (TextView) findViewById(R.id.tituloNotificacion);
-        tituloNotificacion.setText("Aca va el titulo de la notificacion"); //TODO: con el titulo de la notificacion setear bien el titulo del activity aca.
+        tv_notif_texto = (TextView) findViewById(R.id.tv_notif_texto);
+
+        tituloNotificacion.setText(notif.notificacion_desc); //TODO: con el titulo de la notificacion setear bien el titulo del activity aca.
+        tv_notif_texto.setText(notif.notificacion_texto);
 
         calificar = (Button) findViewById(R.id.botonCalificar);
         if (supportNumber.isEmpty()){
             calificar.setVisibility(View.INVISIBLE);
+            session.setNotificaciones((NMF_Info.notificaciones));
         }else{
             calificar.setVisibility(View.VISIBLE);
+            //si no es para calificar no marco como leido
         }
     }
 
