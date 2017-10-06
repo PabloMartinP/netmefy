@@ -727,7 +727,7 @@
             android:layout_height="match_parent"
             android:layout_margin="3dp"
             android:layout_weight="1"
-            android:background="@android:color/holo_red_light"
+            android:background="@android:color/holo_purple"
             android:onClick="goToGestiones"
             android:orientation="vertical">
 

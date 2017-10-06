@@ -9,7 +9,7 @@
         android:id="@+id/toolbar"
         android:layout_width="0dp"
         android:layout_height="56dp"
-        android:background="@android:color/holo_red_light"
+        android:background="@android:color/holo_purple"
         android:minHeight="?attr/actionBarSize"
         android:theme="?attr/actionBarTheme"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -112,7 +112,7 @@
             android:layout_height="match_parent"
             android:layout_margin="3dp"
             android:layout_weight="1"
-            android:background="@android:color/holo_red_light"
+            android:background="@android:color/holo_orange_light"
             android:onClick="goToReclamosList"
             android:orientation="vertical">
 
@@ -227,7 +227,7 @@
             android:layout_height="match_parent"
             android:layout_margin="3dp"
             android:layout_weight="1"
-            android:background="@android:color/holo_red_dark"
+            android:background="@android:color/holo_orange_dark"
             android:onClick="goToReclamos"
             android:orientation="vertical">
 
