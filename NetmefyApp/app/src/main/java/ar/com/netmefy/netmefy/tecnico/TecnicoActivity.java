@@ -27,23 +27,23 @@ public class TecnicoActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tecnico);
         session = new Session(getApplicationContext());
-        techLogOut = (Button) findViewById(R.id.tech_log_out);
+        /*techLogOut = (Button) findViewById(R.id.tech_log_out);
 
         //api = Api.getInstance(getApplicationContext());
-        /*api.LogIn("netmefy", "yfemten", new Response.Listener<String>() {
+        *//*api.LogIn("netmefy", "yfemten", new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 saveToken();
             }
-        });*/
+        });*//*
         api = Api.getInstance(getApplicationContext());
 
-        saveToken();
+        saveToken();*/
 
     }
 
     private void saveToken(){
-        try {
+       /* try {
             session.getClientInfo();
             if(NMF_Info.clientInfo!=null){
                 api.saveFirebaseToken(NMF_Info.clientInfo.id, session.getUserType(), FirebaseInstanceId.getInstance().getToken(), new Response.Listener<String>() {
@@ -61,7 +61,7 @@ public class TecnicoActivity extends AppCompatActivity {
 
         } catch (IllegalAccessException e) {
             e.printStackTrace();
-        }
+        }*/
     }
 
     public void logOut(View view){

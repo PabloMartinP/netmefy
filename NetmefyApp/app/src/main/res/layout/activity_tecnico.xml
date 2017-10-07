@@ -6,30 +6,229 @@
     android:layout_height="match_parent"
     tools:context="ar.com.netmefy.netmefy.tecnico.TecnicoActivity">
 
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginTop="8dp"
-        android:text="@string/tech_user"
-        android:textColor="@android:color/holo_blue_dark"
-        android:textSize="24sp"
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="0dp"
+        android:layout_height="56dp"
+        android:background="@android:color/holo_green_light"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="?attr/actionBarTheme"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout4"
+        android:layout_marginTop="0dp" />
 
-    <Button
-        android:id="@+id/tech_log_out"
+    <TextView
+        android:id="@+id/textView14"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:text="Ordenes de Trabajo "
+        android:textColor="@android:color/background_light"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="@+id/toolbar"
+        app:layout_constraintLeft_toRightOf="@+id/imageView"
+        app:layout_constraintTop_toTopOf="@+id/toolbar" />
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="37dp"
+        android:layout_height="33dp"
+        app:srcCompat="@drawable/ot_128"
+        android:layout_marginLeft="8dp"
+        app:layout_constraintLeft_toLeftOf="@+id/toolbar"
+        app:layout_constraintTop_toTopOf="@+id/toolbar"
+        android:layout_marginTop="7dp"
+        android:layout_marginStart="8dp"
+        app:layout_constraintBottom_toBottomOf="@+id/toolbar"
+        android:layout_marginBottom="8dp" />
+
+    <ImageButton
+        android:id="@+id/refreshOrdenes"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="10dp"
+        android:background="@android:color/transparent"
+        android:scaleType="fitXY"
+        app:layout_constraintRight_toRightOf="@+id/toolbar"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout4"
+        app:srcCompat="@drawable/reset_128" />
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="150dp"
+        android:layout_marginTop="-51dp"
+        android:layout_weight="1"
+        android:orientation="horizontal"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:id="@+id/linearLayout2"
+        app:layout_constraintTop_toTopOf="parent">
+
+
+
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="0dip"
+            android:layout_height="match_parent"
+            android:layout_margin="3dp"
+            android:layout_weight="1"
+            android:background="#303f9f"
+            android:onClick="goToReclamos"
+            android:orientation="vertical">
+
+            <ImageButton
+                android:id="@+id/ib_logout_tecnico"
+                android:layout_width="37dp"
+                android:layout_height="37dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginTop="7dp"
+                android:background="@android:color/transparent"
+                android:contentDescription="@string/logout"
+                android:onClick="logOut"
+                android:scaleType="fitCenter"
+                android:src="@drawable/logout_128"
+                android:visibility="visible"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginTop="7dp"
+                android:text="Juan Carlos Perez"
+                android:textColor="@android:color/white"
+                android:textSize="24sp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                app:layout_constraintHorizontal_bias="0.502" />
+
+            <RatingBar
+                android:id="@+id/ratingBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_marginTop="8dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_marginBottom="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                app:layout_constraintVertical_bias="0.507"
+                android:layout_marginLeft="8dp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                android:layout_marginRight="8dp"
+                app:layout_constraintRight_toRightOf="parent" />
+
+            <TextView
+                android:id="@+id/textView15"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:layout_marginRight="8dp"
+                android:text="B042629"
+                android:textColor="@android:color/white"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                android:layout_marginEnd="8dp" />
+
+            <TextView
+                android:id="@+id/textView16"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:layout_marginLeft="8dp"
+                android:text="jcperez@telecom.com.ar"
+                android:textColor="@android:color/white"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                android:layout_marginStart="8dp" />
+
+
+        </android.support.constraint.ConstraintLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="140dp"
+        android:layout_weight="3"
+        android:orientation="horizontal"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout2"
+        android:id="@+id/linearLayout4">
+
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="0dip"
+            android:layout_height="match_parent"
+            android:layout_margin="3dp"
+            android:layout_weight="1"
+            android:background="@android:color/holo_orange_light"
+            android:onClick="goToReclamosList"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/imageReclamosHistorial"
+                android:layout_width="75dp"
+                android:layout_height="75dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:src="@drawable/wrench_128"
+                android:visibility="visible"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/reclamos_historial"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="19dp"
+                android:text="@string/set_de_pruebas"
+                android:textColor="@color/cardview_light_background"
+                android:textSize="18sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintHorizontal_bias="0.502"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/imageReclamosHistorial"
+                app:layout_constraintVertical_bias="0.0" />
+        </android.support.constraint.ConstraintLayout>
+    </LinearLayout>
+
+    <ListView
+        android:id="@+id/lvOrdenesDeTrabajo"
+        android:layout_width="match_parent"
+        android:layout_height="218dp"
+        android:layout_marginBottom="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginTop="8dp"
-        android:onClick="logOut"
-        android:text="@string/logout"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView" />
+        app:layout_constraintTop_toBottomOf="@+id/toolbar"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintVertical_bias="0.333" />
+
 </android.support.constraint.ConstraintLayout>
