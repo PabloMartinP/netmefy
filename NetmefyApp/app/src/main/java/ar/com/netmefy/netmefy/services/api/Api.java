@@ -35,6 +35,7 @@ import ar.com.netmefy.netmefy.services.api.entity.dispositivoInfo;
 import ar.com.netmefy.netmefy.services.api.entity.log;
 import ar.com.netmefy.netmefy.services.api.entity.notificacionModel;
 import ar.com.netmefy.netmefy.services.api.entity.osModel;
+import ar.com.netmefy.netmefy.services.api.entity.otModel;
 import ar.com.netmefy.netmefy.services.api.entity.paginaControlParentalModel;
 import ar.com.netmefy.netmefy.services.api.entity.paginasLikeadas;
 import ar.com.netmefy.netmefy.services.api.entity.routerInfo;
@@ -540,10 +541,10 @@ public  class Api {
     public void getNotificaciones(int cliente_sk, int usuario_sk, final Response.Listener<List<notificacionModel>> success) {
 
         cliente_sk = 1;
-        usuario_sk = 0;
+        usuario_sk = 1;
 
         String url = "http://200.82.0.24/api/notificaciones?cliente_sk="+String.valueOf(cliente_sk)+"&usuario_sk="+String.valueOf(usuario_sk);
-
+        //todo: ACA LO HAGO ASI PORQUE NOSE COMO HACER PARA TRAERME UN ARRAY,
         final Map<String, String> params = null;
         StringRequest sr = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
             @Override
@@ -563,6 +564,13 @@ public  class Api {
                         nm.notificacion_desc = explrObject.getString("notificacion_desc");
                         nm.notificacion_texto = explrObject.getString("notificacion_texto");
                         nm.tiempo_sk = explrObject.getString("tiempo_sk").substring(0, 10);
+
+                        String aux = explrObject.getString("ot_id");
+                        if(aux.equalsIgnoreCase("null"))
+                            nm.ot_id = "";
+                        else
+                            nm.ot_id = explrObject.getString("ot_id");
+
                         ressult.add(nm);
                     }
                     success.onResponse(ressult);
@@ -598,5 +606,31 @@ public  class Api {
         };
         execute(sr);
 
+    }
+
+    public void calificarOt(int ot_id, int calificacion, final Response.Listener success ){
+
+        String url = "http://200.82.0.24/api/ot/"+String.valueOf(ot_id) + "?calificacion="+ String.valueOf(calificacion);
+
+
+        JsonRequestApi rq = new JsonRequestApi(Request.Method.PUT, url, null, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                otModel ot = null;
+                Gson gson = new Gson();
+                try {
+                    ot = gson.fromJson(response.get("ot").toString(), otModel.class);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                success.onResponse(ot);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                success.onResponse(null);
+            }
+        });
+        execute(rq);
     }
 }

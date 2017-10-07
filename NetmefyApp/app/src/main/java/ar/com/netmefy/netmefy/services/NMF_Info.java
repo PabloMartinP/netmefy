@@ -114,4 +114,16 @@ public class NMF_Info {
         //session.setClientInfo();//guardo la info de los nuevos equipos de clientInfo
 
     }
+
+    public static void marcarNotificacionComoLeida(int notificationId, Context context) {
+        for (notificacionModel nm : NMF_Info.notificaciones) {
+            if(nm.notificacion_sk == notificationId){
+                nm.leido = true;
+                break;
+            }
+        }
+        Session session = new Session(context);
+        session.setNotificaciones(NMF_Info.notificaciones);
+
+    }
 }

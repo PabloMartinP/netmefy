@@ -140,6 +140,15 @@ public class MainActivity extends AppCompatActivity  {
         iv_deviceConnected[1] =(CircleImageView) findViewById(R.id.ivDeviceConnected2);
         iv_deviceConnected[2] =(CircleImageView) findViewById(R.id.ivDeviceConnected3);
         iv_deviceConnected[3] =(CircleImageView) findViewById(R.id.ivDeviceConnected4);
+////////////////////////////////////////////////////////////
+        tv_deviceConnected[0].setVisibility(View.INVISIBLE);
+        tv_deviceConnected[1].setVisibility(View.INVISIBLE);
+        tv_deviceConnected[2].setVisibility(View.INVISIBLE);
+        tv_deviceConnected[3].setVisibility(View.INVISIBLE);
+        iv_deviceConnected[0].setVisibility(View.INVISIBLE);
+        iv_deviceConnected[1].setVisibility(View.INVISIBLE);
+        iv_deviceConnected[2].setVisibility(View.INVISIBLE);
+        iv_deviceConnected[3].setVisibility(View.INVISIBLE);
 
 
         ////////////////////////////////////////////////////////////
@@ -422,7 +431,7 @@ public class MainActivity extends AppCompatActivity  {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            Toast.makeText(getApplicationContext(), "Error:"+error.getMessage(), Toast.LENGTH_LONG).show();
+                            Toast.makeText(getApplicationContext(), "Error al obtener token", Toast.LENGTH_SHORT).show();
                         }
                     });
                 }
@@ -516,6 +525,8 @@ public class MainActivity extends AppCompatActivity  {
 
         try{
             //router.createTPLink();
+            
+
             router.createNucom();
             router = Router.getInstance(getApplicationContext());
 
@@ -530,7 +541,7 @@ public class MainActivity extends AppCompatActivity  {
             }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
-                    Toast.makeText(getApplicationContext(), "Error:"+error.getMessage(), Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), "Error al conectar con el Router", Toast.LENGTH_LONG).show();
                     changeRouterToRed();
                     //progress.dismiss();
                 }
@@ -593,6 +604,9 @@ public class MainActivity extends AppCompatActivity  {
         for (; i < cant_elem; i++) {
             dispositivoInfo d = list_connected.get(i);
             tv_deviceConnected[i].setText(d.apodo);
+
+            tv_deviceConnected[i].setVisibility(View.VISIBLE);
+            iv_deviceConnected[i].setVisibility(View.VISIBLE);
         }
         for (int j = i; j < 4; j++) {
             tv_deviceConnected[j].setVisibility(View.INVISIBLE);

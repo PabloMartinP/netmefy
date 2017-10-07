@@ -79,7 +79,7 @@ public class NotificationListActivity extends AppCompatActivity {
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                         Intent notification = new Intent(NotificationListActivity.this, NotificationDetailActivity.class);
                         notification.putExtra("notifcation", values[position].getId());
-                        notification.putExtra("supportNumber", values[position].getOrdenDeTrabajo());
+                        notification.putExtra("ot_id", values[position].getOrdenDeTrabajo());
                         //startActivity(notification);
                         startActivityForResult(notification, 1);
                         //Intent intent = new Intent(this, SyncActivity.class);

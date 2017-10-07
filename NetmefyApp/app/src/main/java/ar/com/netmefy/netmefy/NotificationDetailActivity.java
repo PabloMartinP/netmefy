@@ -17,8 +17,9 @@ public class NotificationDetailActivity extends AppCompatActivity {
     Button calificar;
     TextView tituloNotificacion;
     TextView tv_notif_texto;
-    private String supportNumber;
+    private String ot_id;
     private Session session;
+    int notificationId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,15 +29,18 @@ public class NotificationDetailActivity extends AppCompatActivity {
 
 
         Bundle inBundle = getIntent().getExtras();
-        supportNumber =  inBundle.getString("supportNumber");
-        int notificationId =  inBundle.getInt("notifcation");//TODO: se puede usar para saber el id de la notificacion.
+        ot_id =  inBundle.getString("ot_id");
+        notificationId =  inBundle.getInt("notifcation");//TODO: se puede usar para saber el id de la notificacion.
         notificacionModel notif = null;
+
+        //NMF_Info.marcarNotificacionComoLeida(notificationId, getApplicationContext());
+
         for (notificacionModel nm : NMF_Info.notificaciones) {
             if(nm.notificacion_sk == notificationId){
                 notif = nm;
-                if(supportNumber.isEmpty())//este codigo hace llorar al niño dios
+                /*if(ot_id.isEmpty())//este codigo hace llorar al niño dios
                     notif.leido = true;
-                break;
+                break;*/
             }
         }
 
@@ -49,9 +53,10 @@ public class NotificationDetailActivity extends AppCompatActivity {
         tv_notif_texto.setText(notif.notificacion_texto);
 
         calificar = (Button) findViewById(R.id.botonCalificar);
-        if (supportNumber.isEmpty()){
+        if (ot_id.isEmpty()){
             calificar.setVisibility(View.INVISIBLE);
             session.setNotificaciones((NMF_Info.notificaciones));
+            NMF_Info.marcarNotificacionComoLeida(notificationId, getApplicationContext());
         }else{
             calificar.setVisibility(View.VISIBLE);
             //si no es para calificar no marco como leido
@@ -60,8 +65,8 @@ public class NotificationDetailActivity extends AppCompatActivity {
 
     public void irAClificar (View view){
         Intent calificacion = new Intent(NotificationDetailActivity.this, RateSupportActivity.class);
-        calificacion.putExtra("userId", "ACA VA EL USER"); //TODO: Poner el user que va
-        calificacion.putExtra("supportNumber", supportNumber);
+        calificacion.putExtra("notificacionId", notificationId ); //TODO: Poner el user que va
+        calificacion.putExtra("ot_id", ot_id);
         startActivity(calificacion);
     }
 }
