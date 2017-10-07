@@ -16,9 +16,10 @@ public class notificacionModel {
     public String notificacion_desc ;
     public String notificacion_texto ;
     public boolean leido = false;
+    public String ot_id ;
 
     public NotificationItem toNotificacionItem() {
-        NotificationItem rs = new NotificationItem(this.notificacion_sk, this.notificacion_desc, this.notificacion_texto, this.tiempo_sk, 2130837588, leido, "");
+        NotificationItem rs = new NotificationItem(this.notificacion_sk, this.notificacion_desc, this.notificacion_texto, this.tiempo_sk, 2130837588, leido, ot_id);
 //(int id,String title, String descripcion, String fecha, int resId, Boolean read, String ordenDeTrabajo) {
 /*        rs.setResId(2130837588);
         rs.setDescripcion(this.notificacion_desc);

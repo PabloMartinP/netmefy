@@ -124,10 +124,10 @@ public class UserIdActivity extends AppCompatActivity {
                 try {
                     //String kind = response.getString("kind");
                     String typeOfUser = response.getString("typeOfUser");
-                    String supportNumber = response.getString("supportNumber");
+                    String ot_id = response.getString("ot_id");
                     session.setUserType(typeOfUser);
                     if(typeOfUser.equalsIgnoreCase("user")){
-                        redirectToUser(supportNumber);
+                        redirectToUser(ot_id);
                     }else{
                         redirectToTech();
                     }
@@ -163,7 +163,7 @@ public class UserIdActivity extends AppCompatActivity {
             Intent userPass = new Intent(UserIdActivity.this,RateSupportActivity.class);
 
             userPass.putExtra("userId",etUserId.getText());
-            userPass.putExtra("supportNumber",supportNumber);
+            userPass.putExtra("ot_id",supportNumber);
             startActivity(userPass);
             finish();
         }else{
