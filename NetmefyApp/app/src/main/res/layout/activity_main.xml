@@ -243,6 +243,16 @@
                 tools:layout_editor_absoluteX="175dp"
                 tools:layout_editor_absoluteY="-7dp" />
 
+            <TextView
+                android:id="@+id/tv_client_id"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="8dp"
+                android:text="id"
+                android:textColor="@color/white"
+                app:layout_constraintRight_toLeftOf="@+id/tv_internet_speed"
+                tools:layout_editor_absoluteY="137dp" />
+
         </android.support.constraint.ConstraintLayout>
 
     </LinearLayout>

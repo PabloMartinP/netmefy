@@ -1,9 +1,7 @@
 package ar.com.netmefy.netmefy.services.api;
 
 import android.content.Context;
-import android.util.ArrayMap;
 
-import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -11,20 +9,17 @@ import com.android.volley.Response;
 import com.android.volley.RetryPolicy;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.jsoup.Connection;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import ar.com.netmefy.netmefy.router.Device;
 import ar.com.netmefy.netmefy.services.NMF_Info;
 import ar.com.netmefy.netmefy.services.Utils;
 import ar.com.netmefy.netmefy.services.api.entity.DeviceModel;
@@ -40,8 +35,8 @@ import ar.com.netmefy.netmefy.services.api.entity.paginaControlParentalModel;
 import ar.com.netmefy.netmefy.services.api.entity.paginasLikeadas;
 import ar.com.netmefy.netmefy.services.api.entity.reclamoListItemModel;
 import ar.com.netmefy.netmefy.services.api.entity.routerInfo;
+import ar.com.netmefy.netmefy.services.api.entity.gestionAddModel;
 import ar.com.netmefy.netmefy.services.api.entity.solicitudListItemModel;
-import ar.com.netmefy.netmefy.services.api.entity.solicitudModel;
 import ar.com.netmefy.netmefy.services.api.entity.tipoOsModel;
 import ar.com.netmefy.netmefy.services.api.entity.tipoOtModel;
 import ar.com.netmefy.netmefy.services.api.entity.tipoUsuarioApp;
@@ -340,17 +335,17 @@ public  class Api {
         execute(rq);
     }
 
-    public void addSolicitud(int client_sk, final Response.Listener success ){
+    public void addSolicitud(gestionAddModel sol, final Response.Listener success ){
         String url = "http://200.82.0.24/api/solicitudes";
-        solicitudModel solicitudModel = new solicitudModel();
+        /*solicitudModel solicitudModel = new solicitudModel();
         solicitudModel.cliente_sk = client_sk;
         solicitudModel.os_id = 0;
         solicitudModel.fh_cierre = "";
-        solicitudModel.fh_creacion = "";
+        solicitudModel.fh_creacion = "";*/
 
         Map<String, String> data  = null;
         try {
-            data = Utils.toMap(solicitudModel);
+            data = Utils.toMap(sol);
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         }
@@ -374,16 +369,16 @@ public  class Api {
 
     }
 
-    public void addReclamo(int client_sk, final Response.Listener success) {
+    public void addReclamo(gestionAddModel g, final Response.Listener success) {
         String url = "http://200.82.0.24/api/ot";
-        osModel solicitudModel = new osModel();
+        /*osModel solicitudModel = new osModel();
         solicitudModel.cliente_sk = client_sk;
         solicitudModel.fh_cierre = "";
-        solicitudModel.fh_creacion = "";
+        solicitudModel.fh_creacion = "";*/
 
         Map<String, String> data  = null;
         try {
-            data = Utils.toMap(solicitudModel);
+            data = Utils.toMap(g);
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         }
@@ -545,8 +540,8 @@ public  class Api {
 
     public void getNotificaciones(int cliente_sk, int usuario_sk, final Response.Listener<List<notificacionModel>> success) {
 
-        cliente_sk = 1;
-        usuario_sk = 1;
+        //cliente_sk = 1;
+        //usuario_sk = 1;
 
         String url = "http://200.82.0.24/api/notificaciones?cliente_sk="+String.valueOf(cliente_sk)+"&usuario_sk="+String.valueOf(usuario_sk);
         //todo: ACA LO HAGO ASI PORQUE NOSE COMO HACER PARA TRAERME UN ARRAY,
@@ -740,7 +735,9 @@ public  class Api {
 
     public void getSolicitudes(final Response.Listener<List<solicitudListItemModel>> success){
 
-        int cliente_sk = 2;//NMF_Info.clientInfo.id;//2;
+        //int cliente_sk = 2;//NMF_Info.clientInfo.id;//2;
+        int cliente_sk = NMF_Info.clientInfo.id;
+
         final Gson gson = new Gson();
         String url = "http://200.82.0.24/api/solicitudes?cliente_sk=" + String.valueOf(cliente_sk);
         //todo: ACA LO HAGO ASI PORQUE NOSE COMO HACER PARA TRAERME UN ARRAY,
@@ -774,7 +771,8 @@ public  class Api {
 
     public void getReclamos(final Response.Listener<List<reclamoListItemModel>> success){
 
-        int cliente_sk = 1;//NMF_Info.clientInfo.id;//2;
+        //int cliente_sk = 1;//NMF_Info.clientInfo.id;//2;
+        int cliente_sk = NMF_Info.clientInfo.id;
         final Gson gson = new Gson();
         String url = "http://200.82.0.24/api/ot?cliente_sk=" + String.valueOf(cliente_sk);
         //todo: ACA LO HAGO ASI PORQUE NOSE COMO HACER PARA TRAERME UN ARRAY,

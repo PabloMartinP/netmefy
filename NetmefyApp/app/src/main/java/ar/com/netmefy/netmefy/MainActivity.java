@@ -80,6 +80,8 @@ public class MainActivity extends AppCompatActivity  {
     private ImageView iv_router_red;
     private TextView tv_user_number;
     private TextView tv_internet_speed;
+    private TextView tv_client_id;
+
     public TextView tvFacebookStatus;
 
     private TextView[] tv_deviceConnected = new TextView[4];
@@ -137,6 +139,7 @@ public class MainActivity extends AppCompatActivity  {
 
         tv_user_number = (TextView) findViewById(R.id.tv_user_number);
         tv_internet_speed = (TextView) findViewById(R.id.tv_internet_speed);
+        tv_client_id= (TextView) findViewById(R.id.tv_client_id);
 
         tv_deviceConnected[0] =(TextView) findViewById(R.id.tvDeviceConnected1);
         tv_deviceConnected[1] =(TextView) findViewById(R.id.tvDeviceConnected2);
@@ -194,6 +197,8 @@ public class MainActivity extends AppCompatActivity  {
                                     public void run() {
                                         tv_user_number.setText(response.nombre);
                                         tv_internet_speed.setText(String.valueOf(response.mb_contratado)+"MB");
+                                        tv_client_id.setText("cliente: "+String.valueOf(NMF_Info.clientInfo.id) + "-"+String.valueOf(NMF_Info.usuarioInfo.usuario_sk));
+
                                     }
                                 });
 
@@ -437,7 +442,7 @@ public class MainActivity extends AppCompatActivity  {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            Toast.makeText(getApplicationContext(), "Error al obtener token", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), "Error al obtener token Firebase", Toast.LENGTH_SHORT).show();
                         }
                     });
                 }

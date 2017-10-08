@@ -35,7 +35,7 @@ public class VerGestionActivity extends AppCompatActivity {
                 if(solicitud.os_id == gestionId){
                     titulo = solicitud.tipo;
                     descripcion = solicitud.descripcion;
-                    estado = "ToDo";
+                    estado = solicitud.estado_desc;
                 }
             }
         }else{
@@ -44,7 +44,7 @@ public class VerGestionActivity extends AppCompatActivity {
                 if(reclamo.ot_id == gestionId){
                     titulo = reclamo.tipo   ;
                     descripcion = reclamo.descripcion;
-                    estado = "ToDo";
+                    estado = reclamo.estado_desc;
                 }
             }
         }
