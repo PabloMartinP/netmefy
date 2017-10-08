@@ -525,7 +525,7 @@ public class MainActivity extends AppCompatActivity  {
 
         try{
             //router.createTPLink();
-            
+
 
             router.createNucom();
             router = Router.getInstance(getApplicationContext());

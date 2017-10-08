@@ -1,10 +1,12 @@
 package ar.com.netmefy.netmefy.login;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.ProgressBar;
 
 import com.android.volley.Response;
 import com.facebook.CallbackManager;
@@ -22,6 +24,7 @@ import org.json.JSONObject;
 import ar.com.netmefy.netmefy.MainActivity;
 import ar.com.netmefy.netmefy.R;
 import ar.com.netmefy.netmefy.services.NMF_Info;
+import ar.com.netmefy.netmefy.services.Utils;
 import ar.com.netmefy.netmefy.services.api.Api;
 import ar.com.netmefy.netmefy.services.api.entity.usuarioAddModel;
 import ar.com.netmefy.netmefy.services.api.entity.usuarioInfo;
@@ -51,9 +54,11 @@ public class LoginActivity extends AppCompatActivity {
         loginButton.setCompoundDrawablePadding(0);
         final Api api = Api.getInstance(getApplicationContext());
         api.log(220, "Abre login FB");
+        final ProgressDialog progress = Utils.getProgressBar(this, "Cargando ...");
         FacebookCallback<LoginResult> callback = new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
+                progress.show();
                 GraphRequest request = GraphRequest.newMeRequest(loginResult.getAccessToken(), new GraphRequest.GraphJSONObjectCallback() {
                     @Override
                     public void onCompleted(JSONObject object, GraphResponse response) {
@@ -87,10 +92,10 @@ public class LoginActivity extends AppCompatActivity {
                         user.usuario_nombre = fb_nombre;
                         user.usuario_sexo = fb_sexo;
 
-
                         api.addUser(user, new Response.Listener() {
                             @Override
                             public void onResponse(Object response) {
+
                                 boolean b = (boolean)response;
                                 if(b){
                                     api.findUser(user.usuario_email, new Response.Listener() {
@@ -100,6 +105,8 @@ public class LoginActivity extends AppCompatActivity {
                                             userInfo.usuario_email = user.usuario_email;
                                             NMF_Info.usuarioInfo = userInfo;
                                             session.setUsuarioInfo();
+                                            progress.dismiss();
+
                                             callMainActivity();
                                         }
                                     });

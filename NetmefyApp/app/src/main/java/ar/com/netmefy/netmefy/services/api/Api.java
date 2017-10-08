@@ -40,11 +40,14 @@ import ar.com.netmefy.netmefy.services.api.entity.paginaControlParentalModel;
 import ar.com.netmefy.netmefy.services.api.entity.paginasLikeadas;
 import ar.com.netmefy.netmefy.services.api.entity.routerInfo;
 import ar.com.netmefy.netmefy.services.api.entity.solicitudModel;
+import ar.com.netmefy.netmefy.services.api.entity.tipoOsModel;
+import ar.com.netmefy.netmefy.services.api.entity.tipoOtModel;
 import ar.com.netmefy.netmefy.services.api.entity.tipoUsuarioApp;
 import ar.com.netmefy.netmefy.services.api.entity.usuarioAddModel;
 import ar.com.netmefy.netmefy.services.api.entity.usuarioInfo;
 import ar.com.netmefy.netmefy.services.api.entity.webABloquearModel;
 import ar.com.netmefy.netmefy.services.api.entity.webBloqModel;
+import ar.com.netmefy.netmefy.services.api.stringRequests.JsonArrayRequestApi;
 import ar.com.netmefy.netmefy.services.api.stringRequests.JsonRequestApi;
 import ar.com.netmefy.netmefy.services.api.stringRequests.RequestQueueSingletonApi;
 
@@ -546,6 +549,45 @@ public  class Api {
         String url = "http://200.82.0.24/api/notificaciones?cliente_sk="+String.valueOf(cliente_sk)+"&usuario_sk="+String.valueOf(usuario_sk);
         //todo: ACA LO HAGO ASI PORQUE NOSE COMO HACER PARA TRAERME UN ARRAY,
         final Map<String, String> params = null;
+        JsonArrayRequestApi sr = new JsonArrayRequestApi(Request.Method.GET, url, null, new Response.Listener<JSONArray>() {
+            @Override
+            public void onResponse(JSONArray response) {
+                List<notificacionModel> ressult  = new ArrayList<>();
+                notificacionModel nm = null;
+                for (int i = 0; i < response.length(); i++) {
+                    JSONObject explrObject = null;
+                    try {
+                        explrObject = response.getJSONObject(i);
+                        nm = new notificacionModel();
+                        nm.usuario_sk = explrObject.getInt("usuario_sk");
+                        nm.cliente_sk = explrObject.getInt("cliente_sk");
+                        nm.notificacion_sk = explrObject.getInt("notificacion_sk");
+                        nm.notificacion_desc = explrObject.getString("notificacion_desc");
+                        nm.notificacion_texto = explrObject.getString("notificacion_texto");
+                        nm.tiempo_sk = explrObject.getString("tiempo_sk").substring(0, 10);
+
+                        String aux = explrObject.getString("ot_id");
+                        if(aux.equalsIgnoreCase("null"))
+                            nm.ot_id = "";
+                        else
+                            nm.ot_id = explrObject.getString("ot_id");
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+
+                    ressult.add(nm);
+                }
+                success.onResponse(ressult);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                success.onResponse(null);
+            }
+        }) ;
+        execute(sr);
+        /*
         StringRequest sr = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
@@ -578,10 +620,6 @@ public  class Api {
                     e.printStackTrace();
                 }
 
-
-
-
-
             }
         }, new Response.ErrorListener() {
             @Override
@@ -598,14 +636,13 @@ public  class Api {
                 Map<String, String> headers = new HashMap<String, String>();
                 if(Api.token!=null){
                     headers.put("Authorization", "Bearer " + Api.token.getAccess_token());
-
                 }
                 return headers ;
             }
 
         };
         execute(sr);
-
+*/
     }
 
     public void calificarOt(int ot_id, int calificacion, final Response.Listener success ){
@@ -633,4 +670,69 @@ public  class Api {
         });
         execute(rq);
     }
+
+    public void getTiposDeSolicitudes(final Response.Listener<List<tipoOsModel>> success){
+        final Gson gson = new Gson();
+        String url = "http://200.82.0.24/api/tipo_os";
+        //todo: ACA LO HAGO ASI PORQUE NOSE COMO HACER PARA TRAERME UN ARRAY,
+        JsonArrayRequestApi sr = new JsonArrayRequestApi(Request.Method.GET, url, null, new Response.Listener<JSONArray>() {
+            @Override
+            public void onResponse(JSONArray response) {
+                List<tipoOsModel> ressult  = new ArrayList<>();
+                tipoOsModel tipo = null;
+                for (int i = 0; i < response.length(); i++) {
+                    JSONObject explrObject = null;
+                    try {
+                        explrObject = response.getJSONObject(i);
+                        tipo = gson.fromJson(explrObject.toString(), tipoOsModel.class);
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                    ressult.add(tipo);
+                }
+                success.onResponse(ressult);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                success.onResponse(null);
+            }
+        }) ;
+        execute(sr);
+    }
+
+    public void getTiposDeReclamos(final Response.Listener<List<tipoOtModel>> success){
+        final Gson gson = new Gson();
+        String url = "http://200.82.0.24/api/tipo_ot";
+        //todo: ACA LO HAGO ASI PORQUE NOSE COMO HACER PARA TRAERME UN ARRAY,
+        JsonArrayRequestApi sr = new JsonArrayRequestApi(Request.Method.GET, url, null, new Response.Listener<JSONArray>() {
+            @Override
+            public void onResponse(JSONArray response) {
+                List<tipoOtModel> ressult  = new ArrayList<>();
+                tipoOtModel tipo = null;
+                for (int i = 0; i < response.length(); i++) {
+                    JSONObject explrObject = null;
+                    try {
+                        explrObject = response.getJSONObject(i);
+                        tipo = gson.fromJson(explrObject.toString(), tipoOtModel.class);
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                    ressult.add(tipo);
+                }
+                success.onResponse(ressult);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                success.onResponse(null);
+            }
+        }) ;
+        execute(sr);
+    }
+
 }

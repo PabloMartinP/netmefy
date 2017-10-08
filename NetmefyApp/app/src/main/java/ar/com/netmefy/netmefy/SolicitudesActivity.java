@@ -14,10 +14,12 @@ import android.widget.Toast;
 import com.android.volley.Response;
 
 import java.util.HashMap;
+import java.util.List;
 
 import ar.com.netmefy.netmefy.services.NMF_Info;
 import ar.com.netmefy.netmefy.services.Utils;
 import ar.com.netmefy.netmefy.services.api.Api;
+import ar.com.netmefy.netmefy.services.api.entity.tipoOsModel;
 
 public class SolicitudesActivity extends AppCompatActivity {
 
@@ -25,6 +27,7 @@ public class SolicitudesActivity extends AppCompatActivity {
     EditText et_desc;
     Button btn_aceptar;
     Api api;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +45,7 @@ public class SolicitudesActivity extends AppCompatActivity {
     private void populate_tipo(){
         ////////////////////////////////////////////////
         //preparar
-        String[] spinnerArray = new String[3];
+        /*String[] spinnerArray = new String[3];
         HashMap<Integer,String> spinnerMap = new HashMap<Integer, String>();
 
         spinnerMap.put(0,"0");
@@ -52,12 +55,31 @@ public class SolicitudesActivity extends AppCompatActivity {
         spinnerArray[1] = "desc 1";
 
         spinnerMap.put(2,"2");
-        spinnerArray[2] = "desc 2" ;
+        spinnerArray[2] = "desc 2" ;*/
+
+        final HashMap<Integer,String> spinnerMap = new HashMap<Integer, String>();
+        api.getTiposDeSolicitudes(new Response.Listener<List<tipoOsModel>>() {
+            @Override
+            public void onResponse(List<tipoOsModel> lista) {
+                String[] spinnerArray;
+                spinnerArray = new String[lista.size()];
+                tipoOsModel tipo = null;
+                for (int i = 0; i < lista.size(); i++) {
+                    tipo = lista.get(i);
+                    spinnerMap.put(i,String.valueOf(tipo.tipo_os_sk));
+                    spinnerArray[i] = tipo.tipo_os_desc;
+                }
+
+                //////////////////////////////////
+                ArrayAdapter<String> adapter =new ArrayAdapter<String>(getApplicationContext(),android.R.layout.simple_spinner_item, spinnerArray);
+                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                spn_tipo.setAdapter(adapter);
+
+            }
+        });
+
         ////////////////////////////////////////////////////////////////////////////
         //set value to spinner
-        ArrayAdapter<String> adapter =new ArrayAdapter<String>(getApplicationContext(),android.R.layout.simple_spinner_item, spinnerArray);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spn_tipo.setAdapter(adapter);
 
         /////////////////////////////////////////////////////////////
     }
