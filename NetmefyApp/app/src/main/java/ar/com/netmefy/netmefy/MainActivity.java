@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -33,6 +35,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
@@ -44,6 +49,7 @@ import ar.com.netmefy.netmefy.router.ConfigWifi;
 import ar.com.netmefy.netmefy.router.Device;
 import ar.com.netmefy.netmefy.router.RestartTry;
 import ar.com.netmefy.netmefy.router.Router;
+import ar.com.netmefy.netmefy.router.models.WifiSignalResult;
 import ar.com.netmefy.netmefy.services.NMF_Info;
 import ar.com.netmefy.netmefy.services.Utils;
 import ar.com.netmefy.netmefy.services.WifiUtils;
@@ -552,10 +558,13 @@ public class MainActivity extends AppCompatActivity  {
                 @Override
                 public void onResponse(List<Device> devices) {
                     populate_list_connected(devices);
+
+                    //start_thread_list_connected();
                 }
             }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
+                    Toast.makeText(getApplicationContext(), "Error al traer la lista conectados", Toast.LENGTH_SHORT).show();
 
                 }
             });
@@ -568,6 +577,31 @@ public class MainActivity extends AppCompatActivity  {
             //progress.dismiss();
 
         }
+    }
+
+    public void start_thread_list_connected(){
+        final int DELAY_SECS = 0;
+        final int DELAY_BETWEEN_INTENT_SECS = 10;
+        Timer timer = new Timer();
+        timer.schedule(new TimerTask()
+        {
+            @Override
+            public void run()
+            {
+                router.listDevicesConnected(new Response.Listener<List<Device>>() {
+                    @Override
+                    public void onResponse(List<Device> devices) {
+                        populate_list_connected(devices);
+                    }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(getApplicationContext(), "Error al traer la lista conectados", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+        }, DELAY_SECS*1000, DELAY_BETWEEN_INTENT_SECS*1000);
+
     }
 
 

@@ -15,7 +15,7 @@ public class solicitudListItemModel {
     public String fh_cierre;
     public String descripcion;
     public String tipo;
-
+    public int tipo_id;
 
     public GestionItem toGestionItem(){
         GestionItem item = new GestionItem(os_id,tipo,fh_creacion,"EstadoOk", descripcion);

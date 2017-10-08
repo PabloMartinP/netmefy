@@ -19,6 +19,13 @@ public class InternetSpeed {
     public String get_speed() {
         return _speed;
     }
+    public int get_speedRounded(){
+        float f = Float.parseFloat(_speed);
+        //String s = Float.toString(f);
+
+        int rs = Math.round(f);
+        return rs;
+    }
 
     public void set_speed(String _speed) {
         this._speed = _speed;

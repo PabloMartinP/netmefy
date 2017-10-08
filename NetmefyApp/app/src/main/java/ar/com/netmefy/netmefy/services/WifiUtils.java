@@ -40,6 +40,50 @@ import ar.com.netmefy.netmefy.router.models.WifiSignalResult;
 
 public class WifiUtils {
 
+    /*public static void ping(String url, int count, Response.Listener success, Response.Listener finish){
+        final int DELAR_SECS = 5;
+        final int DELAY_BETWEEN_INTENTS_SECS = 2;
+
+        Timer timer = new Timer();
+        timer.schedule(new TimerTask()
+        {
+            int i = 0;
+            @Override
+            public void run()
+            {
+                boolean termino  = false;
+                i++;
+                RestartTry restartTry;
+                if (tryConnectToNetwork(ssidtoconnect, context)){
+                    String actualSsid = getWifiName(context);
+                    if (actualSsid.equalsIgnoreCase(ssidtoconnect)){
+                        //info = "OOOok" +Integer.toString(i);
+                        //restartTry.set_success(true);
+                        restartTry  = new RestartTry(true, i, "");
+                        tryConnectToNetwork(ssidtoconnect, context);
+                        actualSsid = getWifiName(context);
+
+                        if(actualSsid !="") {
+                            this.cancel();
+                            termino = true;
+                            listenerSuccess.onResponse("ok");
+                        }
+                        else
+                            restartTry  = new RestartTry(false, i, "El ssid actual ["+actualSsid+"] no es igual al configurado ["+ssidtoconnect+"]");
+                    }else{
+                        //info = "NOO-"+Integer.toString(i);;
+                        restartTry  = new RestartTry(false, i, "El ssid actual ["+actualSsid+"] no es igual al configurado ["+ssidtoconnect+"]");
+                    }
+                }else{
+                    //info = "HHHHH-"+Integer.toString(i);;
+                    restartTry  = new RestartTry(false, i, "SSID ["+ssidtoconnect+"] no encontrado");
+                }
+                if(!termino)
+                    listener.onResponse((Object) restartTry);
+            }
+        }, DELAR_SECS*1000, DELAY_BETWEEN_INTENTS_SECS*1000);
+    }*/
+
     public static String ping(String url, int count) {
         String str = "";
         try {
@@ -90,12 +134,21 @@ public class WifiUtils {
                 speed = document.getElementById("speed-value").html();
                 speedUnit = document.getElementById("speed-units").html();
 
-                speedOk.set(speed);
+                //si es distinto a mbps le setteo uno porque no me importa nada vieja
+                if(!speedUnit.equalsIgnoreCase("mbps")){
+                    speedUnit = "Mbps";
+                    speed = "1";
+                }
 
-                if(speedUnit.equalsIgnoreCase("&nbsp;"))
-                    speedUnitOk.set("?bps");
+                speedOk.set(speed);
+                speedUnitOk.set(speedUnit);
+                /*if(speedUnit.equalsIgnoreCase("&nbsp;")) {//a vces trae fruta, le setteo uno porque si
+                    speedUnitOk.set("Mbps");
+                    speed = "1";
+                    speedOk.set(speed);
+                }
                 else
-                    speedUnitOk.set(speedUnit);
+                    speedUnitOk.set(speedUnit);*/
 
 
                 //btnok.setText(speed + " " + speedUnit);
@@ -175,7 +228,7 @@ public class WifiUtils {
 
     public static void checkSignal(final Context context, final Response.Listener<WifiSignalResult> success){
         final int DELAY_SECS = 0;
-        final int DELAY_BETWEEN_INTENT_SECS = 2;
+        final int DELAY_BETWEEN_INTENT_SECS = 1;
         final WifiSignalResult result   =new WifiSignalResult();
         final int numberOfLevels = 5;
         Timer timer = new Timer();

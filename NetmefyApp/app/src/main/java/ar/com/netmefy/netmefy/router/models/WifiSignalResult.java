@@ -7,7 +7,7 @@ package ar.com.netmefy.netmefy.router.models;
 public class WifiSignalResult {
     private int _signal;
     private int _numberIntent;
-    private int _rssi;
+    private int _dB;
 
     public WifiSignalResult(){
         set_signal(0);
@@ -15,23 +15,26 @@ public class WifiSignalResult {
 
     }
 
-    public int get_rssi() {
-        return _rssi;
+    public int get_dB() {
+        return _dB;
+    }
+    public String get_dBWithUnit() {
+        return String.valueOf(_dB) + "dB";
     }
 
-    public void set_rssi(int _rssi) {
-        this._rssi = _rssi;
+    public void set_dB(int _dB) {
+        this._dB = _dB;
     }
 
     public void newIntent(int signal, int rssi){
         set_signal(signal);
-        set_rssi(rssi);
+        set_dB(rssi);
         set_numberIntent(get_numberIntent() + 1);
     }
 
     @Override
     public String toString(){
-        return "N°" + String.valueOf(get_numberIntent()) + ", Level:" + String.valueOf(get_signal()) + ", dBm:"+String.valueOf(get_rssi());
+        return "N°" + String.valueOf(get_numberIntent()) + ", Level:" + String.valueOf(get_signal()) + ", dBm:"+String.valueOf(get_dB());
     }
 
     public int get_signal() {
