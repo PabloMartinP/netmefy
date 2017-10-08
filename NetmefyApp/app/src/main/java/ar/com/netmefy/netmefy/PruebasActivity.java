@@ -25,6 +25,7 @@ public class PruebasActivity extends AppCompatActivity {
     TextView tvSenal;
     TextView tvVelocidad;
     ProgressBar pb;
+    ProgressBar loadingBarTestSpeed;
     TextView tvVelocidadDeInternetTitle;
     TextView tvPingAMostrar;
     @Override
@@ -36,13 +37,14 @@ public class PruebasActivity extends AppCompatActivity {
         pb = (ProgressBar) findViewById(R.id.progressBarVelocidad);
         tvVelocidad = (TextView) findViewById(R.id.tvVelocidad) ;
         tvVelocidadDeInternetTitle  = (TextView) findViewById(R.id.tvVelocidadDeInternetTitle) ;
+        loadingBarTestSpeed = (ProgressBar) findViewById(R.id.loadingBarTestSpeed);
         pb.setProgress(0);
         tvVelocidad.setText("0 Mbps");
-
         tvPingAMostrar = (TextView) findViewById(R.id.tvPingAMostrar) ;
-
+        loadingBarTestSpeed.setVisibility(View.INVISIBLE);
         startSignalWifi();
         startPing();
+        startSpeedTest();
     }
 
     public void refreshSignal(View view){
@@ -115,9 +117,13 @@ public class PruebasActivity extends AppCompatActivity {
     }
 
     public void refreshSpeed(View view){
+        startSpeedTest();
+    }
+
+    public void startSpeedTest(){
         pb.setProgress(0);
         tvVelocidad.setText("0 Mbps");
-        tvVelocidadDeInternetTitle.setText("Velocidad de Internet - Comenzando test");
+        loadingBarTestSpeed.setVisibility(View.VISIBLE);
         WifiUtils.testDownloadSpeedWithFast(getApplicationContext(),this, new Response.Listener<InternetSpeed>() {
             @Override
             public void onResponse(final InternetSpeed response) {
@@ -140,14 +146,12 @@ public class PruebasActivity extends AppCompatActivity {
                     public void run() {
                         //btnDown.setText("FIN::"+response.toString());
                         tvVelocidad.setText(response.toString());//TODO: usar el valor de la barra mas el string mb
-                        tvVelocidadDeInternetTitle.setText("Velocidad de Internet - Termino");
+                        loadingBarTestSpeed.setVisibility(View.INVISIBLE);
 
                     }
                 });
             }
         });
-
-
     }
 
     public void refreshPing(View view){
