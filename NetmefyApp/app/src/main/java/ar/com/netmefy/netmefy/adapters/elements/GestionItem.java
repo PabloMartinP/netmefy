@@ -7,16 +7,16 @@ import java.util.Date;
  */
 
 public class GestionItem {
-    private Long idDeGestion;
+    private int idDeGestion;
     private String tipoDeGestion;
-    private Date fechaDeGestion;
+    private String fechaDeGestion;
     private String estadoDeGestion;
     private String descripcionDeGestion;
 
     public GestionItem() {
     }
 
-    public GestionItem(Long idDeGestion, String tipoDeGestion, Date fechaDeGestion, String estadoDeGestion, String descripcionDeGestion) {
+    public GestionItem(int idDeGestion, String tipoDeGestion, String fechaDeGestion, String estadoDeGestion, String descripcionDeGestion) {
         this.idDeGestion = idDeGestion;
         this.tipoDeGestion = tipoDeGestion;
         this.fechaDeGestion = fechaDeGestion;
@@ -24,11 +24,11 @@ public class GestionItem {
         this.descripcionDeGestion = descripcionDeGestion;
     }
 
-    public Long getIdDeGestion() {
+    public int getIdDeGestion() {
         return idDeGestion;
     }
 
-    public void setIdDeGestion(Long idDeGestion) {
+    public void setIdDeGestion(int idDeGestion) {
         this.idDeGestion = idDeGestion;
     }
 
@@ -40,11 +40,11 @@ public class GestionItem {
         this.tipoDeGestion = tipoDeGestion;
     }
 
-    public Date getFechaDeGestion() {
+    public String getFechaDeGestion() {
         return fechaDeGestion;
     }
 
-    public void setFechaDeGestion(Date fechaDeGestion) {
+    public void setFechaDeGestion(String fechaDeGestion) {
         this.fechaDeGestion = fechaDeGestion;
     }
 

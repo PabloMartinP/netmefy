@@ -34,7 +34,7 @@ public class MySimpleGestionArrayAdapter extends ArrayAdapter<GestionItem> {
         TextView titulo = (TextView) rowView.findViewById(R.id.firstLine);
         TextView subtitulo = (TextView) rowView.findViewById(R.id.secondLine);
         TextView estado = (TextView) rowView.findViewById(R.id.estadoGestionItem);
-        titulo.setText(values[position].getIdDeGestion().toString() + ": " + values[position].getTipoDeGestion());
+        titulo.setText(String.valueOf(values[position].getIdDeGestion()) + ": " + values[position].getTipoDeGestion());
         subtitulo.setText(values[position].getFechaDeGestion().toString());
         estado.setText(values[position].getEstadoDeGestion());
 

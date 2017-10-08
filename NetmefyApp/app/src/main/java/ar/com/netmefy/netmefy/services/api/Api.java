@@ -38,7 +38,9 @@ import ar.com.netmefy.netmefy.services.api.entity.osModel;
 import ar.com.netmefy.netmefy.services.api.entity.otModel;
 import ar.com.netmefy.netmefy.services.api.entity.paginaControlParentalModel;
 import ar.com.netmefy.netmefy.services.api.entity.paginasLikeadas;
+import ar.com.netmefy.netmefy.services.api.entity.reclamoListItemModel;
 import ar.com.netmefy.netmefy.services.api.entity.routerInfo;
+import ar.com.netmefy.netmefy.services.api.entity.solicitudListItemModel;
 import ar.com.netmefy.netmefy.services.api.entity.solicitudModel;
 import ar.com.netmefy.netmefy.services.api.entity.tipoOsModel;
 import ar.com.netmefy.netmefy.services.api.entity.tipoOtModel;
@@ -717,6 +719,75 @@ public  class Api {
                     try {
                         explrObject = response.getJSONObject(i);
                         tipo = gson.fromJson(explrObject.toString(), tipoOtModel.class);
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                    ressult.add(tipo);
+                }
+                success.onResponse(ressult);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                success.onResponse(null);
+            }
+        }) ;
+        execute(sr);
+    }
+
+
+    public void getSolicitudes(final Response.Listener<List<solicitudListItemModel>> success){
+
+        int cliente_sk = 2;//NMF_Info.clientInfo.id;//2;
+        final Gson gson = new Gson();
+        String url = "http://200.82.0.24/api/solicitudes?cliente_sk=" + String.valueOf(cliente_sk);
+        //todo: ACA LO HAGO ASI PORQUE NOSE COMO HACER PARA TRAERME UN ARRAY,
+        JsonArrayRequestApi sr = new JsonArrayRequestApi(Request.Method.GET, url, null, new Response.Listener<JSONArray>() {
+            @Override
+            public void onResponse(JSONArray response) {
+                List<solicitudListItemModel> ressult  = new ArrayList<>();
+                solicitudListItemModel tipo = null;
+                for (int i = 0; i < response.length(); i++) {
+                    JSONObject explrObject = null;
+                    try {
+                        explrObject = response.getJSONObject(i);
+                        tipo = gson.fromJson(explrObject.toString(), solicitudListItemModel.class);
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                    ressult.add(tipo);
+                }
+                success.onResponse(ressult);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                success.onResponse(null);
+            }
+        }) ;
+        execute(sr);
+    }
+
+    public void getReclamos(final Response.Listener<List<reclamoListItemModel>> success){
+
+        int cliente_sk = 1;//NMF_Info.clientInfo.id;//2;
+        final Gson gson = new Gson();
+        String url = "http://200.82.0.24/api/ot?cliente_sk=" + String.valueOf(cliente_sk);
+        //todo: ACA LO HAGO ASI PORQUE NOSE COMO HACER PARA TRAERME UN ARRAY,
+        JsonArrayRequestApi sr = new JsonArrayRequestApi(Request.Method.GET, url, null, new Response.Listener<JSONArray>() {
+            @Override
+            public void onResponse(JSONArray response) {
+                List<reclamoListItemModel> ressult  = new ArrayList<>();
+                reclamoListItemModel tipo = null;
+                for (int i = 0; i < response.length(); i++) {
+                    JSONObject explrObject = null;
+                    try {
+                        explrObject = response.getJSONObject(i);
+                        tipo = gson.fromJson(explrObject.toString(), reclamoListItemModel.class);
 
                     } catch (JSONException e) {
                         e.printStackTrace();
