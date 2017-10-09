@@ -33,7 +33,6 @@ public class PruebasActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pruebas);
 
-        //TODO: esto es para manejar la parte de velocidad
         pb = (ProgressBar) findViewById(R.id.progressBarVelocidad);
         tvVelocidad = (TextView) findViewById(R.id.tvVelocidad) ;
         tvVelocidadDeInternetTitle  = (TextView) findViewById(R.id.tvVelocidadDeInternetTitle) ;
@@ -79,7 +78,6 @@ public class PruebasActivity extends AppCompatActivity {
     }
 
     private void updateSignal(WifiSignalResult dB) {
-        //TODO: esto es para manejar la parte de intensidad de senal
         ImageView ivSenal = (ImageView) findViewById(R.id.ivSenal);
         tvSenal = (TextView) findViewById(R.id.tvSenal) ;
         /*
@@ -102,17 +100,7 @@ public class PruebasActivity extends AppCompatActivity {
         if(betweenExclusive(db, 40, 55))
             ivSenal.setImageResource(R.drawable.wifi_4_128);
 
-
-
-        //ivSenal.setImageResource(R.drawable.wifi_2_128); //TODO: asi seteas las imagenes
-        //TODO: las opciones de imagenes son:
-        //TODO:     R.drawable.wifi_0_128
-        //TODO:     R.drawable.wifi_1_128
-        //TODO:     R.drawable.wifi_2_128
-        //TODO:     R.drawable.wifi_3_128
-        //TODO:     R.drawable.wifi_4_128
-        //TODO:  El numero que cambia son las barras llenas, usar la division de Lean para saber cual mostrar
-        tvSenal.setText(dB.get_dBWithUnit()); //TODO: para setear el texto con el valor de decibeles.
+        tvSenal.setText(dB.get_dBWithUnit());
 
     }
 
@@ -130,10 +118,9 @@ public class PruebasActivity extends AppCompatActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        pb.setProgress(response.get_speedRounded());//TODO: El maximo valor de la barra es 100 por lo que si da mas mb de 100 ponerlo en 100
-                        //pb.setProgress();//TODO: El maximo valor de la barra es 100 por lo que si da mas mb de 100 ponerlo en 100
-                        //tvVelocidad.setText(String.valueOf(progressStatus) + "mb");//TODO: usar el valor de la barra mas el string mb
-                        tvVelocidad.setText(response.toString());//TODO: usar el valor de la barra mas el string mb
+                        pb.setProgress(response.get_speedRounded());
+
+                        tvVelocidad.setText(response.toString());
                         //btnDown.setText(response.toString());
                     }
                 });
@@ -145,7 +132,7 @@ public class PruebasActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         //btnDown.setText("FIN::"+response.toString());
-                        tvVelocidad.setText(response.toString());//TODO: usar el valor de la barra mas el string mb
+                        tvVelocidad.setText(response.toString());
                         loadingBarTestSpeed.setVisibility(View.INVISIBLE);
 
                     }
@@ -159,7 +146,7 @@ public class PruebasActivity extends AppCompatActivity {
         startPing();
     }
     public void startPing(){
-        tvPingAMostrar.setText("..."); //TODO: para setear el valor de ping
+        tvPingAMostrar.setText("...");
 
         /*for(int i =0;i<1;i++);{
             result = WifiUtils.ping("www.google.com.ar", 4);
@@ -211,5 +198,9 @@ public class PruebasActivity extends AppCompatActivity {
         };
 
         thread.start();
+    }
+
+    public void saveTest (View view){
+        //TODO: PONER ACA PARA GUARDAR EL TEST QUE SE REALIZO
     }
 }
