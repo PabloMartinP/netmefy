@@ -484,4 +484,11 @@ public class WifiUtils {
         wifiManager.saveConfiguration();
         //wifiManager.setWifiEnabled(true);
     }
+
+    public static String getMacAddress(Context context) {
+        WifiManager manager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+        WifiInfo info = manager.getConnectionInfo();
+        String address = info.getMacAddress();
+        return address ;
+    }
 }
