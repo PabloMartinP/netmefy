@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
@@ -43,6 +44,7 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import ar.com.netmefy.netmefy.adapters.elements.CircularTextView;
 import ar.com.netmefy.netmefy.cliente.ControlParentalActivity;
 import ar.com.netmefy.netmefy.login.UserIdActivity;
 import ar.com.netmefy.netmefy.router.ConfigWifi;
@@ -81,6 +83,7 @@ public class MainActivity extends AppCompatActivity  {
     private TextView tv_user_number;
     private TextView tv_internet_speed;
     public TextView tvFacebookStatus;
+    private CircularTextView cantidadNotificaciones;
 
     private TextView[] tv_deviceConnected = new TextView[4];
     private CircleImageView[] iv_deviceConnected = new CircleImageView[4];
@@ -155,7 +158,10 @@ public class MainActivity extends AppCompatActivity  {
         iv_deviceConnected[1].setVisibility(View.INVISIBLE);
         iv_deviceConnected[2].setVisibility(View.INVISIBLE);
         iv_deviceConnected[3].setVisibility(View.INVISIBLE);
-
+        cantidadNotificaciones = (CircularTextView) findViewById(R.id.cantidadNotificaciones);
+        cantidadNotificaciones.setStrokeWidth(1);
+        cantidadNotificaciones.setStrokeColor("#ffffff");
+        cantidadNotificaciones.setSolidColor("#ffff4444");
 
         ////////////////////////////////////////////////////////////
         //api = Api.getInstance(getApplicationContext());
