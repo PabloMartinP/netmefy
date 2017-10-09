@@ -18,6 +18,7 @@ import java.util.List;
 import ar.com.netmefy.netmefy.services.NMF_Info;
 import ar.com.netmefy.netmefy.services.Utils;
 import ar.com.netmefy.netmefy.services.api.Api;
+import ar.com.netmefy.netmefy.services.api.entity.gestionAddModel;
 import ar.com.netmefy.netmefy.services.api.entity.tipoOsModel;
 import ar.com.netmefy.netmefy.services.api.entity.tipoOtModel;
 
@@ -26,7 +27,7 @@ public class ReclamosActivity extends AppCompatActivity {
     EditText et_desc;
     Button btn_aceptar;
     Api api;
-
+    HashMap<Integer,String> spinnerMap;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,7 +55,7 @@ public class ReclamosActivity extends AppCompatActivity {
         spinnerMap.put(2,"2");
         spinnerArray[2] = "desc 2" ;*/
 
-        final HashMap<Integer,String> spinnerMap = new HashMap<Integer, String>();
+        spinnerMap = new HashMap<Integer, String>();
         api.getTiposDeReclamos(new Response.Listener<List<tipoOtModel>>() {
             @Override
             public void onResponse(List<tipoOtModel> lista) {
@@ -88,12 +89,15 @@ public class ReclamosActivity extends AppCompatActivity {
 //get value from spinner
         //String name = spinner.getSelectedItem().toString();
         //String id = spinnerMap.get(spinner.getSelectedItemPosition());
-        final ProgressDialog pb =  Utils.getProgressBar(this, "Enviando solicitud");
-        pb.show();
-        api.addReclamo(NMF_Info.clientInfo.id, new Response.Listener() {
+        gestionAddModel g = new gestionAddModel();
+        g.cliente_sk = NMF_Info.clientInfo.id;
+        g.descripcion = et_desc.getText().toString();
+        g.tipo_id = Integer.parseInt(spinnerMap.get(spn_tipo.getSelectedItemPosition()));
+
+        api.addReclamo(g, new Response.Listener() {
             @Override
             public void onResponse(Object response) {
-                pb.dismiss();
+
                 if(response.toString().equals("ok")){
                     Toast.makeText(getApplicationContext(), "Reclamo enviado correctamente. ", Toast.LENGTH_SHORT).show();
                     finish();

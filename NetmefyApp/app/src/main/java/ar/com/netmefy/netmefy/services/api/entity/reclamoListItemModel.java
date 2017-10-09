@@ -13,11 +13,15 @@ public class reclamoListItemModel {
     public String fh_creacion;
     public String fh_cierre;
     public int calificacion;
-    public String tipo;
     public String descripcion;
 
+    public int tipo_id;
+    public String tipo;
+    public int estado_id;
+    public String estado_desc;
+
     public GestionItem toGestionItem() {
-        GestionItem item = new GestionItem(ot_id,tipo,fh_creacion,"EstadoOk", descripcion);
+        GestionItem item = new GestionItem(ot_id,tipo,fh_creacion,estado_desc, descripcion);
         return  item;
     }
 }

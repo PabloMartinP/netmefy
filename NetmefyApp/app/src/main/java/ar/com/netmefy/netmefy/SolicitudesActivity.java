@@ -1,13 +1,11 @@
 package ar.com.netmefy.netmefy;
 
-import android.app.ProgressDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -17,8 +15,8 @@ import java.util.HashMap;
 import java.util.List;
 
 import ar.com.netmefy.netmefy.services.NMF_Info;
-import ar.com.netmefy.netmefy.services.Utils;
 import ar.com.netmefy.netmefy.services.api.Api;
+import ar.com.netmefy.netmefy.services.api.entity.gestionAddModel;
 import ar.com.netmefy.netmefy.services.api.entity.tipoOsModel;
 
 public class SolicitudesActivity extends AppCompatActivity {
@@ -27,7 +25,7 @@ public class SolicitudesActivity extends AppCompatActivity {
     EditText et_desc;
     Button btn_aceptar;
     Api api;
-
+    HashMap<Integer,String> spinnerMap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,7 +55,7 @@ public class SolicitudesActivity extends AppCompatActivity {
         spinnerMap.put(2,"2");
         spinnerArray[2] = "desc 2" ;*/
 
-        final HashMap<Integer,String> spinnerMap = new HashMap<Integer, String>();
+        spinnerMap = new HashMap<Integer, String>();
         api.getTiposDeSolicitudes(new Response.Listener<List<tipoOsModel>>() {
             @Override
             public void onResponse(List<tipoOsModel> lista) {
@@ -88,12 +86,18 @@ public class SolicitudesActivity extends AppCompatActivity {
         //get value from spinner
         //String name = spinner.getSelectedItem().toString();
         //String id = spinnerMap.get(spinner.getSelectedItemPosition());
-        final ProgressDialog pb =  Utils.getProgressBar(this, "Enviando solicitud");
-        pb.show();
-        api.addSolicitud(NMF_Info.clientInfo.id, new Response.Listener() {
+        //final ProgressDialog pb =  Utils.getProgressBar(this, "Enviando solicitud");
+        //pb.show();
+        gestionAddModel sol = new gestionAddModel();
+        sol.cliente_sk = NMF_Info.clientInfo.id;
+        sol.descripcion = et_desc.getText().toString();
+        sol.tipo_id = Integer.parseInt(spinnerMap.get(spn_tipo.getSelectedItemPosition()));
+
+
+        api.addSolicitud(sol, new Response.Listener() {
             @Override
             public void onResponse(Object response) {
-                pb.dismiss();
+                //pb.dismiss();
                 if(response.toString().equals("ok")){
                     Toast.makeText(getApplicationContext(), "Solicitud enviada correctamente. ", Toast.LENGTH_SHORT).show();
                     finish();

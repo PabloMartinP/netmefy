@@ -38,12 +38,12 @@ public class MySimpleGestionArrayAdapter extends ArrayAdapter<GestionItem> {
         subtitulo.setText(values[position].getFechaDeGestion().toString());
         estado.setText(values[position].getEstadoDeGestion());
 
-        String estadoReclamo = values[position].getEstadoDeGestion();
-        if (estadoReclamo.equalsIgnoreCase("abierto")) {
+        String estadoGestion = values[position].getEstadoDeGestion();
+        if (estadoGestion.equalsIgnoreCase("abierto")) {
             estado.setTextColor(Color.BLUE);
-        } else if (estadoReclamo.equalsIgnoreCase("pendiente")){
+        } else if (estadoGestion.equalsIgnoreCase("en curso")){
             estado.setTextColor(Color.YELLOW);
-        }else if (estadoReclamo.equalsIgnoreCase("cerrado")){
+        }else if (estadoGestion.equalsIgnoreCase("cerrado")){
             estado.setTextColor(Color.GREEN);
         }
 
