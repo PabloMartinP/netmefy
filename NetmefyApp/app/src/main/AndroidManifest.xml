@@ -116,7 +116,9 @@
         <activity android:name=".ReclamosListActivity" />
         <activity android:name=".SolicitudesListActivity" />
         <activity android:name=".VerGestionActivity" />
-        <activity android:name=".PruebasActivity"></activity>
+        <activity android:name=".PruebasActivity" />
+        <activity android:name=".OrdenesDeTrabajoActivity" />
+        <activity android:name=".PasosOTActivity"></activity>
     </application>
 
 </manifest>

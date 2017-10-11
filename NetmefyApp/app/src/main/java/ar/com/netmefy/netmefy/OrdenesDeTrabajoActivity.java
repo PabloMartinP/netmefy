@@ -1,4 +1,4 @@
-package ar.com.netmefy.netmefy.tecnico;
+package ar.com.netmefy.netmefy;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
@@ -7,50 +7,27 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
-import android.widget.RatingBar;
-import android.widget.TextView;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.google.firebase.iid.FirebaseInstanceId;
 
-import ar.com.netmefy.netmefy.GestionesActivity;
-import ar.com.netmefy.netmefy.MainActivity;
-import ar.com.netmefy.netmefy.OrdenesDeTrabajoActivity;
-import ar.com.netmefy.netmefy.PasosOTActivity;
-import ar.com.netmefy.netmefy.PruebasActivity;
-import ar.com.netmefy.netmefy.R;
 import ar.com.netmefy.netmefy.adapters.MySimpleOrdenesArrayAdapter;
-import ar.com.netmefy.netmefy.adapters.elements.OtItem;
-import ar.com.netmefy.netmefy.login.UserIdActivity;
 import ar.com.netmefy.netmefy.services.NMF_Info;
 import ar.com.netmefy.netmefy.services.api.Api;
 import ar.com.netmefy.netmefy.services.api.entity.Tecnico;
 import ar.com.netmefy.netmefy.services.login.Session;
+import ar.com.netmefy.netmefy.tecnico.TecnicoActivity;
 
-public class TecnicoActivity extends AppCompatActivity {
-
-    private Session session;
-    private Button techLogOut;
-    private Api api;
-    private Tecnico tecnico;
-    TextView legajoTecnico;
-    TextView mailTecnico;
-    TextView nombreDeTecnico;
-    RatingBar calificacionTecnico;
+public class OrdenesDeTrabajoActivity extends AppCompatActivity {
     ListView lvOrdenesDeTrabajo;
-
+    private Tecnico tecnico;
+    private Session session;
+    private Api api;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_tecnico);
-
-        legajoTecnico = (TextView) findViewById(R.id.legajoTecnico);
-        mailTecnico = (TextView) findViewById(R.id.mailTecnico);
-        nombreDeTecnico = (TextView) findViewById(R.id.nombreDeTecnico);
-        calificacionTecnico = (RatingBar) findViewById(R.id.calificacionTecnico);
-        lvOrdenesDeTrabajo = (ListView) findViewById(R.id.lvOrdenesDeTrabajo);
-
+        setContentView(R.layout.activity_ordenes_de_trabajo);
 
         session = new Session(getApplicationContext());
 
@@ -64,12 +41,10 @@ public class TecnicoActivity extends AppCompatActivity {
         api = Api.getInstance(getApplicationContext());
 
         saveToken();
-        //TODO: REMPLAZAR POR LO QUE SE TRAE DE LA API
+
         tecnico = new Tecnico();
-        legajoTecnico.setText(tecnico.getId());
-        mailTecnico.setText(tecnico.getEmail());
-        nombreDeTecnico.setText(tecnico.getNombre());
-        calificacionTecnico.setRating(tecnico.getCalificacion());
+        lvOrdenesDeTrabajo = (ListView) findViewById(R.id.listOTFull);
+
 
 
         MySimpleOrdenesArrayAdapter adapter = new MySimpleOrdenesArrayAdapter(this, tecnico.getOts());
@@ -79,16 +54,19 @@ public class TecnicoActivity extends AppCompatActivity {
 
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent ot = new Intent(TecnicoActivity.this, PasosOTActivity.class);
+                Intent ot = new Intent(OrdenesDeTrabajoActivity.this, PasosOTActivity.class);
                 ot.putExtra("tipoGestion", tecnico.getOts()[position].getTipoDeGestion());
                 startActivity(ot);
             }
         });
+    }
+
+    public void refreshOtFull(View view){
 
     }
 
     private void saveToken(){
-       try {
+        try {
             session.getClientInfo();
             if(NMF_Info.clientInfo!=null){
                 api.saveFirebaseToken(NMF_Info.clientInfo.id, session.getUserType(), FirebaseInstanceId.getInstance().getToken(), new Response.Listener<String>() {
@@ -107,27 +85,5 @@ public class TecnicoActivity extends AppCompatActivity {
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         }
-    }
-
-    public void goToSetOfTest(View view){
-        Intent tests = new Intent(TecnicoActivity.this, PruebasActivity.class);
-        startActivity(tests);
-    }
-
-    public void refreshOt (View view){
-        //TODO REFRESCAR LISTA
-    }
-
-    public void goToFullOt(View view){
-        Intent tests = new Intent(TecnicoActivity.this, OrdenesDeTrabajoActivity.class);
-        startActivity(tests);
-    }
-
-
-    public void logOut(View view){
-        session.setUserId("");
-        session.setUserType("");
-        Intent login = new Intent(TecnicoActivity.this, UserIdActivity.class);
-        startActivity(login);
     }
 }

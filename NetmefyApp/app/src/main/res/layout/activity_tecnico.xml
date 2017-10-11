@@ -15,6 +15,7 @@
         android:theme="?attr/actionBarTheme"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
+        android:onClick="goToFullOt"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintTop_toBottomOf="@+id/linearLayout4" />
 
@@ -55,6 +56,7 @@
         android:scaleType="fitXY"
         app:layout_constraintRight_toRightOf="@+id/toolbar"
         app:layout_constraintTop_toBottomOf="@+id/linearLayout4"
+        android:onClick="refreshOt"
         app:srcCompat="@drawable/reset_128"
         android:layout_marginEnd="16dp" />
 
@@ -100,7 +102,7 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginEnd="8dp" />
             <TextView
-                android:id="@+id/textView"
+                android:id="@+id/nombreDeTecnico"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="8dp"
@@ -117,7 +119,7 @@
                 app:layout_constraintHorizontal_bias="0.502" />
 
             <RatingBar
-                android:id="@+id/ratingBar"
+                android:id="@+id/calificacionTecnico"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toTopOf="parent"
@@ -133,7 +135,7 @@
                 app:layout_constraintRight_toRightOf="parent" />
 
             <TextView
-                android:id="@+id/textView15"
+                android:id="@+id/legajoTecnico"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
@@ -145,7 +147,7 @@
                 android:layout_marginEnd="8dp" />
 
             <TextView
-                android:id="@+id/textView16"
+                android:id="@+id/mailTecnico"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
