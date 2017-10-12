@@ -96,9 +96,10 @@ public class LoginActivity extends AppCompatActivity {
                             @Override
                             public void onResponse(Object response) {
 
-                                boolean b = (boolean)response;
-                                if(b){
-                                    api.findUser(user.usuario_email, new Response.Listener() {
+                                boolean existe = response != null;
+                                if(existe){
+                                    usuarioAddModel usernew = (usuarioAddModel) response;
+                                    api.findUser(usernew.usuario_sk, new Response.Listener() {
                                         @Override
                                         public void onResponse(Object response) {
                                             usuarioInfo userInfo = (usuarioInfo) response;

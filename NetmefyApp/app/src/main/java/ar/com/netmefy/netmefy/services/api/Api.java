@@ -296,13 +296,17 @@ public  class Api {
             @Override
             public void onResponse(JSONObject response) {
                 String status="";
+                usuarioAddModel actualUser = null;
                 try {
                     status = response.get("status").toString();
+                    Gson gson = new Gson();
+                    actualUser = gson.fromJson(response.getString("usuario"), usuarioAddModel.class);
+
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
 
-                success.onResponse(status.equals("ok"));
+                success.onResponse(actualUser);
             }
         }, new Response.ErrorListener() {
             @Override
@@ -314,8 +318,8 @@ public  class Api {
         execute(rq);
     }
 
-    public void findUser(String email, final Response.Listener success) {
-        String url = "http://200.82.0.24/api/usuarios?email="+email;
+    public void findUser(int usuario_sk, final Response.Listener success) {
+        String url = "http://200.82.0.24/api/usuarios/" + String.valueOf(usuario_sk);
 
         JsonRequestApi rq = new JsonRequestApi(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
             @Override
@@ -562,6 +566,7 @@ public  class Api {
                         nm.notificacion_desc = explrObject.getString("notificacion_desc");
                         nm.notificacion_texto = explrObject.getString("notificacion_texto");
                         nm.tiempo_sk = explrObject.getString("tiempo_sk").substring(0, 10);
+                        nm.ot_calificacion = explrObject.getDouble("ot_calificacion");
 
                         String aux = explrObject.getString("ot_id");
                         if(aux.equalsIgnoreCase("null"))

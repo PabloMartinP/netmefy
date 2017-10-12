@@ -187,7 +187,7 @@ public class MainActivity extends AppCompatActivity  {
                         //LikesToFacebook likesToFacebook = new LikesToFacebook(_this);
                         //likesToFacebook.run();
                         session.getUsuarioInfo();
-                        api.findUser(NMF_Info.usuarioInfo.usuario_email, new Response.Listener() {
+                        api.findUser(NMF_Info.usuarioInfo.usuario_sk, new Response.Listener() {
                             //api.findUser("pablo.penialoza@hotmail.com", new Response.Listener() {
                             @Override
                             public void onResponse(Object response2) {

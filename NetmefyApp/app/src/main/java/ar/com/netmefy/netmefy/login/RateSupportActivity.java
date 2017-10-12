@@ -24,6 +24,7 @@ import ar.com.netmefy.netmefy.R;
 import ar.com.netmefy.netmefy.services.NMF_Info;
 import ar.com.netmefy.netmefy.services.Utils;
 import ar.com.netmefy.netmefy.services.api.Api;
+import ar.com.netmefy.netmefy.services.api.entity.notificacionModel;
 
 public class RateSupportActivity extends AppCompatActivity {
 
@@ -43,7 +44,18 @@ public class RateSupportActivity extends AppCompatActivity {
         rbRateSupport = (RatingBar) findViewById(R.id.rb_rate_support);
         btSendRateSupport = (Button) findViewById(R.id.bt_send_rate_suport);
         pbRate = (ProgressBar) findViewById(R.id.pb_rate);
-        rbRateSupport.setRating(new Float(4));
+        //rbRateSupport.setRating(new Float(4));
+
+
+        for (notificacionModel nm : NMF_Info.notificaciones) {
+            if(nm.notificacion_sk == notificacionId){
+                if(nm.ot_calificacion!=0)
+                    rbRateSupport.setRating((float)nm.ot_calificacion);
+                break;
+            }
+        }
+
+
     }
 
     public void sendRateOnClick(View view){

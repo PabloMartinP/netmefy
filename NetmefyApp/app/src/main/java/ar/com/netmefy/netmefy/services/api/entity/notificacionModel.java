@@ -1,5 +1,7 @@
 package ar.com.netmefy.netmefy.services.api.entity;
 
+import java.math.BigDecimal;
+
 import ar.com.netmefy.netmefy.adapters.elements.NotificationItem;
 
 /**
@@ -17,6 +19,7 @@ public class notificacionModel {
     public String notificacion_texto ;
     public boolean leido = false;
     public String ot_id ;
+    public double    ot_calificacion ;
 
     public NotificationItem toNotificacionItem() {
         NotificationItem rs = new NotificationItem(this.notificacion_sk, this.notificacion_desc, this.notificacion_texto, this.tiempo_sk, 2130837588, leido, ot_id);

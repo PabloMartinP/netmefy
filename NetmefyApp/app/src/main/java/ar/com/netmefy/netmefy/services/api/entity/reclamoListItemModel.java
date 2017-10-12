@@ -1,5 +1,7 @@
 package ar.com.netmefy.netmefy.services.api.entity;
 
+import java.math.BigDecimal;
+
 import ar.com.netmefy.netmefy.adapters.elements.GestionItem;
 
 /**
@@ -12,7 +14,7 @@ public class reclamoListItemModel {
     public int tecnico_sk;
     public String fh_creacion;
     public String fh_cierre;
-    public int calificacion;
+    public BigDecimal calificacion;
     public String descripcion;
 
     public int tipo_id;
