@@ -309,10 +309,10 @@
         android:layout_marginBottom="8dp"
         android:layout_marginRight="8dp"
         android:clickable="true"
+        android:onClick="saveTest"
         app:fabSize="mini"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        android:onClick="saveTest"
         app:srcCompat="@drawable/com_facebook_button_like_icon_selected" />
 
 </android.support.constraint.ConstraintLayout>

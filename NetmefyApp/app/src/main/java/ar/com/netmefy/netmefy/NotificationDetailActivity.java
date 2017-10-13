@@ -67,6 +67,17 @@ public class NotificationDetailActivity extends AppCompatActivity {
         Intent calificacion = new Intent(NotificationDetailActivity.this, RateSupportActivity.class);
         calificacion.putExtra("notificacionId", notificationId ); //TODO: Poner el user que va
         calificacion.putExtra("ot_id", ot_id);
+        calificacion.putExtra("ir_a_main", false);
+
         startActivity(calificacion);
     }
+
+/*
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(resultCode==RESULT_CANCELED){
+            this.finish();
+        }
+    }*/
 }

@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.Response;
 
@@ -19,6 +20,7 @@ import java.io.StringReader;
 import ar.com.netmefy.netmefy.router.models.InternetSpeed;
 import ar.com.netmefy.netmefy.router.models.WifiSignalResult;
 import ar.com.netmefy.netmefy.services.WifiUtils;
+import ar.com.netmefy.netmefy.services.api.Api;
 
 public class PruebasActivity extends AppCompatActivity {
     private int progressStatus;
@@ -28,10 +30,13 @@ public class PruebasActivity extends AppCompatActivity {
     ProgressBar loadingBarTestSpeed;
     TextView tvVelocidadDeInternetTitle;
     TextView tvPingAMostrar;
+    Api api ;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pruebas);
+
+        api = Api.getInstance(getApplicationContext());
 
         pb = (ProgressBar) findViewById(R.id.progressBarVelocidad);
         tvVelocidad = (TextView) findViewById(R.id.tvVelocidad) ;
@@ -202,6 +207,26 @@ public class PruebasActivity extends AppCompatActivity {
 
     public void saveTest (View view){
         //TODO: PONER ACA PARA GUARDAR EL TEST QUE SE REALIZO
+        double vel_mb_ok  = Double.parseDouble(tvVelocidad.getText().toString().replace("Mbps", ""));
+        double ping_ok = Double.parseDouble(tvPingAMostrar.getText().toString().replace("ms", ""));
+        double dB_ok = Double.parseDouble(tvSenal.getText().toString().replace("dB", ""));
 
+        int vel_mb = (int)vel_mb_ok;
+        int ping = (int)ping_ok;
+        int dB = (int)dB_ok;
+
+
+        api.addTest(vel_mb, ping, dB, new Response.Listener() {
+            @Override
+            public void onResponse(Object response) {
+                if(response==null){
+                    Toast.makeText(getApplicationContext(), "Hubo un error al guardar el test", Toast.LENGTH_SHORT).show();
+                }else{
+                    Toast.makeText(getApplicationContext(), "Guardado correctamente", Toast.LENGTH_SHORT).show();
+                    finish();
+                }
+
+            }
+        });
     }
 }

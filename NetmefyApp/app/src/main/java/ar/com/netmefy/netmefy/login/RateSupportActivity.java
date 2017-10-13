@@ -33,6 +33,7 @@ public class RateSupportActivity extends AppCompatActivity {
     ProgressBar pbRate;
     String ot_id;
     int notificacionId ;
+    boolean ir_a_main;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,6 +42,7 @@ public class RateSupportActivity extends AppCompatActivity {
         //userId =  inBundle.get("userId").toString();
         ot_id =  inBundle.get("ot_id").toString();
         notificacionId=  Integer.parseInt(inBundle.get("notificacionId").toString());
+        ir_a_main=  inBundle.getBoolean("ir_a_main");
         rbRateSupport = (RatingBar) findViewById(R.id.rb_rate_support);
         btSendRateSupport = (Button) findViewById(R.id.bt_send_rate_suport);
         pbRate = (ProgressBar) findViewById(R.id.pb_rate);
@@ -76,10 +78,14 @@ public class RateSupportActivity extends AppCompatActivity {
 
                 }else{
                     NMF_Info.marcarNotificacionComoLeida(notificacionId, getApplicationContext());
-
-                    startActivity(new Intent(RateSupportActivity.this,MainActivity.class));
                     Toast.makeText(getApplicationContext(), "calificación enviada", Toast.LENGTH_SHORT).show();
-                    finish();
+                    if(ir_a_main){
+                        startActivity(new Intent(RateSupportActivity.this,MainActivity.class));
+                    }else{
+                        finish();
+                    }
+
+
                 }
 
             }

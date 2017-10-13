@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import ar.com.netmefy.netmefy.router.ConfigWifi;
 import ar.com.netmefy.netmefy.services.NMF_Info;
 import ar.com.netmefy.netmefy.services.Utils;
 import ar.com.netmefy.netmefy.services.api.entity.DeviceModel;
@@ -36,7 +37,9 @@ import ar.com.netmefy.netmefy.services.api.entity.paginasLikeadas;
 import ar.com.netmefy.netmefy.services.api.entity.reclamoListItemModel;
 import ar.com.netmefy.netmefy.services.api.entity.routerInfo;
 import ar.com.netmefy.netmefy.services.api.entity.gestionAddModel;
+import ar.com.netmefy.netmefy.services.api.entity.routerModel;
 import ar.com.netmefy.netmefy.services.api.entity.solicitudListItemModel;
+import ar.com.netmefy.netmefy.services.api.entity.testModel;
 import ar.com.netmefy.netmefy.services.api.entity.tipoOsModel;
 import ar.com.netmefy.netmefy.services.api.entity.tipoOtModel;
 import ar.com.netmefy.netmefy.services.api.entity.tipoUsuarioApp;
@@ -807,6 +810,68 @@ public  class Api {
             }
         }) ;
         execute(sr);
+    }
+
+    public void saveRouter(String name, ConfigWifi configWifi, final Response.Listener success){
+        routerModel router = new routerModel();
+        router.router_modelo = name ;
+        router.router_ssid = configWifi.getSsid();
+        router.router_psw = configWifi.getPassword();
+
+        Map<String, String> data = null;
+        try {
+            data = Utils.toMap(router);
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+
+        String url = "http://200.82.0.24/api/routers";
+        JsonRequestApi rq = new JsonRequestApi(Request.Method.PUT, url, data, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                success.onResponse("ok");
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                success.onResponse(null);
+            }
+        });
+        execute(rq);
+    }
+
+    public void addTest(int vel_mb, int ping, int dB, final Response.Listener success){
+        testModel test = new testModel();
+        test.cliente_sk = NMF_Info.clientInfo.id;
+        test.vel_mb_medidos = vel_mb;
+        test.potencia_recep = dB;
+        test.ot_id = 0;
+        test.comentario = "";
+        test.flag_cableado_nuevo = -1;
+        test.flag_instalacion = -1;
+        test.flag_modem_ok = 1;
+        //test.ping = ping;
+
+        Map<String, String> data = null;
+        try {
+            data = Utils.toMap(test);
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+
+        String url = "http://200.82.0.24/api/tests";
+        JsonRequestApi rq = new JsonRequestApi(Request.Method.POST, url, data, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                success.onResponse("ok");
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                success.onResponse(null);
+            }
+        });
+        execute(rq);
     }
 
 }

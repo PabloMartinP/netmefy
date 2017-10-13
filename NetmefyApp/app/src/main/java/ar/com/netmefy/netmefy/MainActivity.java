@@ -553,6 +553,13 @@ public class MainActivity extends AppCompatActivity  {
                     et_wifi_password.setText(response.getPassword());
                     et_wifi_name.setText(response.getSsid());
                     changeRouterToGreen();
+
+                    api.saveRouter(router.getName(), response, new Response.Listener() {
+                        @Override
+                        public void onResponse(Object response) {
+
+                        }
+                    });
                     //progress.dismiss();
                 }
             }, new Response.ErrorListener() {
