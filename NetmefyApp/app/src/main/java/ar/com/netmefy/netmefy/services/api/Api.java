@@ -845,9 +845,9 @@ public  class Api {
         test.cliente_sk = NMF_Info.clientInfo.id;
         test.vel_mb_medidos = vel_mb;
         test.potencia_recep = dB;
-        test.ot_id = 0;
+        test.ot_id = null;
         test.comentario = "";
-        test.flag_cableado_nuevo = -1;
+        test.flag_cableado_nuevo = null;
         test.flag_instalacion = -1;
         test.flag_modem_ok = 1;
         //test.ping = ping;
