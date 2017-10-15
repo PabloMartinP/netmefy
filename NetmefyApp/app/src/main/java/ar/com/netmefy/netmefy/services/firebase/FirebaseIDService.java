@@ -2,13 +2,8 @@ package ar.com.netmefy.netmefy.services.firebase;
 
 import android.util.Log;
 
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.FirebaseInstanceIdService;
-
-import ar.com.netmefy.netmefy.services.NMF_Info;
-import ar.com.netmefy.netmefy.services.api.Api;
 
 /**
  * Created by fiok on 21/08/2017.

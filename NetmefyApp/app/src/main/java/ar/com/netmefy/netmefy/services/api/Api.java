@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.Map;
 
 import ar.com.netmefy.netmefy.router.ConfigWifi;
-import ar.com.netmefy.netmefy.services.NMF_Info;
+import ar.com.netmefy.netmefy.services.NMF;
 import ar.com.netmefy.netmefy.services.Utils;
 import ar.com.netmefy.netmefy.services.api.entity.DeviceModel;
 import ar.com.netmefy.netmefy.services.api.entity.SaveToken;
@@ -29,9 +29,9 @@ import ar.com.netmefy.netmefy.services.api.entity.Tecnico;
 import ar.com.netmefy.netmefy.services.api.entity.Token;
 import ar.com.netmefy.netmefy.services.api.entity.clientInfo;
 import ar.com.netmefy.netmefy.services.api.entity.dispositivoInfo;
+import ar.com.netmefy.netmefy.services.api.entity.gestionModel;
 import ar.com.netmefy.netmefy.services.api.entity.log;
 import ar.com.netmefy.netmefy.services.api.entity.notificacionModel;
-import ar.com.netmefy.netmefy.services.api.entity.osModel;
 import ar.com.netmefy.netmefy.services.api.entity.otModel;
 import ar.com.netmefy.netmefy.services.api.entity.paginaControlParentalModel;
 import ar.com.netmefy.netmefy.services.api.entity.paginasLikeadas;
@@ -59,7 +59,7 @@ import ar.com.netmefy.netmefy.services.api.stringRequests.RequestQueueSingletonA
 
 public  class Api {
     public static Token token;
-
+    final Gson gson = new Gson();
 
     /////////////////////////////////////////////////////////////////////
     private RequestQueue _queue;
@@ -99,7 +99,6 @@ public  class Api {
         JsonRequestApi rq = new JsonRequestApi(Request.Method.POST, url, params, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                Gson gson = new Gson();
                 token = gson.fromJson(response.toString(), Token.class);
                 success.onResponse("ok");
             }
@@ -121,7 +120,6 @@ public  class Api {
             public void onResponse(JSONObject response) {
                 //String rr = response.toString();
                 tipoUsuarioApp tipo ;
-                Gson gson = new Gson();
                 tipo= gson.fromJson(response.toString(), tipoUsuarioApp.class);
                 success.onResponse(tipo);
             }
@@ -135,11 +133,7 @@ public  class Api {
             @Override
             public void onResponse(JSONObject response) {
                 clientInfo client ;
-                Gson gson = new Gson();
                 client = gson.fromJson(response.toString(), clientInfo.class);
-                String jj;
-
-                jj = client.nombre;
                 success.onResponse(client);
             }
         }, error);
@@ -172,7 +166,6 @@ public  class Api {
             public void onResponse(JSONObject response) {
                 //success.onResponse("ok:"+dataok);
                 dispositivoInfo dispositivoInfo ;
-                Gson gson = new Gson();
                 dispositivoInfo= gson.fromJson(response.toString(), dispositivoInfo.class);
                 //SOLO ME INTERESA LA SK, LOS DEMAS CAMPOS NO SE CARGAN PORQUE SE LLAMAN DISTINTO
 
@@ -208,7 +201,6 @@ public  class Api {
             public void onResponse(JSONObject response) {
                 //success.onResponse("ok:"+dataok);
                 dispositivoInfo dispositivoInfo ;
-                Gson gson = new Gson();
                 dispositivoInfo= gson.fromJson(response.toString(), dispositivoInfo.class);
                 //SOLO ME INTERESA LA SK, LOS DEMAS CAMPOS NO SE CARGAN PORQUE SE LLAMAN DISTINTO
 
@@ -303,7 +295,6 @@ public  class Api {
                 usuarioAddModel actualUser = null;
                 try {
                     status = response.get("status").toString();
-                    Gson gson = new Gson();
                     actualUser = gson.fromJson(response.getString("usuario"), usuarioAddModel.class);
 
                 } catch (JSONException e) {
@@ -329,7 +320,6 @@ public  class Api {
             @Override
             public void onResponse(JSONObject response) {
                 usuarioInfo usuarioInfo ;
-                Gson gson = new Gson();
                 usuarioInfo = gson.fromJson(response.toString(), usuarioInfo.class);
                 success.onResponse(usuarioInfo);
             }
@@ -362,8 +352,6 @@ public  class Api {
         JsonRequestApi rq = new JsonRequestApi(Request.Method.POST, url, data, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                //Gson gson = new Gson();
-                //usuarioInfo = gson.fromJson(response.toString(), usuarioInfo.class);
                 success.onResponse("ok");
             }
         }, new Response.ErrorListener() {
@@ -395,8 +383,6 @@ public  class Api {
         JsonRequestApi rq = new JsonRequestApi(Request.Method.POST, url, data, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                //Gson gson = new Gson();
-                //usuarioInfo = gson.fromJson(response.toString(), usuarioInfo.class);
                 success.onResponse("ok");
             }
         }, new Response.ErrorListener() {
@@ -419,7 +405,6 @@ public  class Api {
                 try {
                     listJson = new JSONArray(response);
                     List<paginaControlParentalModel> result = new ArrayList<>();
-                    Gson gson = new Gson();
                     for (int i = 0; i < listJson.length(); i++) {
                         JSONObject jo = listJson.getJSONObject(i);
                         paginaControlParentalModel p = gson.fromJson(jo.toString(), paginaControlParentalModel.class);
@@ -440,21 +425,7 @@ public  class Api {
             }
         });
         execute(sr);
-        /*JsonRequestApi rq = new JsonRequestApi(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject response) {
-                Gson gson = new Gson();
-                List<paginaControlParentalModel> p = gson.fromJson(response.toString(), List.class);
-                success.onResponse(p);
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                //Map<String, String> data1 = data    ;
-                success.onResponse(null);
-            }
-        });
-        execute(rq);*/
+
     }
 
     public void BlockPages(int cliente_sk, int router_sk, List<paginaControlParentalModel> paginasModel, final Response.Listener success) {
@@ -472,7 +443,6 @@ public  class Api {
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         }
-        final Gson gson = new Gson();
         /*
         Map<String, String> data  = new HashMap<>();;
             //data = Utils.toMap(model);
@@ -489,9 +459,8 @@ public  class Api {
                 try {
                     if(response.get("status").equals("ok")) {
                         routerInfo router;
-                        Gson gson = new Gson();
                         router = gson.fromJson(response.get("router").toString(), routerInfo.class);
-                        NMF_Info.clientInfo.router = router;
+                        NMF.cliente.router = router;
                         success.onResponse("ok");
                     }
                     else
@@ -516,8 +485,8 @@ public  class Api {
 
         int max = Math.min(3500, descripcion.length());
         int cliente_sk = 0;
-        if(NMF_Info.tipoUsuarioApp!=null)
-            cliente_sk = NMF_Info.tipoUsuarioApp.id;
+        if(NMF.tipoUsuarioApp!=null)
+            cliente_sk = NMF.tipoUsuarioApp.id;
         else
             cliente_sk = -1;
         log log = new log(tipo, cliente_sk, descripcion.substring(0, max));
@@ -660,7 +629,6 @@ public  class Api {
             @Override
             public void onResponse(JSONObject response) {
                 otModel ot = null;
-                Gson gson = new Gson();
                 try {
                     ot = gson.fromJson(response.get("ot").toString(), otModel.class);
                 } catch (JSONException e) {
@@ -678,7 +646,6 @@ public  class Api {
     }
 
     public void getTiposDeSolicitudes(final Response.Listener<List<tipoOsModel>> success){
-        final Gson gson = new Gson();
         String url = "http://200.82.0.24/api/tipo_os";
         //todo: ACA LO HAGO ASI PORQUE NOSE COMO HACER PARA TRAERME UN ARRAY,
         JsonArrayRequestApi sr = new JsonArrayRequestApi(Request.Method.GET, url, null, new Response.Listener<JSONArray>() {
@@ -710,7 +677,6 @@ public  class Api {
     }
 
     public void getTiposDeReclamos(final Response.Listener<List<tipoOtModel>> success){
-        final Gson gson = new Gson();
         String url = "http://200.82.0.24/api/tipo_ot";
         //todo: ACA LO HAGO ASI PORQUE NOSE COMO HACER PARA TRAERME UN ARRAY,
         JsonArrayRequestApi sr = new JsonArrayRequestApi(Request.Method.GET, url, null, new Response.Listener<JSONArray>() {
@@ -744,10 +710,9 @@ public  class Api {
 
     public void getSolicitudes(final Response.Listener<List<solicitudListItemModel>> success){
 
-        //int cliente_sk = 2;//NMF_Info.clientInfo.id;//2;
-        int cliente_sk = NMF_Info.clientInfo.id;
+        //int cliente_sk = 2;//NMF.cliente.id;//2;
+        int cliente_sk = NMF.cliente.id;
 
-        final Gson gson = new Gson();
         String url = "http://200.82.0.24/api/solicitudes?cliente_sk=" + String.valueOf(cliente_sk);
         //todo: ACA LO HAGO ASI PORQUE NOSE COMO HACER PARA TRAERME UN ARRAY,
         JsonArrayRequestApi sr = new JsonArrayRequestApi(Request.Method.GET, url, null, new Response.Listener<JSONArray>() {
@@ -780,9 +745,8 @@ public  class Api {
 
     public void getReclamos(final Response.Listener<List<reclamoListItemModel>> success){
 
-        //int cliente_sk = 1;//NMF_Info.clientInfo.id;//2;
-        int cliente_sk = NMF_Info.clientInfo.id;
-        final Gson gson = new Gson();
+        //int cliente_sk = 1;//NMF.cliente.id;//2;
+        int cliente_sk = NMF.cliente.id;
         String url = "http://200.82.0.24/api/ot?cliente_sk=" + String.valueOf(cliente_sk);
         //todo: ACA LO HAGO ASI PORQUE NOSE COMO HACER PARA TRAERME UN ARRAY,
         JsonArrayRequestApi sr = new JsonArrayRequestApi(Request.Method.GET, url, null, new Response.Listener<JSONArray>() {
@@ -875,8 +839,36 @@ public  class Api {
         execute(rq);
     }
 
+    public void setEstadoOt(int ot_id, int nuevo_estado, final Response.Listener success){
+
+        String url = "http://200.82.0.24/api/ot_status";
+        gestionModel g = new gestionModel();
+        g.ot_id = ot_id;
+        g.comentarios = "";
+        g.estado_sk = nuevo_estado;
+        Map<String, String> data = null;
+        try {
+            data = Utils.toMap(g);
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+
+
+        JsonRequestApi rq = new JsonRequestApi(Request.Method.POST, url, data, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                success.onResponse("ok");
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                success.onResponse(null);
+            }
+        });
+        execute(rq);
+    }
+
     public void getTecnico(String username, final Response.Listener<Tecnico> success, final Response.ErrorListener error){
-        final Gson gson = new Gson();
         String url = "http://200.82.0.24/api/tecnicos/"+username;
         JsonRequestApi rq = new JsonRequestApi(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
             @Override
@@ -884,8 +876,8 @@ public  class Api {
                 if(response!=null){
                     Tecnico tecnico ;///= new Tecnico();
                     tecnico = gson.fromJson(response.toString(), Tecnico.class);
-                    NMF_Info.tecnico =tecnico;
-                    success.onResponse(NMF_Info.tecnico);
+                    NMF.tecnico =tecnico;
+                    success.onResponse(NMF.tecnico);
                 }else{
                     error.onErrorResponse(new VolleyError("error al traer el tecnico"));
                 }

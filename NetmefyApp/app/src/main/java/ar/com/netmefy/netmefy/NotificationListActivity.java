@@ -10,16 +10,12 @@ import android.widget.ListView;
 
 import com.android.volley.Response;
 
-import java.util.Date;
 import java.util.List;
 
 import ar.com.netmefy.netmefy.adapters.MySimpleNotificationArrayAdapter;
-import ar.com.netmefy.netmefy.adapters.elements.DeviceItem;
 import ar.com.netmefy.netmefy.adapters.elements.NotificationItem;
-import ar.com.netmefy.netmefy.router.Router;
-import ar.com.netmefy.netmefy.services.NMF_Info;
+import ar.com.netmefy.netmefy.services.NMF;
 import ar.com.netmefy.netmefy.services.api.Api;
-import ar.com.netmefy.netmefy.services.api.entity.dispositivoInfo;
 import ar.com.netmefy.netmefy.services.api.entity.notificacionModel;
 import ar.com.netmefy.netmefy.services.login.Session;
 
@@ -36,15 +32,15 @@ public class NotificationListActivity extends AppCompatActivity {
 
         final Api api = Api.getInstance(getApplicationContext());
         final Activity _this = this;
-        api.getNotificaciones(NMF_Info.clientInfo.id, NMF_Info.usuarioInfo.usuario_sk, new Response.Listener<List<notificacionModel>>() {
+        api.getNotificaciones(NMF.cliente.id, NMF.usuario.usuario_sk, new Response.Listener<List<notificacionModel>>() {
             @Override
             public void onResponse(List<notificacionModel> notificaciones) {
                 List<notificacionModel> notificacionesGuardadas = session.getNotificaciones();
 
 
-                NMF_Info.notificaciones = notificaciones;
+                NMF.notificaciones = notificaciones;
 
-                for (notificacionModel nm : NMF_Info.notificaciones ) {
+                for (notificacionModel nm : NMF.notificaciones ) {
                     for (notificacionModel nmg : notificacionesGuardadas) {
                         if(nm.notificacion_sk == nmg.notificacion_sk){
                             nm.leido = nmg.leido;
@@ -58,9 +54,9 @@ public class NotificationListActivity extends AppCompatActivity {
 
                 //converto la lista en items
                 final NotificationItem[] values ;
-                values = new NotificationItem[NMF_Info.notificaciones.size()];
+                values = new NotificationItem[NMF.notificaciones.size()];
                 int i = 0;
-                for (notificacionModel d : NMF_Info.notificaciones) {
+                for (notificacionModel d : NMF.notificaciones) {
                     values[i] = d.toNotificacionItem();
                     i++;
                 }

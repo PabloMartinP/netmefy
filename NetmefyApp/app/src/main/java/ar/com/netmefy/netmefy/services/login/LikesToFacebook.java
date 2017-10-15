@@ -1,9 +1,6 @@
 package ar.com.netmefy.netmefy.services.login;
 
 import android.content.Context;
-import android.text.Html;
-import android.text.TextUtils;
-import android.util.Log;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -28,15 +25,10 @@ import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 
 import ar.com.netmefy.netmefy.MainActivity;
-import ar.com.netmefy.netmefy.R;
-import ar.com.netmefy.netmefy.services.App;
-import ar.com.netmefy.netmefy.services.NMF_Info;
-import ar.com.netmefy.netmefy.services.api.Api;
+import ar.com.netmefy.netmefy.services.NMF;
 import ar.com.netmefy.netmefy.services.api.entity.paginasLikeadas;
 
 import static com.facebook.FacebookSdk.getApplicationContext;
@@ -202,10 +194,10 @@ public class LikesToFacebook implements Runnable {
         final paginasLikeadas paginasLikeadas = new paginasLikeadas();
 
         //TODO: por ahora dejo el 1 1 pero hay que leer el id del session()
-        //paginasLikeadas.cliente_sk = 2;//;Api.clientInfo.id;
+        //paginasLikeadas.cliente_sk = 2;//;Api.cliente.id;
         //paginasLikeadas.usuario_sk = 2;//Api.tipoUsuarioApp
-        paginasLikeadas.cliente_sk = NMF_Info.usuarioInfo.cliente_sk;//;Api.clientInfo.id;
-        paginasLikeadas.usuario_sk = NMF_Info.usuarioInfo.usuario_sk;//Api.tipoUsuarioApp
+        paginasLikeadas.cliente_sk = NMF.usuario.cliente_sk;//;Api.cliente.id;
+        paginasLikeadas.usuario_sk = NMF.usuario.usuario_sk;//Api.tipoUsuarioApp
 
         int j ;
         mainActivity.tvFacebookStatus.setText("fb:ok??");

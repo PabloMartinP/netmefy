@@ -1,13 +1,10 @@
 package ar.com.netmefy.netmefy;
 
 import android.content.Context;
-import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -21,7 +18,7 @@ import java.io.StringReader;
 
 import ar.com.netmefy.netmefy.router.models.InternetSpeed;
 import ar.com.netmefy.netmefy.router.models.WifiSignalResult;
-import ar.com.netmefy.netmefy.services.NMF_Info;
+import ar.com.netmefy.netmefy.services.NMF;
 import ar.com.netmefy.netmefy.services.WifiUtils;
 import ar.com.netmefy.netmefy.services.api.Api;
 
@@ -238,7 +235,7 @@ public class PruebasActivity extends AppCompatActivity {
         int dB = (int)dB_ok;
 
         if(cliente_sk == -1)
-            cliente_sk = NMF_Info.clientInfo.id;
+            cliente_sk = NMF.cliente.id;
 
 
 

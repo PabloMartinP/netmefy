@@ -1,12 +1,7 @@
 package ar.com.netmefy.netmefy;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
-import android.net.wifi.WifiInfo;
-import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -29,16 +24,12 @@ import com.facebook.GraphResponse;
 import com.facebook.HttpMethod;
 import com.facebook.Profile;
 import com.facebook.login.LoginManager;
-import com.fasterxml.jackson.databind.deser.std.DateDeserializers;
 import com.google.firebase.iid.FirebaseInstanceId;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
@@ -49,24 +40,16 @@ import ar.com.netmefy.netmefy.cliente.ControlParentalActivity;
 import ar.com.netmefy.netmefy.login.UserIdActivity;
 import ar.com.netmefy.netmefy.router.ConfigWifi;
 import ar.com.netmefy.netmefy.router.Device;
-import ar.com.netmefy.netmefy.router.RestartTry;
 import ar.com.netmefy.netmefy.router.Router;
-import ar.com.netmefy.netmefy.router.models.WifiSignalResult;
-import ar.com.netmefy.netmefy.services.NMF_Info;
+import ar.com.netmefy.netmefy.services.NMF;
 import ar.com.netmefy.netmefy.services.Utils;
-import ar.com.netmefy.netmefy.services.WifiUtils;
 import ar.com.netmefy.netmefy.services.api.Api;
-import ar.com.netmefy.netmefy.services.api.entity.DeviceModel;
 import ar.com.netmefy.netmefy.services.api.entity.clientInfo;
 import ar.com.netmefy.netmefy.services.api.entity.dispositivoInfo;
 import ar.com.netmefy.netmefy.services.api.entity.paginasLikeadas;
-import ar.com.netmefy.netmefy.services.api.entity.tipoUsuarioApp;
 import ar.com.netmefy.netmefy.services.api.entity.usuarioInfo;
-import ar.com.netmefy.netmefy.services.login.LikesToFacebook;
 import ar.com.netmefy.netmefy.services.login.Session;
 import de.hdodenhof.circleimageview.CircleImageView;
-
-import static com.facebook.FacebookSdk.getApplicationContext;
 
 //public class MainActivity extends Activity {
 public class MainActivity extends AppCompatActivity  {
@@ -169,30 +152,30 @@ public class MainActivity extends AppCompatActivity  {
         ////////////////////////////////////////////////////////////
         //api = Api.getInstance(getApplicationContext());
 
-        if(NMF_Info.usuarioInfo == null)//
+        if(NMF.usuario == null)//
             session.getUsuarioInfo();
 
         final MainActivity _this = this;
 
         try {
-            if(NMF_Info.tipoUsuarioApp !=null){
+            if(NMF.tipoUsuarioApp !=null){
 
 
-                api.getInfoUser(NMF_Info.tipoUsuarioApp.username, new Response.Listener<clientInfo>() {
+                api.getInfoUser(NMF.tipoUsuarioApp.username, new Response.Listener<clientInfo>() {
                     @Override
                     public void onResponse(final clientInfo response) {
-                        NMF_Info.clientInfo = response;
+                        NMF.cliente = response;
                         session.setClientInfo();
 
                         //LikesToFacebook likesToFacebook = new LikesToFacebook(_this);
                         //likesToFacebook.run();
                         session.getUsuarioInfo();
-                        api.findUser(NMF_Info.usuarioInfo.usuario_sk, new Response.Listener() {
+                        api.findUser(NMF.usuario.usuario_sk, new Response.Listener() {
                             //api.findUser("pablo.penialoza@hotmail.com", new Response.Listener() {
                             @Override
                             public void onResponse(Object response2) {
                                 usuarioInfo userInfo = (usuarioInfo) response2;
-                                NMF_Info.usuarioInfo = userInfo;
+                                NMF.usuario = userInfo;
                                 session.setUsuarioInfo();
                                 send_likes();
 
@@ -203,7 +186,7 @@ public class MainActivity extends AppCompatActivity  {
                                     public void run() {
                                         tv_user_number.setText(response.nombre);
                                         tv_internet_speed.setText(String.valueOf(response.mb_contratado)+"MB");
-                                        tv_client_id.setText("cliente: "+String.valueOf(NMF_Info.clientInfo.id) + "-"+String.valueOf(NMF_Info.usuarioInfo.usuario_sk));
+                                        tv_client_id.setText("cliente: "+String.valueOf(NMF.cliente.id) + "-"+String.valueOf(NMF.usuario.usuario_sk));
 
                                     }
                                 });
@@ -306,7 +289,7 @@ public class MainActivity extends AppCompatActivity  {
 
             //page = URLEncoder.encode(page, "UTF-8");
             //page = Html.escapeHtml(page);
-            if(!NMF_Info.usuarioInfo.paginas.contains(page)){
+            if(!NMF.usuario.paginas.contains(page)){
                 likesNames.add("'" + page + "'");
             }
             //likesNames.add(page );
@@ -336,10 +319,10 @@ public class MainActivity extends AppCompatActivity  {
         final paginasLikeadas paginasLikeadas = new paginasLikeadas();
 
         //TODO: por ahora dejo el 1 1 pero hay que leer el id del session()
-        //paginasLikeadas.cliente_sk = 2;//;Api.clientInfo.id;
+        //paginasLikeadas.cliente_sk = 2;//;Api.cliente.id;
         //paginasLikeadas.usuario_sk = 2;//Api.tipoUsuarioApp
-        paginasLikeadas.cliente_sk = NMF_Info.usuarioInfo.cliente_sk;//;Api.clientInfo.id;
-        paginasLikeadas.usuario_sk = NMF_Info.usuarioInfo.usuario_sk;//Api.tipoUsuarioApp
+        paginasLikeadas.cliente_sk = NMF.usuario.cliente_sk;//;Api.cliente.id;
+        paginasLikeadas.usuario_sk = NMF.usuario.usuario_sk;//Api.tipoUsuarioApp
 
         int j ;
         tvFacebookStatus.setText("fb:ok");
@@ -429,8 +412,8 @@ public class MainActivity extends AppCompatActivity  {
                 try {
                     final TimerTask _this = this;
 
-                    if(NMF_Info.tipoUsuarioApp!=null && FirebaseInstanceId.getInstance()!=null && FirebaseInstanceId.getInstance().getToken()!=null){
-                        api.saveFirebaseToken(NMF_Info.tipoUsuarioApp.id, session.getUserType(), FirebaseInstanceId.getInstance().getToken(), new Response.Listener<String>() {
+                    if(NMF.tipoUsuarioApp!=null && FirebaseInstanceId.getInstance()!=null && FirebaseInstanceId.getInstance().getToken()!=null){
+                        api.saveFirebaseToken(NMF.tipoUsuarioApp.id, session.getUserType(), FirebaseInstanceId.getInstance().getToken(), new Response.Listener<String>() {
                             @Override
                             public void onResponse(String response) {
                                 response = response.toString();
@@ -646,10 +629,10 @@ public class MainActivity extends AppCompatActivity  {
     }
 
     public void populate_list_connected(List<Device> devices){
-        NMF_Info.updateDevicesConnected(devices, getApplicationContext());
+        NMF.updateDevicesConnected(devices, getApplicationContext());
 
         ///////////////////////////////////////////////
-        List<dispositivoInfo> list_connected = NMF_Info.getDevicesConnected();
+        List<dispositivoInfo> list_connected = NMF.getDevicesConnected();
 
         int cant_elem = Math.min(4, list_connected.size());//del 0 al cuatro
         int i = 0;
@@ -700,7 +683,7 @@ public class MainActivity extends AppCompatActivity  {
 
     public void goToSetOfTest(View view){
         Intent tests = new Intent(MainActivity.this, PruebasActivity.class);
-        tests.putExtra("ot_cliente_sk", NMF_Info.clientInfo.id);
+        tests.putExtra("ot_cliente_sk", NMF.cliente.id);
         tests.putExtra("ot_id", -1);
         startActivity(tests);
     }

@@ -7,14 +7,10 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ListView;
 import android.widget.Switch;
-import android.widget.TextView;
 
 import com.android.volley.Response;
 
@@ -25,7 +21,7 @@ import ar.com.netmefy.netmefy.ControlParentalWebPageSetUp;
 import ar.com.netmefy.netmefy.R;
 import ar.com.netmefy.netmefy.adapters.MySimpleWebPageArrayAdapter;
 import ar.com.netmefy.netmefy.adapters.elements.WebPageToBlockItem;
-import ar.com.netmefy.netmefy.services.NMF_Info;
+import ar.com.netmefy.netmefy.services.NMF;
 import ar.com.netmefy.netmefy.services.api.Api;
 import ar.com.netmefy.netmefy.services.api.entity.paginaControlParentalModel;
 import ar.com.netmefy.netmefy.services.api.entity.webModel;
@@ -50,7 +46,7 @@ public class ControlParentalActivity extends AppCompatActivity {
 
                 //setteo las paginasbloqueadas
                 for (paginaControlParentalModel p : paginas) {
-                    for (webModel webBloqueada: NMF_Info.clientInfo.router.webs_bloqueadas ) {
+                    for (webModel webBloqueada: NMF.cliente.router.webs_bloqueadas ) {
                         if(webBloqueada.id == p.id){
                             p.bloqueado = true;
                             break;
@@ -105,7 +101,7 @@ public class ControlParentalActivity extends AppCompatActivity {
                                     paginasModel.add(p);
                                 }
 
-                                api.BlockPages(NMF_Info.clientInfo.id, NMF_Info.clientInfo.router.router_sk, paginasModel, new Response.Listener() {
+                                api.BlockPages(NMF.cliente.id, NMF.cliente.router.router_sk, paginasModel, new Response.Listener() {
                                     @Override
                                     public void onResponse(Object response) {
 
@@ -114,7 +110,7 @@ public class ControlParentalActivity extends AppCompatActivity {
                                 ///////////////////////////////////////////////////////////////////
                             }
                         });//fin setOnCheckedCHange();
-                        if(NMF_Info.clientInfo.router.webs_bloqueadas.size()>0){
+                        if(NMF.cliente.router.webs_bloqueadas.size()>0){
 
                             switchParentalControl.setChecked(true);
                             //updateList(true);

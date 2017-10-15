@@ -47,7 +47,6 @@ public class MySimpleOrdenesArrayAdapter extends ArrayAdapter<OtItem> {
 
         }
 
-        //rowView.setBackgroundColor(Color.parseColor("#aaaaaa00"));
         if (statusOt == 1) { //ESTADO ABIERTO
             rowView.setBackgroundColor(Color.parseColor("#aaaaaa00"));
             //rowView.setBackgroundColor(Color.BLUE);

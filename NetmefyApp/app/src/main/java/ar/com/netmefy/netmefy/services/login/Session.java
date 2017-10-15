@@ -13,8 +13,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-import ar.com.netmefy.netmefy.services.NMF_Info;
-import ar.com.netmefy.netmefy.services.api.Api;
+import ar.com.netmefy.netmefy.services.NMF;
 import ar.com.netmefy.netmefy.services.api.entity.clientInfo;
 import ar.com.netmefy.netmefy.services.api.entity.notificacionModel;
 import ar.com.netmefy.netmefy.services.api.entity.usuarioInfo;
@@ -97,15 +96,15 @@ public class Session {
 
     public void setClientInfo() {
         Gson gson = new Gson();
-        String json = gson.toJson(NMF_Info.clientInfo);
-        prefs.edit().putString("clientInfo", json).apply();
+        String json = gson.toJson(NMF.cliente);
+        prefs.edit().putString("cliente", json).apply();
     }
     public void getClientInfo(){
         Gson gson = new Gson();
-        String clientInfoJson = prefs.getString("clientInfo","");
+        String clientInfoJson = prefs.getString("cliente","");
 
         clientInfo clientInfo = gson.fromJson(clientInfoJson, clientInfo.class);
-        NMF_Info.clientInfo = clientInfo;
+        NMF.cliente = clientInfo;
 
     }
 
@@ -140,15 +139,15 @@ public class Session {
 
     public void setUsuarioInfo() {
         Gson gson = new Gson();
-        String json = gson.toJson(NMF_Info.usuarioInfo);
-        prefs.edit().putString("usuarioInfo", json).apply();
+        String json = gson.toJson(NMF.usuario);
+        prefs.edit().putString("usuario", json).apply();
     }
     public void getUsuarioInfo(){
         Gson gson = new Gson();
-        String usuarioInfoJson = prefs.getString("usuarioInfo","");
+        String usuarioInfoJson = prefs.getString("usuario","");
 
         usuarioInfo usuarioInfo = gson.fromJson(usuarioInfoJson, usuarioInfo.class);
-        NMF_Info.usuarioInfo = usuarioInfo;
+        NMF.usuario = usuarioInfo;
 
     }
 }

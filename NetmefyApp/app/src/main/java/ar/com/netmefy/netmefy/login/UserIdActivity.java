@@ -10,23 +10,11 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.Volley;
-import com.google.firebase.iid.FirebaseInstanceId;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.IOException;
-
-import ar.com.netmefy.netmefy.MainActivity;
 import ar.com.netmefy.netmefy.R;
-import ar.com.netmefy.netmefy.router.activities.TPLinkTestsActivity;
-import ar.com.netmefy.netmefy.services.NMF_Info;
+import ar.com.netmefy.netmefy.services.NMF;
 import ar.com.netmefy.netmefy.services.api.Api;
 import ar.com.netmefy.netmefy.services.api.entity.tipoUsuarioApp;
 import ar.com.netmefy.netmefy.services.login.Session;
@@ -83,9 +71,9 @@ public class UserIdActivity extends AppCompatActivity {
                     api.getTypeOfUser(username, new Response.Listener<tipoUsuarioApp>() {
                         @Override
                         public void onResponse(tipoUsuarioApp tipoUsuarioApp) {
-                            NMF_Info.tipoUsuarioApp = tipoUsuarioApp;
+                            NMF.tipoUsuarioApp = tipoUsuarioApp;
 
-                            if(NMF_Info.tipoUsuarioApp.esCliente()){
+                            if(NMF.tipoUsuarioApp.esCliente()){
                                 session.setUserType("client");
                                 redirectToUser("");
                             }else{

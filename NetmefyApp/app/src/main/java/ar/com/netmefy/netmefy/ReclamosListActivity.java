@@ -10,15 +10,13 @@ import android.widget.ListView;
 
 import com.android.volley.Response;
 
-import java.util.Date;
 import java.util.List;
 
 import ar.com.netmefy.netmefy.adapters.MySimpleGestionArrayAdapter;
 import ar.com.netmefy.netmefy.adapters.elements.GestionItem;
-import ar.com.netmefy.netmefy.services.NMF_Info;
+import ar.com.netmefy.netmefy.services.NMF;
 import ar.com.netmefy.netmefy.services.api.Api;
 import ar.com.netmefy.netmefy.services.api.entity.reclamoListItemModel;
-import ar.com.netmefy.netmefy.services.api.entity.solicitudListItemModel;
 
 public class ReclamosListActivity extends AppCompatActivity {
     ListView reclamosHistorialListView;
@@ -35,13 +33,13 @@ public class ReclamosListActivity extends AppCompatActivity {
         api.getReclamos(new Response.Listener<List<reclamoListItemModel>>() {
             @Override
             public void onResponse(List<reclamoListItemModel> response) {
-                NMF_Info.reclamos = response;
+                NMF.reclamos = response;
 
 
                 final GestionItem[] values ;
-                values = new GestionItem[NMF_Info.reclamos.size()];
+                values = new GestionItem[NMF.reclamos.size()];
                 int i = 0;
-                for (reclamoListItemModel d : NMF_Info.reclamos) {
+                for (reclamoListItemModel d : NMF.reclamos) {
                     values[i] = d.toGestionItem();
                     i++;
                 }

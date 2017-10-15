@@ -1,6 +1,5 @@
 package ar.com.netmefy.netmefy.login;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -10,19 +9,11 @@ import android.widget.ProgressBar;
 import android.widget.RatingBar;
 import android.widget.Toast;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
 import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.Volley;
-
-import org.json.JSONObject;
 
 import ar.com.netmefy.netmefy.MainActivity;
 import ar.com.netmefy.netmefy.R;
-import ar.com.netmefy.netmefy.services.NMF_Info;
-import ar.com.netmefy.netmefy.services.Utils;
+import ar.com.netmefy.netmefy.services.NMF;
 import ar.com.netmefy.netmefy.services.api.Api;
 import ar.com.netmefy.netmefy.services.api.entity.notificacionModel;
 
@@ -49,7 +40,7 @@ public class RateSupportActivity extends AppCompatActivity {
         //rbRateSupport.setRating(new Float(4));
 
 
-        for (notificacionModel nm : NMF_Info.notificaciones) {
+        for (notificacionModel nm : NMF.notificaciones) {
             if(nm.notificacion_sk == notificacionId){
                 if(nm.ot_calificacion!=0)
                     rbRateSupport.setRating((float)nm.ot_calificacion);
@@ -77,7 +68,7 @@ public class RateSupportActivity extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), "Error al enviar la calificación", Toast.LENGTH_SHORT).show();
 
                 }else{
-                    NMF_Info.marcarNotificacionComoLeida(notificacionId, getApplicationContext());
+                    NMF.marcarNotificacionComoLeida(notificacionId, getApplicationContext());
                     Toast.makeText(getApplicationContext(), "calificación enviada", Toast.LENGTH_SHORT).show();
                     if(ir_a_main){
                         startActivity(new Intent(RateSupportActivity.this,MainActivity.class));

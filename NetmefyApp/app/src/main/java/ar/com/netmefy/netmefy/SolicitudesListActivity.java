@@ -10,17 +10,13 @@ import android.widget.ListView;
 
 import com.android.volley.Response;
 
-import java.util.Date;
 import java.util.List;
 
 import ar.com.netmefy.netmefy.adapters.MySimpleGestionArrayAdapter;
-import ar.com.netmefy.netmefy.adapters.elements.DeviceItem;
 import ar.com.netmefy.netmefy.adapters.elements.GestionItem;
-import ar.com.netmefy.netmefy.services.NMF_Info;
+import ar.com.netmefy.netmefy.services.NMF;
 import ar.com.netmefy.netmefy.services.api.Api;
-import ar.com.netmefy.netmefy.services.api.entity.dispositivoInfo;
 import ar.com.netmefy.netmefy.services.api.entity.solicitudListItemModel;
-import ar.com.netmefy.netmefy.services.api.entity.tipoOsModel;
 
 public class SolicitudesListActivity extends AppCompatActivity {
     ListView solisitudesHistorialListView;
@@ -38,13 +34,13 @@ public class SolicitudesListActivity extends AppCompatActivity {
         api.getSolicitudes(new Response.Listener<List<solicitudListItemModel>>() {
             @Override
             public void onResponse(List<solicitudListItemModel> response) {
-                NMF_Info.solicitudes = response;
+                NMF.solicitudes = response;
 
 
                 final GestionItem[] values ;
-                values = new GestionItem[NMF_Info.solicitudes.size()];
+                values = new GestionItem[NMF.solicitudes.size()];
                 int i = 0;
-                for (solicitudListItemModel d : NMF_Info.solicitudes) {
+                for (solicitudListItemModel d : NMF.solicitudes) {
                     values[i] = d.toGestionItem();
                     i++;
                 }

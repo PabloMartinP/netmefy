@@ -14,7 +14,7 @@ import com.android.volley.Response;
 import java.util.HashMap;
 import java.util.List;
 
-import ar.com.netmefy.netmefy.services.NMF_Info;
+import ar.com.netmefy.netmefy.services.NMF;
 import ar.com.netmefy.netmefy.services.api.Api;
 import ar.com.netmefy.netmefy.services.api.entity.gestionAddModel;
 import ar.com.netmefy.netmefy.services.api.entity.tipoOsModel;
@@ -89,7 +89,7 @@ public class SolicitudesActivity extends AppCompatActivity {
         //final ProgressDialog pb =  Utils.getProgressBar(this, "Enviando solicitud");
         //pb.show();
         gestionAddModel sol = new gestionAddModel();
-        sol.cliente_sk = NMF_Info.clientInfo.id;
+        sol.cliente_sk = NMF.cliente.id;
         sol.descripcion = et_desc.getText().toString();
         sol.tipo_id = Integer.parseInt(spinnerMap.get(spn_tipo.getSelectedItemPosition()));
 

@@ -11,14 +11,13 @@ import android.widget.ListView;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import ar.com.netmefy.netmefy.adapters.MySimpleArrayAdapter;
 import ar.com.netmefy.netmefy.adapters.elements.DeviceItem;
 import ar.com.netmefy.netmefy.router.Device;
 import ar.com.netmefy.netmefy.router.Router;
-import ar.com.netmefy.netmefy.services.NMF_Info;
+import ar.com.netmefy.netmefy.services.NMF;
 import ar.com.netmefy.netmefy.services.api.entity.dispositivoInfo;
 
 public class DeviceListActivity extends AppCompatActivity {
@@ -48,9 +47,9 @@ public class DeviceListActivity extends AppCompatActivity {
         router.listDevicesConnected(new Response.Listener<List<Device>>() {
             @Override
             public void onResponse(List<Device> devices) {
-                NMF_Info.updateDevicesConnected(devices, getApplicationContext());
+                NMF.updateDevicesConnected(devices, getApplicationContext());
 
-                List<dispositivoInfo> list_connected = NMF_Info.getDevicesConnected();
+                List<dispositivoInfo> list_connected = NMF.getDevicesConnected();
 
                 final DeviceItem[] values ;
                 values = new DeviceItem[list_connected.size()];

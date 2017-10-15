@@ -1,6 +1,5 @@
 package ar.com.netmefy.netmefy;
 
-import android.app.ProgressDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -15,11 +14,9 @@ import com.android.volley.Response;
 import java.util.HashMap;
 import java.util.List;
 
-import ar.com.netmefy.netmefy.services.NMF_Info;
-import ar.com.netmefy.netmefy.services.Utils;
+import ar.com.netmefy.netmefy.services.NMF;
 import ar.com.netmefy.netmefy.services.api.Api;
 import ar.com.netmefy.netmefy.services.api.entity.gestionAddModel;
-import ar.com.netmefy.netmefy.services.api.entity.tipoOsModel;
 import ar.com.netmefy.netmefy.services.api.entity.tipoOtModel;
 
 public class ReclamosActivity extends AppCompatActivity {
@@ -90,7 +87,7 @@ public class ReclamosActivity extends AppCompatActivity {
         //String name = spinner.getSelectedItem().toString();
         //String id = spinnerMap.get(spinner.getSelectedItemPosition());
         gestionAddModel g = new gestionAddModel();
-        g.cliente_sk = NMF_Info.clientInfo.id;
+        g.cliente_sk = NMF.cliente.id;
         g.descripcion = et_desc.getText().toString();
         g.tipo_id = Integer.parseInt(spinnerMap.get(spn_tipo.getSelectedItemPosition()));
 

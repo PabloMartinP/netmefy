@@ -8,7 +8,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import ar.com.netmefy.netmefy.login.RateSupportActivity;
-import ar.com.netmefy.netmefy.services.NMF_Info;
+import ar.com.netmefy.netmefy.services.NMF;
 import ar.com.netmefy.netmefy.services.api.entity.notificacionModel;
 import ar.com.netmefy.netmefy.services.login.Session;
 
@@ -33,9 +33,9 @@ public class NotificationDetailActivity extends AppCompatActivity {
         notificationId =  inBundle.getInt("notifcation");//TODO: se puede usar para saber el id de la notificacion.
         notificacionModel notif = null;
 
-        //NMF_Info.marcarNotificacionComoLeida(notificationId, getApplicationContext());
+        //NMF.marcarNotificacionComoLeida(notificationId, getApplicationContext());
 
-        for (notificacionModel nm : NMF_Info.notificaciones) {
+        for (notificacionModel nm : NMF.notificaciones) {
             if(nm.notificacion_sk == notificationId){
                 notif = nm;
                 /*if(ot_id.isEmpty())//este codigo hace llorar al niño dios
@@ -55,8 +55,8 @@ public class NotificationDetailActivity extends AppCompatActivity {
         calificar = (Button) findViewById(R.id.botonCalificar);
         if (ot_id.isEmpty()){
             calificar.setVisibility(View.INVISIBLE);
-            session.setNotificaciones((NMF_Info.notificaciones));
-            NMF_Info.marcarNotificacionComoLeida(notificationId, getApplicationContext());
+            session.setNotificaciones((NMF.notificaciones));
+            NMF.marcarNotificacionComoLeida(notificationId, getApplicationContext());
         }else{
             calificar.setVisibility(View.VISIBLE);
             //si no es para calificar no marco como leido

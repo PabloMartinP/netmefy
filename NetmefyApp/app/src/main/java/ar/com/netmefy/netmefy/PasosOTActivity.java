@@ -1,22 +1,21 @@
 package ar.com.netmefy.netmefy;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.google.firebase.iid.FirebaseInstanceId;
 
 import ar.com.netmefy.netmefy.adapters.MySimplePasosArrayAdapter;
 import ar.com.netmefy.netmefy.adapters.elements.OtItem;
 import ar.com.netmefy.netmefy.adapters.elements.PasoItem;
-import ar.com.netmefy.netmefy.services.NMF_Info;
+import ar.com.netmefy.netmefy.services.NMF;
 import ar.com.netmefy.netmefy.services.api.Api;
-import ar.com.netmefy.netmefy.services.api.entity.Tecnico;
 import ar.com.netmefy.netmefy.services.login.Session;
 
 public class PasosOTActivity extends AppCompatActivity {
@@ -26,6 +25,7 @@ public class PasosOTActivity extends AppCompatActivity {
     ListView listPasos;
     int ot_id;
     OtItem ot;
+    PasoItem[] pasosARealizar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,11 +36,11 @@ public class PasosOTActivity extends AppCompatActivity {
         ot_id =  inBundle.getInt("ot_id", -1);
         session = new Session(getApplicationContext());
 
-        ot = NMF_Info.tecnico.buscarOt(ot_id);
+        ot = NMF.tecnico.buscarOt(ot_id);
 
         api = Api.getInstance(getApplicationContext());
 
-        final PasoItem[] pasosARealizar = crearPasosSegunGestion(ot.getTipo_ot());
+        pasosARealizar = crearPasosSegunGestion(ot.getTipo_ot());
         listPasos = (ListView) findViewById(R.id.listPasos);
 
 
@@ -59,12 +59,53 @@ public class PasosOTActivity extends AppCompatActivity {
                     startActivity(pruebas);
                     //TODO: CUANDO VUELVE DE LAS PRUEVAS DEBERIA PONERSE EN DONE ESTA ACTIVIDAD
                 }
+
                 pasosARealizar[position].setDone(Boolean.TRUE);
-                if (position == pasosARealizar.length-1){
-                    finish();
+                if (pasosARealizar[position].getDone()) { //ESTADO realizado
+                    view.setBackgroundColor(Color.parseColor("#ff99cc00"));
+                } else { //ESTADO no hecho aun
+                    view.setBackgroundColor(Color.parseColor("#ffffbb33"));
+                }
+                //view.refreshDrawableState();
+                //parent.refreshDrawableState();
+                if (terminoTodosLosPasos()){
+                    //si la ot no esta cerrada la cierrto
+                    if(!ot.estaCerrado()){
+                        api.setEstadoOt(ot.getOt_id(), 3, new Response.Listener() {
+                            @Override
+                            public void onResponse(Object response) {
+                                Toast.makeText(getApplicationContext(), "Orden de trabajo cerrada", Toast.LENGTH_SHORT).show();
+                                finish();
+                            }
+                        });
+                    }else{
+                        finish();
+                    }
+
+
                 }
             }
         });
+        ////////////////////////
+        //si esta abierto lo paso a esta enCUrso();
+        if(ot.estaAbierto()){
+            api.setEstadoOt(ot_id, 2, new Response.Listener() {
+                @Override
+                public void onResponse(Object response) {
+                    Toast.makeText(getApplicationContext(), "Orden de trabajo En Curso", Toast.LENGTH_SHORT).show();
+                    //TODO. nose si haria falta
+                    ot.setEstado(2);
+                    ot.setEstado_desc("En curso");
+                }
+            });
+        }
+    }
+    private boolean terminoTodosLosPasos(){
+        for (PasoItem paso : pasosARealizar) {
+            if(!paso.getDone())
+                return false;
+        }
+        return true;
     }
 
     private PasoItem[] crearPasosSegunGestion(String tipoGestion) {

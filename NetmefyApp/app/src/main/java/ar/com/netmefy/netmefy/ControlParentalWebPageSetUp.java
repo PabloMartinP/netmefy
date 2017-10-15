@@ -7,7 +7,6 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import ar.com.netmefy.netmefy.router.Router;
-import ar.com.netmefy.netmefy.services.NMF_Info;
 
 public class ControlParentalWebPageSetUp extends AppCompatActivity {
 

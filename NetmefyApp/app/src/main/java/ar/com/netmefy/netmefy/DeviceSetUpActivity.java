@@ -14,9 +14,8 @@ import android.widget.Toast;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 
-import ar.com.netmefy.netmefy.adapters.elements.DeviceItem;
 import ar.com.netmefy.netmefy.router.Router;
-import ar.com.netmefy.netmefy.services.NMF_Info;
+import ar.com.netmefy.netmefy.services.NMF;
 import ar.com.netmefy.netmefy.services.Utils;
 import ar.com.netmefy.netmefy.services.WifiUtils;
 import ar.com.netmefy.netmefy.services.api.Api;
@@ -56,7 +55,7 @@ public class DeviceSetUpActivity extends AppCompatActivity {
                 new DeviceItem("11:22:33:44:55:66","Max OS X",R.drawable.search_128, "TV",  Boolean.TRUE)};
         */
 
-        device_selected = NMF_Info.findDeviceByMac(mac);
+        device_selected = NMF.findDeviceByMac(mac);
 
 
         circleImageView2 = (de.hdodenhof.circleimageview.CircleImageView) findViewById(R.id.tvDeviceConnected2);
@@ -117,29 +116,29 @@ public class DeviceSetUpActivity extends AppCompatActivity {
         boolean cambio ;
 
         /////////////////////////////////////////////////
-        final dispositivoInfo di = NMF_Info.findDeviceByMac(mac);
+        final dispositivoInfo di = NMF.findDeviceByMac(mac);
 
         di.apodo = apodo;
         di.tipo  = tipo;
         di.bloqueado = bloqueado;
         /*DeviceModel dm = di.toDeviceModel();
-        dm.cliente_sk = NMF_Info.clientInfo.id;
-        dm.router_sk = NMF_Info.clientInfo.router.router_sk;*/
+        dm.cliente_sk = NMF.cliente.id;
+        dm.router_sk = NMF.cliente.router.router_sk;*/
 
         String myMac = WifiUtils.getMacAddress(getApplicationContext());
 
         if(!myMac.equalsIgnoreCase(mac)){
             //blockOnRouter(di);
             final DeviceModel dm = di.toDeviceModel();
-            dm.cliente_sk = NMF_Info.clientInfo.id;
-            dm.router_sk = NMF_Info.clientInfo.router.router_sk;
+            dm.cliente_sk = NMF.cliente.id;
+            dm.router_sk = NMF.cliente.router.router_sk;
             saveOnApi(dm, di);
         /*
             api.updateDevice(dm, new Response.Listener() {
                 @Override
                 public void onResponse(Object response) {
                     if(!response.toString().equals("error")){
-                        NMF_Info.setDevice(di);
+                        NMF.setDevice(di);
                         //_this.finish();
                         progressBar.hide();
                         progressBar.dismiss();
@@ -164,7 +163,7 @@ public class DeviceSetUpActivity extends AppCompatActivity {
             @Override
             public void onResponse(Object response) {
                 if(!response.toString().equals("error")){
-                    NMF_Info.setDevice(di);
+                    NMF.setDevice(di);
                     //_this.finish();
                     progressBar.hide();
                     progressBar.dismiss();
@@ -184,8 +183,8 @@ public class DeviceSetUpActivity extends AppCompatActivity {
         if(di.bloqueado){
             //final Api api = Api.getInstance(getApplicationContext());
             final DeviceModel dm = di.toDeviceModel();
-            dm.cliente_sk = NMF_Info.clientInfo.id;
-            dm.router_sk = NMF_Info.clientInfo.router.router_sk;
+            dm.cliente_sk = NMF.cliente.id;
+            dm.router_sk = NMF.cliente.router.router_sk;
             if(di.bloqueado){
                 router.addBlockByMac(di.mac, new Response.Listener() {
                     @Override
@@ -213,7 +212,7 @@ public class DeviceSetUpActivity extends AppCompatActivity {
                             @Override
                             public void onResponse(Object response) {
 
-                                NMF_Info.setDevice(di);
+                                NMF.setDevice(di);
                                 //_this.finish();
                                 _this.setResult(RESULT_OK, null);
                                 _this.finish();

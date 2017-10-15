@@ -12,15 +12,13 @@ import android.widget.Toast;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.google.firebase.iid.FirebaseInstanceId;
 
 import ar.com.netmefy.netmefy.adapters.MySimpleOrdenesArrayAdapter;
-import ar.com.netmefy.netmefy.services.NMF_Info;
+import ar.com.netmefy.netmefy.services.NMF;
 import ar.com.netmefy.netmefy.services.Utils;
 import ar.com.netmefy.netmefy.services.api.Api;
 import ar.com.netmefy.netmefy.services.api.entity.Tecnico;
 import ar.com.netmefy.netmefy.services.login.Session;
-import ar.com.netmefy.netmefy.tecnico.TecnicoActivity;
 
 public class OrdenesDeTrabajoActivity extends AppCompatActivity {
     ListView lvOrdenesDeTrabajo;
@@ -41,21 +39,10 @@ public class OrdenesDeTrabajoActivity extends AppCompatActivity {
         lvOrdenesDeTrabajo = (ListView) findViewById(R.id.listOTFull);
 
         cargarOts();
-        /*MySimpleOrdenesArrayAdapter adapter = new MySimpleOrdenesArrayAdapter(this, tecnico.getOts());
-        lvOrdenesDeTrabajo.setAdapter(adapter);
-        lvOrdenesDeTrabajo.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent ot = new Intent(OrdenesDeTrabajoActivity.this, PasosOTActivity.class);
-                ot.putExtra("tipoGestion", tecnico.getOts()[position].getTipo_ot());
-                startActivity(ot);
-            }
-        });*/
     }
 
     private void cargarOts(){
-        MySimpleOrdenesArrayAdapter adapter = new MySimpleOrdenesArrayAdapter(getApplicationContext(), NMF_Info.tecnico.getOts());
+        MySimpleOrdenesArrayAdapter adapter = new MySimpleOrdenesArrayAdapter(getApplicationContext(), NMF.tecnico.getOts());
         lvOrdenesDeTrabajo.setAdapter(adapter);
 
         lvOrdenesDeTrabajo.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -63,9 +50,11 @@ public class OrdenesDeTrabajoActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent ot = new Intent(OrdenesDeTrabajoActivity.this, PasosOTActivity.class);
-                //ot.putExtra("tipoGestion", NMF_Info.tecnico.getOts()[position].getTipo_ot());
-                ot.putExtra("ot_id", NMF_Info.tecnico.getOts()[position].getOt_id());
-                startActivity(ot);
+                //ot.putExtra("tipoGestion", NMF.tecnico.getOts()[position].getTipo_ot());
+                ot.putExtra("ot_id", NMF.tecnico.getOts()[position].getOt_id());
+                //startActivity(ot);
+                startActivityForResult(ot, 1);
+
             }
         });
     }
@@ -77,12 +66,12 @@ public class OrdenesDeTrabajoActivity extends AppCompatActivity {
         final ProgressDialog pd = Utils.getProgressBar(_this, "Obteniendo información del técnico");
 
         pd.show();
-        api.getTecnico(NMF_Info.tipoUsuarioApp.username, new Response.Listener<Tecnico>() {
+        api.getTecnico(NMF.tipoUsuarioApp.username, new Response.Listener<Tecnico>() {
             @Override
             public void onResponse(Tecnico response) {
                 pd.hide();
                 pd.dismiss();
-                NMF_Info.tecnico = response;
+                NMF.tecnico = response;
                 cargarOts();
             }
         }, new Response.ErrorListener() {
@@ -93,6 +82,19 @@ public class OrdenesDeTrabajoActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), "Error al traer el técnico", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        getTecnicoFromApi();
+        /*Toast.makeText(getApplicationContext(), "recargar", Toast.LENGTH_SHORT).show();
+
+        if(resultCode==RESULT_CANCELED){
+            String jj;
+            Toast.makeText(getApplicationContext(), "recargar", Toast.LENGTH_SHORT).show();
+        }*/
     }
 
 }

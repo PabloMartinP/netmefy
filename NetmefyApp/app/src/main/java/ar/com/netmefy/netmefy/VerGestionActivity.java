@@ -7,7 +7,7 @@ import android.support.v7.widget.Toolbar;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import ar.com.netmefy.netmefy.services.NMF_Info;
+import ar.com.netmefy.netmefy.services.NMF;
 import ar.com.netmefy.netmefy.services.api.entity.reclamoListItemModel;
 import ar.com.netmefy.netmefy.services.api.entity.solicitudListItemModel;
 
@@ -31,7 +31,7 @@ public class VerGestionActivity extends AppCompatActivity {
 
         String titulo="", descripcion="", estado="";
         if(tipoGestion == 1){//solicitud
-            for (solicitudListItemModel solicitud: NMF_Info.solicitudes ) {
+            for (solicitudListItemModel solicitud: NMF.solicitudes ) {
                 if(solicitud.os_id == gestionId){
                     titulo = solicitud.tipo;
                     descripcion = solicitud.descripcion;
@@ -40,7 +40,7 @@ public class VerGestionActivity extends AppCompatActivity {
             }
         }else{
             //reclamo
-            for (reclamoListItemModel reclamo   : NMF_Info.reclamos ) {
+            for (reclamoListItemModel reclamo   : NMF.reclamos ) {
                 if(reclamo.ot_id == gestionId){
                     titulo = reclamo.tipo   ;
                     descripcion = reclamo.descripcion;
@@ -58,9 +58,9 @@ public class VerGestionActivity extends AppCompatActivity {
 
         descripcionGestion.setText(descripcion); //TODO poner lo que se puso de descripcion de gestio en el item de la lista que se seleccion y luego de un espacio poner la fecha del item.
 
-        estadoGestion.setText(estado); //TODO:poner el estado de la gestion
+        estadoGestion.setText(estado); //TODO:poner el estado_sk de la gestion
 
-        //TODO: Poner if de a cuerdo al estado de la gestion y cambiar el color del texto a los que estan abajo segun corresponda
+        //TODO: Poner if de a cuerdo al estado_sk de la gestion y cambiar el color del texto a los que estan abajo segun corresponda
         //estadoGestion.setTextColor(Color.GREEN); //TODO: para cerrado
         //estadoGestion.setTextColor(Color.BLUE); //TODO: para abierto
         //estadoGestion.setTextColor(Color.YELLOW); //TODO: para pendiente

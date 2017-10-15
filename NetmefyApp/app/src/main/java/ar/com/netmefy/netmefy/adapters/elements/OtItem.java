@@ -6,7 +6,7 @@ package ar.com.netmefy.netmefy.adapters.elements;
 
 public class OtItem {
     private int ot_id;
-    private Integer estado;
+    private int estado;
     private String estado_desc;
     private String fecha;
 
@@ -27,7 +27,7 @@ public class OtItem {
     public OtItem() {
     }
 
-    public OtItem(int ot_id, Integer estado, String estado_desc, String fecha, String nombreCliente, String direccion, String tipoDeVivienda, String tipo_ot, int cliente_sk) {
+    public OtItem(int ot_id, int estado, String estado_desc, String fecha, String nombreCliente, String direccion, String tipoDeVivienda, String tipo_ot, int cliente_sk) {
         this.ot_id = ot_id;
         this.estado = estado;
         this.estado_desc = estado_desc;
@@ -79,11 +79,11 @@ public class OtItem {
         this.ot_id = ot_id;
     }
 
-    public Integer getEstado() {
+    public int getEstado() {
         return estado;
     }
 
-    public void setEstado(Integer estado) {
+    public void setEstado(int estado) {
         this.estado = estado;
     }
 
@@ -101,5 +101,15 @@ public class OtItem {
 
     public void setFecha(String fecha) {
         this.fecha = fecha;
+    }
+
+    public boolean estaAbierto(){
+        return getEstado() == 1;//;
+    }
+    public boolean estaEnCurso(){
+        return getEstado() == 2;//;
+    }
+    public boolean estaCerrado(){
+        return getEstado() == 3;//;
     }
 }

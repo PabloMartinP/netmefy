@@ -5,8 +5,6 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
-import android.widget.ProgressBar;
 
 import com.android.volley.Response;
 import com.facebook.CallbackManager;
@@ -23,7 +21,7 @@ import org.json.JSONObject;
 
 import ar.com.netmefy.netmefy.MainActivity;
 import ar.com.netmefy.netmefy.R;
-import ar.com.netmefy.netmefy.services.NMF_Info;
+import ar.com.netmefy.netmefy.services.NMF;
 import ar.com.netmefy.netmefy.services.Utils;
 import ar.com.netmefy.netmefy.services.api.Api;
 import ar.com.netmefy.netmefy.services.api.entity.usuarioAddModel;
@@ -87,7 +85,7 @@ public class LoginActivity extends AppCompatActivity {
                         }
 
                         final usuarioAddModel user = new usuarioAddModel();
-                        user.cliente_sk = NMF_Info.tipoUsuarioApp.id;
+                        user.cliente_sk = NMF.tipoUsuarioApp.id;
                         user.usuario_email = fb_email;
                         user.usuario_nombre = fb_nombre;
                         user.usuario_sexo = fb_sexo;
@@ -104,7 +102,7 @@ public class LoginActivity extends AppCompatActivity {
                                         public void onResponse(Object response) {
                                             usuarioInfo userInfo = (usuarioInfo) response;
                                             userInfo.usuario_email = user.usuario_email;
-                                            NMF_Info.usuarioInfo = userInfo;
+                                            NMF.usuario = userInfo;
                                             session.setUsuarioInfo();
                                             progress.dismiss();
 
