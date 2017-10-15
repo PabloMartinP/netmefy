@@ -102,9 +102,13 @@ public class RouterConstants {
     }
 
     private void InitTPLink(){
-        UrlRouter.set_urlRoot("http://192.168.0.1/");
+        UrlRouter.set_urlRoot("http://192.168.2.1/");
+        //UrlRouter.set_urlRoot("http://192.168.55.1/");
+
         _urlRouters.put(eUrl.WIFI_GET_SSID, UrlRouter.createWithFinder("userRpm/WlanNetworkRpm.htm", "userRpm/MenuRpm.htm", "0, 8, 0, \"", "\", 108, ", "Error SSID!!"));
-        _urlRouters.put(eUrl.WIFI_GET_PASSWORD, UrlRouter.createWithFinder("userRpm/WlanSecurityRpm.htm", "userRpm/MenuRpm.htm",   "8, 1, 3, \"132\", 1, 0, \"\", 1812, \"\", \""     ,           "\", 1, 0, 0, 1", "Error Password!!" ));
+        //_urlRouters.put(eUrl.WIFI_GET_PASSWORD, UrlRouter.createWithFinder("userRpm/WlanSecurityRpm.htm", "userRpm/MenuRpm.htm",   "8, 1, 3, \"132\", 1, 0, \"\", 1812, \"\", \""     ,           "\", 1, 0, 0, 1", "Error Password!!" ));
+        _urlRouters.put(eUrl.WIFI_GET_PASSWORD, UrlRouter.createWithFinder("userRpm/WlanSecurityRpm.htm", "userRpm/MenuRpm.htm",   "8, 1, 3, \"333\", 1, 0, \"\", 1812, \"\", \""     ,           "\", 1, 0, 0, 1", "Error Password!!" ));
+
 
         _urlRouters.put(eUrl.LIST_CONNECTED, UrlRouter.create("userRpm/AssignedIpAddrListRpm.htm", "userRpm/MenuRpm.htm"));
 

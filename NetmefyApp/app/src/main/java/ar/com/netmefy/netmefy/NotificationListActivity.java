@@ -37,9 +37,7 @@ public class NotificationListActivity extends AppCompatActivity {
             public void onResponse(List<notificacionModel> notificaciones) {
                 List<notificacionModel> notificacionesGuardadas = session.getNotificaciones();
 
-
                 NMF.notificaciones = notificaciones;
-
                 for (notificacionModel nm : NMF.notificaciones ) {
                     for (notificacionModel nmg : notificacionesGuardadas) {
                         if(nm.notificacion_sk == nmg.notificacion_sk){

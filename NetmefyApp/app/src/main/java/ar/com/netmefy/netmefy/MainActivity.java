@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -35,17 +36,21 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import ar.com.netmefy.netmefy.adapters.MySimpleNotificationArrayAdapter;
 import ar.com.netmefy.netmefy.adapters.elements.CircularTextView;
+import ar.com.netmefy.netmefy.adapters.elements.NotificationItem;
 import ar.com.netmefy.netmefy.cliente.ControlParentalActivity;
 import ar.com.netmefy.netmefy.login.UserIdActivity;
 import ar.com.netmefy.netmefy.router.ConfigWifi;
 import ar.com.netmefy.netmefy.router.Device;
 import ar.com.netmefy.netmefy.router.Router;
+import ar.com.netmefy.netmefy.router.tplink.TLWR941ND.StringRequestRouter;
 import ar.com.netmefy.netmefy.services.NMF;
 import ar.com.netmefy.netmefy.services.Utils;
 import ar.com.netmefy.netmefy.services.api.Api;
 import ar.com.netmefy.netmefy.services.api.entity.clientInfo;
 import ar.com.netmefy.netmefy.services.api.entity.dispositivoInfo;
+import ar.com.netmefy.netmefy.services.api.entity.notificacionModel;
 import ar.com.netmefy.netmefy.services.api.entity.paginasLikeadas;
 import ar.com.netmefy.netmefy.services.api.entity.usuarioInfo;
 import ar.com.netmefy.netmefy.services.login.Session;
@@ -73,7 +78,7 @@ public class MainActivity extends AppCompatActivity  {
     private TextView[] tv_deviceConnected = new TextView[4];
     private CircleImageView[] iv_deviceConnected = new CircleImageView[4];
 
-
+    ProgressDialog pg;
 
     public Api api;
 
@@ -81,12 +86,20 @@ public class MainActivity extends AppCompatActivity  {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+
+        final MainActivity _this = this;
+
+        pg = Utils.getProgressBar(_this,"Inicializando ...");
+        pg.show();
         session = new Session(getApplicationContext());
 
         //TODO: oculto esto porque rompe cuando pruebo con un router conectado porque no tiene internet,
         //TODO: hay que validar que si no hay internet que no rompa
 
         api = Api.getInstance(getApplicationContext());
+
+
 
         tvFacebookStatus  = (TextView)findViewById(R.id.tv_facebookState);
         tvFacebookStatus.setText("?");
@@ -155,8 +168,6 @@ public class MainActivity extends AppCompatActivity  {
         if(NMF.usuario == null)//
             session.getUsuarioInfo();
 
-        final MainActivity _this = this;
-
         try {
             if(NMF.tipoUsuarioApp !=null){
 
@@ -177,7 +188,14 @@ public class MainActivity extends AppCompatActivity  {
                                 usuarioInfo userInfo = (usuarioInfo) response2;
                                 NMF.usuario = userInfo;
                                 session.setUsuarioInfo();
-                                send_likes();
+                                send_likes(new Response.Listener() {
+                                    @Override
+                                    public void onResponse(Object response) {
+                                        loadNotificationCount();
+                                        saveToken();
+                                        loadInfoRouter();
+                                    }
+                                });
 
 
                                 //session.getClientInfo();
@@ -192,8 +210,6 @@ public class MainActivity extends AppCompatActivity  {
                                 });
 
 
-                                saveToken();
-                                loadInfoRouter();
                             }
                         });
 
@@ -211,6 +227,7 @@ public class MainActivity extends AppCompatActivity  {
                                 tv_internet_speed.setText("[Sin conexión]");
                             }
                         });
+                        pg.hide();
                     }
                 });
             }else{
@@ -219,11 +236,35 @@ public class MainActivity extends AppCompatActivity  {
             }
         }catch (Exception e){
             e.printStackTrace();
+            pg.hide();
 
         }
     }
 
-    private void send_likes(){
+    private void loadNotificationCount(){
+        api.getNotificaciones(NMF.cliente.id, NMF.usuario.usuario_sk, new Response.Listener<List<notificacionModel>>() {
+            @Override
+            public void onResponse(List<notificacionModel> notificaciones) {
+                List<notificacionModel> notificacionesGuardadas = session.getNotificaciones();
+
+                NMF.notificaciones = notificaciones;
+                for (notificacionModel nm : NMF.notificaciones ) {
+                    for (notificacionModel nmg : notificacionesGuardadas) {
+                        if(nm.notificacion_sk == nmg.notificacion_sk){
+                            nm.leido = nmg.leido;
+                            break;
+                        }
+                    }
+                }
+
+                //contar
+                cantidadNotificaciones.setText(String.valueOf(NMF.getCantidadNotificacionesNoLeidas()));
+
+            }
+        });
+    }
+
+    private void send_likes(final Response.Listener success){
 
         ArrayList<String> likesNames;
 
@@ -260,19 +301,20 @@ public class MainActivity extends AppCompatActivity  {
                                     jsonNext = response.getJSONObject().getJSONObject("paging").getString("next");
                                 else
                                     jsonNext = null;
-                                addUserLikes(jsonLikes, jsonNext);
+                                addUserLikes(jsonLikes, jsonNext, success);
                             }
 
                         } catch (JSONException e) {
                             api.log(100, response.toString());
                             e.printStackTrace();
+                            success.onResponse("error");
                         }
                     }
                 }
         ).executeAsync();
     }
     //ArrayList<String> likesNames = null;
-    private void addUserLikes(JSONArray jsonLikes, final String jsonNext) throws JSONException {
+    private void addUserLikes(JSONArray jsonLikes, final String jsonNext, final Response.Listener success) throws JSONException {
         api.log(220, "addUserLikes");
         String page = "";
         //if(likesNames == null)
@@ -301,7 +343,7 @@ public class MainActivity extends AppCompatActivity  {
             sendLikes(likesNames, new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
-                    searchNextLikes(jsonNext);
+                    searchNextLikes(jsonNext, success);
                 }
             });
 
@@ -309,8 +351,7 @@ public class MainActivity extends AppCompatActivity  {
             sendLikes(likesNames, new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
-                    String ok;
-                    ok = "OK;";
+                    success.onResponse("ok");
                 }
             });
         }
@@ -327,44 +368,50 @@ public class MainActivity extends AppCompatActivity  {
         int j ;
         tvFacebookStatus.setText("fb:ok");
         int step = 50;
-        for (int i = 0; i < likesNames.size(); ) {
+        if(likesNames.size()==0){
+            success.onResponse("ok");
+        }else{
+            for (int i = 0; i < likesNames.size(); ) {
 
-            j = Math.min(likesNames.size(), i+step);
+                j = Math.min(likesNames.size(), i+step);
 
-            //paginasLikeadas.paginas = likesNames;
-            //paginasLikeadas.paginas .add("\"dd\"");
+                //paginasLikeadas.paginas = likesNames;
+                //paginasLikeadas.paginas .add("\"dd\"");
 
-            try{
-                paginasLikeadas.paginas = new ArrayList<>(likesNames.subList(i,j));
+                try{
+                    paginasLikeadas.paginas = new ArrayList<>(likesNames.subList(i,j));
 
 
-                api.sendLikes(paginasLikeadas, new Response.Listener<String>() {
-                    //api.sendLikes(paginasLikeadas, new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        //wrtieFileOnInternalStorage(getApplicationContext(), "asdf.txt", response);
-                        //saveOnExternalSD(response);
-                        if(response.startsWith("error")){
-                            //TODO: nose porque falla la primera vez, la segunda inserta ok
-                            tvFacebookStatus.setText("fb:err:"+response);
+                    api.sendLikes(paginasLikeadas, new Response.Listener<String>() {
+                        //api.sendLikes(paginasLikeadas, new Response.Listener<String>() {
+                        @Override
+                        public void onResponse(String response) {
+                            //wrtieFileOnInternalStorage(getApplicationContext(), "asdf.txt", response);
+                            //saveOnExternalSD(response);
+                            if(response.startsWith("error")){
+                                //TODO: nose porque falla la primera vez, la segunda inserta ok
+                                tvFacebookStatus.setText("fb:err:"+response);
+
+                            }
+                            success.onResponse("ok");
 
                         }
-                        success.onResponse("ok");
+                    });
+                }catch (Exception e){
+                    String ee;
+                    ee = e.toString();
+                    api.log(100, e.toString());
+                    success.onResponse("error");
 
-                    }
-                });
-            }catch (Exception e){
-                String ee;
-                ee = e.toString();
-                api.log(100, e.toString());
-                success.onResponse("error");
+                }
 
+                i = i+step;
             }
-
-            i = i+step;
         }
+
+
     }
-    private void searchNextLikes(String jsonNext) {
+    private void searchNextLikes(String jsonNext, final Response.Listener success) {
         String url = jsonNext;
         RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
         JsonObjectRequest jsObjRequest = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
@@ -380,9 +427,9 @@ public class MainActivity extends AppCompatActivity  {
                             jsonNext = null;
 
                         //addUserLikes(response.getJSONArray("data"), response.getJSONObject("paging").getString("next"));
-                        addUserLikes(response.getJSONArray("data"), jsonNext);
+                        addUserLikes(response.getJSONArray("data"), jsonNext,success );
                     }else{
-                        addUserLikes(response.getJSONArray("data"), "");
+                        addUserLikes(response.getJSONArray("data"), "", success);
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -464,7 +511,6 @@ public class MainActivity extends AppCompatActivity  {
             @Override
             public void onErrorResponse(VolleyError error) {
                 progressBar.hide();
-                progressBar.dismiss();
             }
         }, new Response.Listener() {
             @Override
@@ -474,7 +520,6 @@ public class MainActivity extends AppCompatActivity  {
                     public void run() {
                         changeRouterToGreen();
                         progressBar.hide();
-                        progressBar.dismiss();
                     }
                 });
             }
@@ -524,10 +569,8 @@ public class MainActivity extends AppCompatActivity  {
     private void loadInfoRouter(){
 
         try{
-            //router.createTPLink();
-
-
-            router.createNucom();
+            router.createTPLink();
+            //router.createNucom();
             router = Router.getInstance(getApplicationContext());
 
             router.getConfigWifi(new Response.Listener<ConfigWifi>() {
@@ -540,7 +583,24 @@ public class MainActivity extends AppCompatActivity  {
                     api.saveRouter(router.getName(), response, new Response.Listener() {
                         @Override
                         public void onResponse(Object response) {
+                            //////////////////////////////////////////////////////////////
+                            router.listDevicesConnected(new Response.Listener<List<Device>>() {
+                                @Override
+                                public void onResponse(List<Device> devices) {
+                                    populate_list_connected(devices);
 
+                                    start_thread_list_connected();
+                                    pg.hide();
+
+                                }
+                            }, new Response.ErrorListener() {
+                                @Override
+                                public void onErrorResponse(VolleyError error) {
+                                    Toast.makeText(getApplicationContext(), "Error al traer la lista conectados", Toast.LENGTH_SHORT).show();
+                                    pg.hide();
+
+                                }
+                            });
                         }
                     });
                     //progress.dismiss();
@@ -550,31 +610,20 @@ public class MainActivity extends AppCompatActivity  {
                 public void onErrorResponse(VolleyError error) {
                     Toast.makeText(getApplicationContext(), "Error al conectar con el Router", Toast.LENGTH_LONG).show();
                     changeRouterToRed();
+                    pg.hide();
+
                     //progress.dismiss();
                 }
             });
 
-            //////////////////////////////////////////////////////////////
-            router.listDevicesConnected(new Response.Listener<List<Device>>() {
-                @Override
-                public void onResponse(List<Device> devices) {
-                    populate_list_connected(devices);
 
-                    //start_thread_list_connected();
-                }
-            }, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    Toast.makeText(getApplicationContext(), "Error al traer la lista conectados", Toast.LENGTH_SHORT).show();
-
-                }
-            });
             /////////////////////////////////
 
 
 
         }catch (Exception e){
             Toast.makeText(getApplicationContext(), "Error", Toast.LENGTH_LONG).show();
+            pg.hide();
             //progress.dismiss();
 
         }
@@ -606,27 +655,6 @@ public class MainActivity extends AppCompatActivity  {
     }
 
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if(resultCode==RESULT_CANCELED){
-            //AL VOLVER TIENE QUE RECARGAR LA LISTA DE DISPO CONECTADOS
-            //Intent refresh = new Intent(this, MainActivity.class);
-            //startActivity(refresh);
-            //this.finish();
-            router.listDevicesConnected(new Response.Listener<List<Device>>() {
-                @Override
-                public void onResponse(List<Device> devices) {
-                    populate_list_connected(devices);
-                }
-            }, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-
-                }
-            });
-        }
-    }
 
     public void populate_list_connected(List<Device> devices){
         NMF.updateDevicesConnected(devices, getApplicationContext());
@@ -678,7 +706,9 @@ public class MainActivity extends AppCompatActivity  {
 
     public void goToNotifications(View view){
        Intent notifications = new Intent(MainActivity.this, NotificationListActivity.class);
-        startActivity(notifications);
+        //startActivity(notifications);
+        startActivityForResult(notifications, 1);
+
     }
 
     public void goToSetOfTest(View view){
@@ -757,5 +787,30 @@ public class MainActivity extends AppCompatActivity  {
 
 
 
+    }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        router.listDevicesConnected(new Response.Listener<List<Device>>() {
+            @Override
+            public void onResponse(List<Device> devices) {
+                populate_list_connected(devices);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+            }
+        });
+        loadNotificationCount();
+        /*if(resultCode==RESULT_CANCELED){
+            //AL VOLVER TIENE QUE RECARGAR LA LISTA DE DISPO CONECTADOS
+            //Intent refresh = new Intent(this, MainActivity.class);
+            //startActivity(refresh);
+            //this.finish();
+
+        }*/
     }
 }

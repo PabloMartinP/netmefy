@@ -129,4 +129,14 @@ public class NMF {
         session.setNotificaciones(NMF.notificaciones);
 
     }
+
+
+    public static int getCantidadNotificacionesNoLeidas() {
+        int cant = 0 ;
+        for (notificacionModel n : NMF.notificaciones) {
+            if(!n.leido )
+                cant ++;
+        }
+        return cant;
+    }
 }
