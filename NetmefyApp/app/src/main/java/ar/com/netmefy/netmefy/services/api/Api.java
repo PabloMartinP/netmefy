@@ -25,6 +25,7 @@ import ar.com.netmefy.netmefy.services.NMF_Info;
 import ar.com.netmefy.netmefy.services.Utils;
 import ar.com.netmefy.netmefy.services.api.entity.DeviceModel;
 import ar.com.netmefy.netmefy.services.api.entity.SaveToken;
+import ar.com.netmefy.netmefy.services.api.entity.Tecnico;
 import ar.com.netmefy.netmefy.services.api.entity.Token;
 import ar.com.netmefy.netmefy.services.api.entity.clientInfo;
 import ar.com.netmefy.netmefy.services.api.entity.dispositivoInfo;
@@ -840,12 +841,12 @@ public  class Api {
         execute(rq);
     }
 
-    public void addTest(int vel_mb, int ping, int dB, final Response.Listener success){
+    public void addTest(int cliente_sk, int ot_id, int vel_mb, int ping, int dB, final Response.Listener success){
         testModel test = new testModel();
-        test.cliente_sk = NMF_Info.clientInfo.id;
+        test.cliente_sk = cliente_sk;
         test.vel_mb_medidos = vel_mb;
         test.potencia_recep = dB;
-        test.ot_id = null;
+        test.ot_id = ot_id;
         test.comentario = "";
         test.flag_cableado_nuevo = null;
         test.flag_instalacion = -1;
@@ -871,6 +872,22 @@ public  class Api {
                 success.onResponse(null);
             }
         });
+        execute(rq);
+    }
+
+    public void getTecnico(String username, final Response.Listener<Tecnico> success, final Response.ErrorListener error){
+        final Gson gson = new Gson();
+        String url = "http://200.82.0.24/api/tecnicos/"+username;
+        JsonRequestApi rq = new JsonRequestApi(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                Tecnico tecnico ;///= new Tecnico();
+                tecnico = gson.fromJson(response.toString(), Tecnico.class);
+                NMF_Info.tecnico =tecnico;
+
+                success.onResponse(NMF_Info.tecnico);
+            }
+        }, error);
         execute(rq);
     }
 

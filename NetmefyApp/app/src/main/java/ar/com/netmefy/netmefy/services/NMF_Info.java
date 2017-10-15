@@ -11,6 +11,7 @@ import ar.com.netmefy.netmefy.adapters.elements.DeviceItem;
 import ar.com.netmefy.netmefy.router.Device;
 import ar.com.netmefy.netmefy.services.api.Api;
 import ar.com.netmefy.netmefy.services.api.entity.DeviceModel;
+import ar.com.netmefy.netmefy.services.api.entity.Tecnico;
 import ar.com.netmefy.netmefy.services.api.entity.clientInfo;
 import ar.com.netmefy.netmefy.services.api.entity.dispositivoInfo;
 import ar.com.netmefy.netmefy.services.api.entity.notificacionModel;
@@ -33,6 +34,7 @@ public class NMF_Info {
     public static List<solicitudListItemModel> solicitudes;
     public static List<reclamoListItemModel> reclamos;
 
+    public static Tecnico tecnico;
 
     public static void setDevice_sk(String mac, int sk){
         for (dispositivoInfo disp : NMF_Info.clientInfo.router.devices ) {

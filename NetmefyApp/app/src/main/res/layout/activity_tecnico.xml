@@ -179,7 +179,7 @@
             android:layout_margin="3dp"
             android:layout_weight="1"
             android:background="@android:color/holo_orange_light"
-            android:onClick="goToReclamosList"
+            android:onClick="goToSetOfTest"
             android:orientation="vertical">
 
             <ImageView
@@ -191,6 +191,7 @@
                 android:layout_marginRight="8dp"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
+                android:onClick="goToSetOfTest"
                 android:src="@drawable/wrench_128"
                 android:visibility="visible"
                 app:layout_constraintLeft_toLeftOf="parent"

@@ -12,6 +12,7 @@ import com.android.volley.VolleyError;
 import com.google.firebase.iid.FirebaseInstanceId;
 
 import ar.com.netmefy.netmefy.adapters.MySimplePasosArrayAdapter;
+import ar.com.netmefy.netmefy.adapters.elements.OtItem;
 import ar.com.netmefy.netmefy.adapters.elements.PasoItem;
 import ar.com.netmefy.netmefy.services.NMF_Info;
 import ar.com.netmefy.netmefy.services.api.Api;
@@ -23,7 +24,8 @@ public class PasosOTActivity extends AppCompatActivity {
     private Session session;
     private Api api;
     ListView listPasos;
-
+    int ot_id;
+    OtItem ot;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,19 +33,14 @@ public class PasosOTActivity extends AppCompatActivity {
         setContentView(R.layout.activity_pasos_ot);
         Bundle inBundle = getIntent().getExtras();
         tipoGestion =  inBundle.getString("tipoGestion");
+        ot_id =  inBundle.getInt("ot_id", -1);
         session = new Session(getApplicationContext());
 
-        api = Api.getInstance(getApplicationContext());
-        api.LogIn("netmefy", "yfemten", new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                saveToken();
-            }
-        });
+        ot = NMF_Info.tecnico.buscarOt(ot_id);
+
         api = Api.getInstance(getApplicationContext());
 
-        saveToken();
-        final PasoItem[] pasosARealizar = crearPasosSegunGestion(tipoGestion);
+        final PasoItem[] pasosARealizar = crearPasosSegunGestion(ot.getTipo_ot());
         listPasos = (ListView) findViewById(R.id.listPasos);
 
 
@@ -57,6 +54,8 @@ public class PasosOTActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if(pasosARealizar[position].getPruebasDeRed()) {
                     Intent pruebas = new Intent(PasosOTActivity.this, PruebasActivity.class);
+                    pruebas.putExtra("ot_id", ot.getOt_id());
+                    pruebas.putExtra("ot_cliente_sk", ot.getCliente_sk());
                     startActivity(pruebas);
                     //TODO: CUANDO VUELVE DE LAS PRUEVAS DEBERIA PONERSE EN DONE ESTA ACTIVIDAD
                 }
@@ -97,25 +96,4 @@ public class PasosOTActivity extends AppCompatActivity {
     }
 
 
-    private void saveToken(){
-        try {
-            session.getClientInfo();
-            if(NMF_Info.clientInfo!=null){
-                api.saveFirebaseToken(NMF_Info.clientInfo.id, session.getUserType(), FirebaseInstanceId.getInstance().getToken(), new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        response = response.toString();
-                    }
-                }, new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        String j= error.toString();
-                    }
-                });
-            }
-
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        }
-    }
 }

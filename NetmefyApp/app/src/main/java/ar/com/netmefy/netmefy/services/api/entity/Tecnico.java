@@ -16,6 +16,14 @@ public class Tecnico {
     private Float calificacion ;
     private OtItem[] ots ;
 
+    public OtItem buscarOt(int ot_id){
+        for (OtItem ot : ots) {
+            if(ot.getOt_id() == ot_id)
+                return ot;
+        }
+        return null;
+    }
+
     public Tecnico() {
     }
 

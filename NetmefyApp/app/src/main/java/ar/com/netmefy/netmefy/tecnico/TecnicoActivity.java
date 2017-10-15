@@ -1,5 +1,6 @@
 package ar.com.netmefy.netmefy.tecnico;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -9,23 +10,21 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.google.firebase.iid.FirebaseInstanceId;
 
-import ar.com.netmefy.netmefy.GestionesActivity;
-import ar.com.netmefy.netmefy.MainActivity;
 import ar.com.netmefy.netmefy.OrdenesDeTrabajoActivity;
 import ar.com.netmefy.netmefy.PasosOTActivity;
 import ar.com.netmefy.netmefy.PruebasActivity;
 import ar.com.netmefy.netmefy.R;
 import ar.com.netmefy.netmefy.adapters.MySimpleOrdenesArrayAdapter;
-import ar.com.netmefy.netmefy.adapters.elements.OtItem;
 import ar.com.netmefy.netmefy.login.UserIdActivity;
 import ar.com.netmefy.netmefy.services.NMF_Info;
 import ar.com.netmefy.netmefy.services.api.Api;
 import ar.com.netmefy.netmefy.services.api.entity.Tecnico;
+import ar.com.netmefy.netmefy.services.api.entity.clientInfo;
 import ar.com.netmefy.netmefy.services.login.Session;
 
 public class TecnicoActivity extends AppCompatActivity {
@@ -55,62 +54,57 @@ public class TecnicoActivity extends AppCompatActivity {
         session = new Session(getApplicationContext());
 
         api = Api.getInstance(getApplicationContext());
-        api.LogIn("netmefy", "yfemten", new Response.Listener<String>() {
+        /*api.LogIn("netmefy", "yfemten", new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 saveToken();
             }
-        });
-        api = Api.getInstance(getApplicationContext());
+        });*/
 
-        saveToken();
+        final Activity _this = this;
+        //saveToken();
         //TODO: REMPLAZAR POR LO QUE SE TRAE DE LA API
-        tecnico = new Tecnico();
-        legajoTecnico.setText(tecnico.getId());
-        mailTecnico.setText(tecnico.getEmail());
-        nombreDeTecnico.setText(tecnico.getNombre());
-        calificacionTecnico.setRating(tecnico.getCalificacion());
-
-
-        MySimpleOrdenesArrayAdapter adapter = new MySimpleOrdenesArrayAdapter(this, tecnico.getOts());
-        lvOrdenesDeTrabajo.setAdapter(adapter);
-
-        lvOrdenesDeTrabajo.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
+        api.getTecnico(NMF_Info.tipoUsuarioApp.username, new Response.Listener<Tecnico>() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent ot = new Intent(TecnicoActivity.this, PasosOTActivity.class);
-                ot.putExtra("tipoGestion", tecnico.getOts()[position].getTipoDeGestion());
-                startActivity(ot);
-            }
-        });
+            public void onResponse(Tecnico response) {
+                NMF_Info.tecnico = response;
 
-    }
+                legajoTecnico.setText(NMF_Info.tecnico.getId());
+                mailTecnico.setText(NMF_Info.tecnico.getEmail());
+                nombreDeTecnico.setText(NMF_Info.tecnico.getNombre());
+                calificacionTecnico.setRating(NMF_Info.tecnico.getCalificacion());
 
-    private void saveToken(){
-       try {
-            session.getClientInfo();
-            if(NMF_Info.clientInfo!=null){
-                api.saveFirebaseToken(NMF_Info.clientInfo.id, session.getUserType(), FirebaseInstanceId.getInstance().getToken(), new Response.Listener<String>() {
+                ///////////////////////////////
+                MySimpleOrdenesArrayAdapter adapter = new MySimpleOrdenesArrayAdapter(getApplicationContext(), NMF_Info.tecnico.getOts());
+                lvOrdenesDeTrabajo.setAdapter(adapter);
+
+                lvOrdenesDeTrabajo.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
                     @Override
-                    public void onResponse(String response) {
-                        response = response.toString();
-                    }
-                }, new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        String j= error.toString();
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        Intent ot = new Intent(TecnicoActivity.this, PasosOTActivity.class);
+                        //ot.putExtra("tipoGestion", NMF_Info.tecnico.getOts()[position].getTipo_ot());
+                        ot.putExtra("ot_id", NMF_Info.tecnico.getOts()[position].getOt_id());
+                        startActivity(ot);
                     }
                 });
             }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(getApplicationContext(), "Error al traer el tecnico", Toast.LENGTH_SHORT).show();
+            }
+        });
 
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        }
+
+
     }
 
     public void goToSetOfTest(View view){
         Intent tests = new Intent(TecnicoActivity.this, PruebasActivity.class);
+        tests.putExtra("ot_cliente_sk", -1);
+        tests.putExtra("ot_id", -1);
+
         startActivity(tests);
     }
 

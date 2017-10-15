@@ -700,11 +700,14 @@ public class MainActivity extends AppCompatActivity  {
 
     public void goToSetOfTest(View view){
         Intent tests = new Intent(MainActivity.this, PruebasActivity.class);
+        tests.putExtra("ot_cliente_sk", NMF_Info.clientInfo.id);
+        tests.putExtra("ot_id", -1);
         startActivity(tests);
     }
 
     public void goToGestiones(View view){
         Intent gestiones = new Intent(MainActivity.this, GestionesActivity.class);
+
         startActivity(gestiones);
     }
 

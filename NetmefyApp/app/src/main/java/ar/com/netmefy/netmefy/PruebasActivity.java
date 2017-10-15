@@ -2,10 +2,12 @@ package ar.com.netmefy.netmefy;
 
 import android.content.Context;
 import android.os.Handler;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -19,6 +21,7 @@ import java.io.StringReader;
 
 import ar.com.netmefy.netmefy.router.models.InternetSpeed;
 import ar.com.netmefy.netmefy.router.models.WifiSignalResult;
+import ar.com.netmefy.netmefy.services.NMF_Info;
 import ar.com.netmefy.netmefy.services.WifiUtils;
 import ar.com.netmefy.netmefy.services.api.Api;
 
@@ -30,11 +33,20 @@ public class PruebasActivity extends AppCompatActivity {
     ProgressBar loadingBarTestSpeed;
     TextView tvVelocidadDeInternetTitle;
     TextView tvPingAMostrar;
+    FloatingActionButton saveButton;
     Api api ;
+    int cliente_sk;
+    int ot_id;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pruebas);
+
+        Bundle inBundle = getIntent().getExtras();
+        cliente_sk=  inBundle.getInt("ot_cliente_sk", -1);
+        ot_id=  inBundle.getInt("ot_id", -1);
+
+
 
         api = Api.getInstance(getApplicationContext());
 
@@ -46,9 +58,17 @@ public class PruebasActivity extends AppCompatActivity {
         tvVelocidad.setText("0 Mbps");
         tvPingAMostrar = (TextView) findViewById(R.id.tvPingAMostrar) ;
         loadingBarTestSpeed.setVisibility(View.INVISIBLE);
+        saveButton =(FloatingActionButton) findViewById(R.id.tests_saveButton);
+
+        if(cliente_sk == -1)
+            saveButton.setVisibility(View.INVISIBLE);
+
+
         startSignalWifi();
         startPing();
         startSpeedTest();
+
+
     }
 
     public void refreshSignal(View view){
@@ -215,8 +235,12 @@ public class PruebasActivity extends AppCompatActivity {
         int ping = (int)ping_ok;
         int dB = (int)dB_ok;
 
+        if(cliente_sk == -1)
+            cliente_sk = NMF_Info.clientInfo.id;
 
-        api.addTest(vel_mb, ping, dB, new Response.Listener() {
+
+
+        api.addTest(cliente_sk, ot_id, vel_mb, ping, dB, new Response.Listener() {
             @Override
             public void onResponse(Object response) {
                 if(response==null){

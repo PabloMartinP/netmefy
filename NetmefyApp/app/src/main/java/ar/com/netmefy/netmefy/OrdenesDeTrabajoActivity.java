@@ -5,7 +5,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.ListView;
 
 import com.android.volley.Response;
@@ -17,7 +16,6 @@ import ar.com.netmefy.netmefy.services.NMF_Info;
 import ar.com.netmefy.netmefy.services.api.Api;
 import ar.com.netmefy.netmefy.services.api.entity.Tecnico;
 import ar.com.netmefy.netmefy.services.login.Session;
-import ar.com.netmefy.netmefy.tecnico.TecnicoActivity;
 
 public class OrdenesDeTrabajoActivity extends AppCompatActivity {
     ListView lvOrdenesDeTrabajo;
@@ -32,15 +30,7 @@ public class OrdenesDeTrabajoActivity extends AppCompatActivity {
         session = new Session(getApplicationContext());
 
         api = Api.getInstance(getApplicationContext());
-        api.LogIn("netmefy", "yfemten", new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                saveToken();
-            }
-        });
-        api = Api.getInstance(getApplicationContext());
 
-        saveToken();
 
         tecnico = new Tecnico();
         lvOrdenesDeTrabajo = (ListView) findViewById(R.id.listOTFull);
@@ -55,7 +45,7 @@ public class OrdenesDeTrabajoActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent ot = new Intent(OrdenesDeTrabajoActivity.this, PasosOTActivity.class);
-                ot.putExtra("tipoGestion", tecnico.getOts()[position].getTipoDeGestion());
+                ot.putExtra("tipoGestion", tecnico.getOts()[position].getTipo_ot());
                 startActivity(ot);
             }
         });
@@ -65,25 +55,4 @@ public class OrdenesDeTrabajoActivity extends AppCompatActivity {
 
     }
 
-    private void saveToken(){
-        try {
-            session.getClientInfo();
-            if(NMF_Info.clientInfo!=null){
-                api.saveFirebaseToken(NMF_Info.clientInfo.id, session.getUserType(), FirebaseInstanceId.getInstance().getToken(), new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        response = response.toString();
-                    }
-                }, new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        String j= error.toString();
-                    }
-                });
-            }
-
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        }
-    }
 }

@@ -35,23 +35,28 @@ public class MySimpleOrdenesArrayAdapter extends ArrayAdapter<OtItem> {
         TextView textView2 = (TextView) rowView.findViewById(R.id.secondLine);
         TextView textView3 = (TextView) rowView.findViewById(R.id.thirdLine);
         ImageView imageView = (ImageView) rowView.findViewById(R.id.circleImageView2);
-        textView1.setText(values[position].getNombreCliente());
-        textView2.setText(values[position].getDireccion());
-        textView3.setText(values[position].getTipoDeVivienda());
+        textView1.setText(values[position].getCliente_desc());
+        textView2.setText(values[position].getCliente_direccion());
+        textView3.setText(values[position].getCliente_tipo_casa());
         Integer statusOt = values[position].getEstado();
 
-        if (values[position].getTipoDeVivienda().equalsIgnoreCase("casa")) {
+        if (values[position].getCliente_tipo_casa().equalsIgnoreCase("casa")) {
             imageView.setImageResource(R.drawable.casa_128);
         }else {
             imageView.setImageResource(R.drawable.dpto_128);
 
         }
+
+        //rowView.setBackgroundColor(Color.parseColor("#aaaaaa00"));
         if (statusOt == 1) { //ESTADO ABIERTO
-            rowView.setBackgroundColor(Color.parseColor("#aaa"));
+            rowView.setBackgroundColor(Color.parseColor("#aaaaaa00"));
+            //rowView.setBackgroundColor(Color.BLUE);
         } else if (statusOt == 2) { //ESTADO EN CURSO
             rowView.setBackgroundColor(Color.parseColor("#ffff8800"));
+            //rowView.setBackgroundColor(Color.YELLOW);
         } else if (statusOt==3){//ESTADO CERRADO
             rowView.setBackgroundColor(Color.parseColor("#ff99cc00"));
+            //rowView.setBackgroundColor(Color.GREEN);
         }
 
         return rowView;
