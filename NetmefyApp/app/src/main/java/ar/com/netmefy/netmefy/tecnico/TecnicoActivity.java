@@ -1,6 +1,7 @@
 package ar.com.netmefy.netmefy.tecnico;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -22,6 +23,7 @@ import ar.com.netmefy.netmefy.R;
 import ar.com.netmefy.netmefy.adapters.MySimpleOrdenesArrayAdapter;
 import ar.com.netmefy.netmefy.login.UserIdActivity;
 import ar.com.netmefy.netmefy.services.NMF_Info;
+import ar.com.netmefy.netmefy.services.Utils;
 import ar.com.netmefy.netmefy.services.api.Api;
 import ar.com.netmefy.netmefy.services.api.entity.Tecnico;
 import ar.com.netmefy.netmefy.services.api.entity.clientInfo;
@@ -38,7 +40,7 @@ public class TecnicoActivity extends AppCompatActivity {
     TextView nombreDeTecnico;
     RatingBar calificacionTecnico;
     ListView lvOrdenesDeTrabajo;
-
+    Activity _this;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,50 +56,54 @@ public class TecnicoActivity extends AppCompatActivity {
         session = new Session(getApplicationContext());
 
         api = Api.getInstance(getApplicationContext());
-        /*api.LogIn("netmefy", "yfemten", new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                saveToken();
-            }
-        });*/
+        _this = this;
 
-        final Activity _this = this;
-        //saveToken();
-        //TODO: REMPLAZAR POR LO QUE SE TRAE DE LA API
+        getTecnicoFromApi();
+
+    }
+    private void getTecnicoFromApi(){
+        final ProgressDialog pd = Utils.getProgressBar(_this, "Obteniendo información del técnico");
+
+        pd.show();
         api.getTecnico(NMF_Info.tipoUsuarioApp.username, new Response.Listener<Tecnico>() {
             @Override
             public void onResponse(Tecnico response) {
+                pd.hide();
+                pd.dismiss();
                 NMF_Info.tecnico = response;
-
-                legajoTecnico.setText(NMF_Info.tecnico.getId());
-                mailTecnico.setText(NMF_Info.tecnico.getEmail());
-                nombreDeTecnico.setText(NMF_Info.tecnico.getNombre());
-                calificacionTecnico.setRating(NMF_Info.tecnico.getCalificacion());
-
-                ///////////////////////////////
-                MySimpleOrdenesArrayAdapter adapter = new MySimpleOrdenesArrayAdapter(getApplicationContext(), NMF_Info.tecnico.getOts());
-                lvOrdenesDeTrabajo.setAdapter(adapter);
-
-                lvOrdenesDeTrabajo.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-                    @Override
-                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        Intent ot = new Intent(TecnicoActivity.this, PasosOTActivity.class);
-                        //ot.putExtra("tipoGestion", NMF_Info.tecnico.getOts()[position].getTipo_ot());
-                        ot.putExtra("ot_id", NMF_Info.tecnico.getOts()[position].getOt_id());
-                        startActivity(ot);
-                    }
-                });
+                cargarInfoTecnico();
+                cargarOts();
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+                pd.hide();
+                pd.dismiss();
                 Toast.makeText(getApplicationContext(), "Error al traer el tecnico", Toast.LENGTH_SHORT).show();
             }
         });
+    }
 
+    private void cargarOts(){
+        MySimpleOrdenesArrayAdapter adapter = new MySimpleOrdenesArrayAdapter(getApplicationContext(), NMF_Info.tecnico.getOts());
+        lvOrdenesDeTrabajo.setAdapter(adapter);
 
+        lvOrdenesDeTrabajo.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent ot = new Intent(TecnicoActivity.this, PasosOTActivity.class);
+                //ot.putExtra("tipoGestion", NMF_Info.tecnico.getOts()[position].getTipo_ot());
+                ot.putExtra("ot_id", NMF_Info.tecnico.getOts()[position].getOt_id());
+                startActivity(ot);
+            }
+        });
+    }
+    private void cargarInfoTecnico(){
+        legajoTecnico.setText(NMF_Info.tecnico.getId());
+        mailTecnico.setText(NMF_Info.tecnico.getEmail());
+        nombreDeTecnico.setText(NMF_Info.tecnico.getNombre());
+        calificacionTecnico.setRating(NMF_Info.tecnico.getCalificacion());
     }
 
     public void goToSetOfTest(View view){
@@ -109,7 +115,7 @@ public class TecnicoActivity extends AppCompatActivity {
     }
 
     public void refreshOt (View view){
-        //TODO REFRESCAR LISTA
+        getTecnicoFromApi();
     }
 
     public void goToFullOt(View view){

@@ -881,11 +881,15 @@ public  class Api {
         JsonRequestApi rq = new JsonRequestApi(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                Tecnico tecnico ;///= new Tecnico();
-                tecnico = gson.fromJson(response.toString(), Tecnico.class);
-                NMF_Info.tecnico =tecnico;
+                if(response!=null){
+                    Tecnico tecnico ;///= new Tecnico();
+                    tecnico = gson.fromJson(response.toString(), Tecnico.class);
+                    NMF_Info.tecnico =tecnico;
+                    success.onResponse(NMF_Info.tecnico);
+                }else{
+                    error.onErrorResponse(new VolleyError("error al traer el tecnico"));
+                }
 
-                success.onResponse(NMF_Info.tecnico);
             }
         }, error);
         execute(rq);

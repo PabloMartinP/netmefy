@@ -226,6 +226,8 @@ public class PruebasActivity extends AppCompatActivity {
     }
 
     public void saveTest (View view){
+        if(tvPingAMostrar.getText().toString().equals("..."))
+            return;
         //TODO: PONER ACA PARA GUARDAR EL TEST QUE SE REALIZO
         double vel_mb_ok  = Double.parseDouble(tvVelocidad.getText().toString().replace("Mbps", ""));
         double ping_ok = Double.parseDouble(tvPingAMostrar.getText().toString().replace("ms", ""));
@@ -253,4 +255,5 @@ public class PruebasActivity extends AppCompatActivity {
             }
         });
     }
+
 }

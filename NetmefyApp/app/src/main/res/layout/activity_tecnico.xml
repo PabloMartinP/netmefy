@@ -13,10 +13,9 @@
         android:background="@android:color/holo_green_light"
         android:minHeight="?attr/actionBarSize"
         android:theme="?attr/actionBarTheme"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        android:onClick="goToFullOt"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintTop_toBottomOf="@+id/linearLayout4" />
 
     <TextView
@@ -27,24 +26,27 @@
         android:layout_marginLeft="16dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
+        android:onClick="goToFullOt"
         android:text="Ordenes de Trabajo "
         android:textColor="@android:color/background_light"
         android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="@+id/toolbar"
         app:layout_constraintLeft_toRightOf="@+id/imageView"
         app:layout_constraintTop_toTopOf="@+id/toolbar" />
+
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="37dp"
         android:layout_height="33dp"
-        app:srcCompat="@drawable/ot_128"
+        android:layout_marginBottom="8dp"
         android:layout_marginLeft="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="7dp"
+        android:onClick="goToFullOt"
+        app:layout_constraintBottom_toBottomOf="@+id/toolbar"
         app:layout_constraintLeft_toLeftOf="@+id/toolbar"
         app:layout_constraintTop_toTopOf="@+id/toolbar"
-        android:layout_marginTop="7dp"
-        android:layout_marginStart="8dp"
-        app:layout_constraintBottom_toBottomOf="@+id/toolbar"
-        android:layout_marginBottom="8dp" />
+        app:srcCompat="@drawable/ot_128" />
 
     <ImageButton
         android:id="@+id/refreshOrdenes"
