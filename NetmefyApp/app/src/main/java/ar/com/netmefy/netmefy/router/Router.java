@@ -245,20 +245,13 @@ public abstract class Router {
         }
     }
 
+
     public void listDevicesConnected(final Response.Listener listener, Response.ErrorListener errorListener ) {
-        /*
-        * ESTE TPLINK AL PARECER ACUMULA LA LISTA DE LOS DHCP,
-        * Y CUANDO SE DESCONECTA UNO NO LO LIMPIA DE LA LISTA,
-        * ASI QUE MUESTRA ALGUNOS DEVICES QUE YA SE DESCONECTARON
-        * POR AHORA LA SOLUCION SERIA RESTART
-        * */
         executeRequest(_routerConstants.get(eUrl.LIST_CONNECTED), new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 try{
                     List<Device> list = parseHtmlListDevices(response);
-
-
 
                     listener.onResponse(list);
                 }catch (Exception ex){

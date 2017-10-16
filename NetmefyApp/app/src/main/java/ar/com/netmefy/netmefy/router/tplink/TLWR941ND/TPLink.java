@@ -161,7 +161,78 @@ public class TPLink extends Router {
     public void logout(final Response.Listener listener,final Response.ErrorListener errorListener){
 
     }
-    
+
+    private List<Device> parseHtmlListDevicesFromWifiStatics(String html){
+        String result = html;
+        String find = "var hostList = new Array(\n";
+        int pinit;
+        pinit = result.indexOf(find) + find.length();
+        result = result.substring(pinit);//para que empiece desde el find
+        int pend;
+        //pend = result.indexOf("0,0 );");
+        pend = result.indexOf("</SCRIPT>");
+
+        String aux ;
+        aux = result.substring(0, pend);
+
+        String[] devicesString = aux.split("\n");
+        List<Device> listDevicesAux = new ArrayList<Device>();
+        Device device;
+        for (int i=0;i<devicesString.length-1;i++){
+            device = new Device();
+            device.setMac(devicesString[i].split("\"")[1]);
+            listDevicesAux.add(device);
+        }
+
+        List<Device>  listDevices;
+        listDevices = listDevicesAux;
+        return listDevices;
+    }
+
+    @Override
+    public void listDevicesConnected(final Response.Listener listener, final Response.ErrorListener errorListener ) {
+        final UrlRouter urlRouter =  _routerConstants.get(eUrl.LIST_CONNECTED_WIRELESS_STATICS);
+        executeRequest(urlRouter, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                String htmlResponse = response;
+                //String value= Utils.getTextBetween(response, urlRouter.get_htmlBefore(), urlRouter.get_htmlAfter(), urlRouter.get_textOnError());
+                final List<Device> listFromWifiStatics = parseHtmlListDevicesFromWifiStatics(response);
+
+                //hasta aca tengnola listsa de conectados posta
+                //como la lista de dhcp no se actuailza rapido, tengo que joinerarla a esa para cargar los datos que le faltan
+                final List<Device> listFinal = new ArrayList<Device>();
+                TPLink.super.listDevicesConnected(new Response.Listener<List<Device>>() {
+                    @Override
+                    public void onResponse(List<Device> listFromDhcp) {
+                        for (Device deviceFromDhcp : listFromDhcp) {
+
+                            for (Device deviceFromWifi : listFromWifiStatics) {
+                                if(deviceFromDhcp.getMac().equalsIgnoreCase(deviceFromWifi.getMac())){
+                                    listFinal.add(deviceFromDhcp);
+                                }
+                            }
+                        }
+
+                        listener.onResponse(listFinal);
+                    }
+                }, errorListener);
+
+
+            }
+        }, errorListener);
+
+        /*super.listDevicesConnected(new Response.Listener() {
+            @Override
+            public void onResponse(Object response) {
+
+
+            }
+        }, errorListener);*/
+    }
+
+
+
     private String formatMac(String mac){
         return mac.replace(":", "-").toUpperCase();
     }

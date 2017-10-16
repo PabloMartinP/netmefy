@@ -112,6 +112,9 @@ public class RouterConstants {
 
         _urlRouters.put(eUrl.LIST_CONNECTED, UrlRouter.create("userRpm/AssignedIpAddrListRpm.htm", "userRpm/MenuRpm.htm"));
 
+        _urlRouters.put(eUrl.LIST_CONNECTED_WIRELESS_STATICS, UrlRouter.create("userRpm/WlanStationRpm.htm", "userRpm/MenuRpm.htm"));
+
+
         String URL_WIFI_SET_SSID_PARAM = "[SSID]";
         String URL_WIFI_SET_SSID = "userRpm/WlanNetworkRpm.htm?ssid1="+URL_WIFI_SET_SSID_PARAM+"&region=2&channel=11&mode=5&chanWidth=2&rate=71&ap=1&broadcast=2&brlssid=&brlbssid=&keytype=1&wepindex=1&authtype=1&keytext=&Save=Save";
         String URL_WIFI_SET_SSID_REFERRER = "userRpm/WlanNetworkRpm.htm";
@@ -149,6 +152,7 @@ public class RouterConstants {
         String URL_REMOVE_BLOCK_BY_URL_PARAM = "[_URL_]";
         String URL_REMOVE_BLOCK_BY_URL = "userRpm/AccessCtrlAccessTargetsRpm.htm?Del="+URL_REMOVE_BLOCK_BY_URL_PARAM+"&Page=1";
         _urlRouters.put(eUrl.REMOVE_BLOCK_BY_URL, UrlRouter.createWithReplace(URL_REMOVE_BLOCK_BY_URL, "userRpm/MenuRpm.htm", URL_REMOVE_BLOCK_BY_URL_PARAM));
+
     }
 
     public UrlRouter get(eUrl eUrl){

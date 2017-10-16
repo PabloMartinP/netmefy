@@ -60,10 +60,24 @@ public class NMF {
 
     public static void setDevice_connected(String mac) {
         for (dispositivoInfo di : cliente.router.devices ) {
-            if(di.mac.toLowerCase().equals(mac.toLowerCase()))
+            if(di.mac.toLowerCase().equals(mac.toLowerCase())){
                 di.set_conectado(true);
+                return;
+            }
         }
+        //si llego hasta significa que no lo encontro, entonces se desconecto, lo borro de la lista
     }
+    public static void setDevice_disconnected(String mac) {
+        for (dispositivoInfo di : cliente.router.devices ) {
+            if(di.mac.toLowerCase().equals(mac.toLowerCase())){
+                di.set_conectado(false);
+                return;
+            }
+        }
+        //si llego hasta significa que no lo encontro, entonces se desconecto, lo borro de la lista
+    }
+
+
 
     public static List<dispositivoInfo> getDevicesConnected(boolean includeBlocked){
         List<dispositivoInfo> list = new ArrayList<>();
@@ -111,6 +125,20 @@ public class NMF {
                 NMF.setDevice_connected(dev.getMac());
             }
             //NMF.cliente.router.devices.add(di);
+        }
+
+        //ahora chequeo si se desconecto alguno
+        for (dispositivoInfo dispoRegistrado : NMF.cliente.router.devices) {
+            boolean existe  = false;
+            for (Device dispoConectadoPosta : devices) {
+                if(dispoConectadoPosta.getMac().equalsIgnoreCase(dispoRegistrado.mac)){
+                    existe = true;
+                    break;
+                    //NMF.setDevice_connected(dispoConectadoPosta.getMac());
+                }
+            }
+            if(!existe)
+                NMF.setDevice_disconnected(dispoRegistrado.mac);
         }
 
         //session.setClientInfo();//guardo la info de los nuevos equipos de cliente
