@@ -4,6 +4,8 @@ package ar.com.netmefy.netmefy.services;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 
@@ -120,5 +122,7 @@ public class Utils {
     }
 
 
-
+    public static void newToast(Context context, String mensaje) {
+        Toast.makeText(context, mensaje, Toast.LENGTH_SHORT).show();
+    }
 }

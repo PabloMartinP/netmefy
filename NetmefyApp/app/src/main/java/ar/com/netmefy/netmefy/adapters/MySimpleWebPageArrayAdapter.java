@@ -32,6 +32,10 @@ public class MySimpleWebPageArrayAdapter extends ArrayAdapter<WebPageToBlockItem
         _primeraVez = true;
     }
 
+    public void toOnlyRead(){
+        //setBackgroundColor(Color.parseColor("#ff33b5e5"));
+        //webPageListView.getChildAt(i).findViewById(R.id.checkBox).setEnabled(true);
+    }
 
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
@@ -48,6 +52,8 @@ public class MySimpleWebPageArrayAdapter extends ArrayAdapter<WebPageToBlockItem
         Boolean blocked = values[position].getBlocked();
         checkBox.setChecked(blocked);
 
+        boolean _readOnly = values[position].getReadOnly();
+
         checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -58,6 +64,15 @@ public class MySimpleWebPageArrayAdapter extends ArrayAdapter<WebPageToBlockItem
         if (position == values.length - 1 && _primeraVez) {
             _primeraVez = false;
             _onCompleteFinish.sendEmptyMessage(0);
+        }
+
+        if(_readOnly){
+            rowView.setBackgroundColor(Color.LTGRAY);
+            rowView.findViewById(R.id.checkBox).setEnabled(false);
+
+        }else{
+            rowView.setBackgroundColor(Color.parseColor("#ff33b5e5"));
+            rowView.findViewById(R.id.checkBox).setEnabled(true);
         }
 
 

@@ -114,14 +114,20 @@ public class TPLink extends Router {
             device.setId(i);
             list.add(device);
         }
-
         //Utils.getTextBetween(html.split("\n")[0], "\"", "\"", "")
-
         return list;
     }
 
     @Override
     public void addBlockByUrl(String url, Response.Listener progress, Response.ErrorListener error, Response.Listener success) {
+        setValueAndReconnect(url,
+                _routerConstants.get(eUrl.ADD_BLOCK_BY_URL_RULE),
+                progress,
+                error,
+                success);
+    }
+    @Override
+    public void addUrlToTargetListBlocked(String url, Response.Listener progress, Response.ErrorListener error, Response.Listener success) {
         setValueAndReconnect(url,
                 _routerConstants.get(eUrl.ADD_BLOCK_BY_URL),
                 progress,

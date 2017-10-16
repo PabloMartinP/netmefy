@@ -70,43 +70,6 @@ public class DeviceListActivity extends AppCompatActivity {
         });
 
 
-
-
-
-/*
-        final Activity activity = this;
-        router.listDevicesConnected(new Response.Listener<List<Device>>() {
-            @Override
-            public void onResponse(List<Device> devices) {
-
-                DeviceItem[] values ;
-                values = new DeviceItem[devices.size()];
-                int i = 0;
-                for (Device d : devices) {
-                    values[i] = d.toDeviceItem();
-                    i++;
-                }
-
-                router.setDeviceConnected(values);
-                MySimpleArrayAdapter adapter = new MySimpleArrayAdapter(activity, values);
-                devicesListView.setAdapter(adapter);
-                devicesListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-                    @Override
-                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        Intent device = new Intent(DeviceListActivity.this, DeviceSetUpActivity.class).putExtra("position", position);
-                        startActivity(device);
-                    }
-                });
-
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-
-            }
-        });
-        */
     }
 
     public void block(View view){

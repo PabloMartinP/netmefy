@@ -10,4 +10,5 @@ public class webModel {
     public String url;
     public int id;
     public String nombre;
+    public int resid_imagen;
 }

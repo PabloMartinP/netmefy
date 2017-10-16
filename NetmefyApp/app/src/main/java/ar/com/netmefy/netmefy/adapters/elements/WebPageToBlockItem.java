@@ -12,16 +12,18 @@ public class WebPageToBlockItem {
     private Boolean blocked;
     private int resId;
     private int id;
+    private boolean readOnly = false;
 
     public WebPageToBlockItem() {
     }
 
-    public WebPageToBlockItem(String name, String url, int resId, Boolean blocked, int id) {
+    public WebPageToBlockItem(String name, String url, int resId, Boolean blocked, int id, boolean readOnly) {
         this.name = name;
         this.url = url;
         this.blocked = blocked;
         this.resId = resId;
         this.id = id;
+        this.readOnly = readOnly;
     }
 
     public void setId(int id){
@@ -71,5 +73,13 @@ public class WebPageToBlockItem {
         res.resId = this.getResId();
         res.url = this.getUrl();
         return res;
+    }
+
+    public boolean getReadOnly() {
+        return readOnly;
+    }
+
+    public void setReadOnly(boolean value) {
+        readOnly = value;
     }
 }

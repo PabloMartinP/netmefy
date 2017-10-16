@@ -21,6 +21,8 @@ public class paginaControlParentalModel {
         res.setBlocked(this.bloqueado);
         res.setResId(this.resId);
         res.setUrl(this.url);
+        res.setReadOnly(false);
+
         return res;
     }
 

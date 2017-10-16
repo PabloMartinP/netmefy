@@ -273,8 +273,11 @@ public abstract class Router {
 
                         configWifi.setSsid(ssid);
                         configWifi.setPassword(password);
+                        if(ssid.equalsIgnoreCase("Error SSID!!"))
+                            errorListener.onErrorResponse(new VolleyError("Error SSID"));
+                        else
+                            listener.onResponse(configWifi);
 
-                        listener.onResponse(configWifi);
                     }
                 }, new Response.ErrorListener() {
                     @Override
@@ -344,6 +347,8 @@ public abstract class Router {
             }
         }, error);
     }
+
+    public abstract void addUrlToTargetListBlocked(String url, Response.Listener progress, Response.ErrorListener error, Response.Listener success);
 
     public abstract void addBlockByUrl(String url, Response.Listener progress, Response.ErrorListener error, Response.Listener success);
 

@@ -575,6 +575,25 @@ public class MainActivity extends AppCompatActivity  {
             router.createTPLink();
             //router.createNucom();
             router = Router.getInstance(getApplicationContext());
+            /////////////////////////////////////////////////////////////////
+/*
+            router.addBlockByUrl("www.abc.gov.ar", new Response.Listener() {
+                @Override
+                public void onResponse(Object response) {
+
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+
+                }
+            }, new Response.Listener() {
+                @Override
+                public void onResponse(Object response) {
+
+                }
+            });*/
+
             /*
             //router.addBlockByMac("aa:bb:cc:11:22:33", new Response.Listener() {
             //router.addBlockByMac("b4:3a:28:69:2c:f1", new Response.Listener() {
@@ -599,10 +618,10 @@ public class MainActivity extends AppCompatActivity  {
             /////////////////////////////////////////////////////////////////////////////////////
             /////////////////////////////////////////////////////////////////////////////////////
 
-
             router.getConfigWifi(new Response.Listener<ConfigWifi>() {
                 @Override
                 public void onResponse(ConfigWifi response) {
+
                     et_wifi_password.setText(response.getPassword());
                     et_wifi_name.setText(response.getSsid());
                     changeRouterToGreen();
@@ -642,11 +661,12 @@ public class MainActivity extends AppCompatActivity  {
                     pg.hide();
                 }
             });
+
+
         }catch (Exception e){
             Toast.makeText(getApplicationContext(), "Error", Toast.LENGTH_LONG).show();
             pg.hide();
             //progress.dismiss();
-
         }
     }
 

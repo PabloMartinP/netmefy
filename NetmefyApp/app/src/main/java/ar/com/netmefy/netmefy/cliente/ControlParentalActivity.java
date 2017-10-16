@@ -13,15 +13,19 @@ import android.widget.ListView;
 import android.widget.Switch;
 
 import com.android.volley.Response;
+import com.android.volley.VolleyError;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import ar.com.netmefy.netmefy.ControlParentalWebPageSetUp;
+import ar.com.netmefy.netmefy.DeviceListActivity;
 import ar.com.netmefy.netmefy.R;
 import ar.com.netmefy.netmefy.adapters.MySimpleWebPageArrayAdapter;
 import ar.com.netmefy.netmefy.adapters.elements.WebPageToBlockItem;
+import ar.com.netmefy.netmefy.router.Device;
 import ar.com.netmefy.netmefy.services.NMF;
+import ar.com.netmefy.netmefy.services.Utils;
 import ar.com.netmefy.netmefy.services.api.Api;
 import ar.com.netmefy.netmefy.services.api.entity.paginaControlParentalModel;
 import ar.com.netmefy.netmefy.services.api.entity.webModel;
@@ -30,7 +34,8 @@ public class ControlParentalActivity extends AppCompatActivity {
 
     ListView webPageListView;
     Switch switchParentalControl;
-
+    WebPageToBlockItem[] values;
+    MySimpleWebPageArrayAdapter adapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,7 +62,7 @@ public class ControlParentalActivity extends AppCompatActivity {
                 }
 
                 //cargo la lista que necesita la lista del activity
-                final WebPageToBlockItem[] values = new WebPageToBlockItem[paginas.size()];
+                values = new WebPageToBlockItem[paginas.size()];
                 int i = 0;
                 for (paginaControlParentalModel p : paginas) {
                     values[i] = p.toWebPageToBlockItem();
@@ -71,24 +76,6 @@ public class ControlParentalActivity extends AppCompatActivity {
                         switchParentalControl.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                                 updateList(isChecked);
-/*
-                        if (isChecked){
-                            for (int i = 0; i < webPageListView.getCount()-1; i++) {
-                                webPageListView.getChildAt(i).findViewById(R.id.checkBox).setEnabled(false);
-                                WebPageToBlockItem v = (WebPageToBlockItem) webPageListView.getItemAtPosition(i);
-                                if (v.getBlocked()) {
-                                    //webpagesBlocked.add(new WebPageToBlockItem(v.getName(), v.getUrl(), v.getResId(), v.getBlocked()));
-                                    //TODO ACA TEENES QUE GUARDAR LA LISTA DE PAGINAS BLOQUEADAS Y DESPUES BLOQUEARLAS EN EL ROUTER
-                                }else{
-                                    webPageListView.getChildAt(i).setBackgroundColor(Color.LTGRAY);
-                                }
-                            }
-                        }else{
-                            for (int i = 0; i < webPageListView.getCount()-1; i++) {
-                                webPageListView.getChildAt(i).setBackgroundColor(Color.parseColor("#ff33b5e5"));
-                                webPageListView.getChildAt(i).findViewById(R.id.checkBox).setEnabled(true);
-                            }
-                        }*/
                                 ///////////////////////////////////////////////////////////////////
                                 final List<paginaControlParentalModel> paginasModel= new ArrayList<paginaControlParentalModel>();
                                 for (int i = 0; i < webPageListView.getCount()-1; i++) {
@@ -119,59 +106,46 @@ public class ControlParentalActivity extends AppCompatActivity {
                         return false;
                     }
                 });
-                MySimpleWebPageArrayAdapter adapter = new MySimpleWebPageArrayAdapter(_this, values, onCompleteHandler);
+                adapter = new MySimpleWebPageArrayAdapter(_this, values, onCompleteHandler);
                 webPageListView.setAdapter(adapter);
+
+                onCompleteHandler.sendEmptyMessage(0);
 
                 ///////////////////////////////////////////////////////////////////
             }
         });
+    }
 
-        ///////////////////////////////////////////////////
-/*
-        WebPageToBlockItem[] values = new WebPageToBlockItem[] {
-                new WebPageToBlockItem("Whatapp","web.whatsapp.com",R.drawable.whatsapp,  Boolean.FALSE),
-                new WebPageToBlockItem("Facebook","facebook.com",R.drawable.facebook, Boolean.FALSE),
-                new WebPageToBlockItem("Instagram","www.instagram.com",R.drawable.instagram, Boolean.TRUE),
-                new WebPageToBlockItem("Netflix","www.netflix.com",R.drawable.netflix,  Boolean.FALSE),
-                new WebPageToBlockItem("Twitter","twitter.com",R.drawable.twitter, Boolean.TRUE),
-                new WebPageToBlockItem("Youtube","www.youtube.com",R.drawable.youtube, Boolean.TRUE),
-                new WebPageToBlockItem("Snapchat","www.snapchat.com",R.drawable.snapchat, Boolean.FALSE),
-                new WebPageToBlockItem("Spotify","www.spotify.com",R.drawable.spotify, Boolean.TRUE),
-                new WebPageToBlockItem("Gmail","www.google.com",R.drawable.gmail, Boolean.FALSE),
-                new WebPageToBlockItem("Telegram","web.telegram.org",R.drawable.telegram, Boolean.TRUE)};
-
-        MySimpleWebPageArrayAdapter adapter = new MySimpleWebPageArrayAdapter(this, values);
-        webPageListView.setAdapter(adapter);
-
-        switchParentalControl = (Switch) findViewById(R.id.switch_parent_control) ;
-
-        switchParentalControl.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked){
-                    ArrayList<WebPageToBlockItem> webpagesBlocked = new ArrayList<>();
-                    for (int i = 0; i < webPageListView.getCount()-1; i++) {
-                        webPageListView.getChildAt(i).findViewById(R.id.checkBox).setEnabled(false);
-                        WebPageToBlockItem v = (WebPageToBlockItem) webPageListView.getItemAtPosition(i);
-                        if (v.getBlocked()) {
-                            webpagesBlocked.add(new WebPageToBlockItem(v.getName(), v.getUrl(), v.getResId(), v.getBlocked()));
-                            //TODO ACA TEENES QUE GUARDAR LA LISTA DE PAGINAS BLOQUEADAS Y DESPUES BLOQUEARLAS EN EL ROUTER
-                        }else{
-                            webPageListView.getChildAt(i).setBackgroundColor(Color.LTGRAY);
-                        }
-                    }
+    public void updateList(boolean isChecked){
+        if(isChecked){
+            for (int i = 0; i < adapter.getCount(); i++) {
+                WebPageToBlockItem view =  adapter.getItem(i);
+                if(view.getBlocked()){
+                    Utils.newToast(getApplicationContext(), "aa");
+                    view.setReadOnly(true);
                 }else{
-                    for (int i = 0; i < webPageListView.getCount()-1; i++) {
-                        webPageListView.getChildAt(i).setBackgroundColor(Color.parseColor("#ff33b5e5"));
-                        webPageListView.getChildAt(i).findViewById(R.id.checkBox).setEnabled(true);
-                    }
+                    Utils.newToast(getApplicationContext(), "bb");
+                    view.setReadOnly(true);
                 }
             }
-        });
-        */
+            webPageListView.invalidateViews();
 
+        }else{
+            //Utils.newToast(getApplicationContext(), "cc");
 
-    }
-    public void updateList(boolean isChecked){
+            /*for (int i = 0; i < webPageListView.getCount()-1; i++) {
+                webPageListView.getChildAt(i).setBackgroundColor(Color.parseColor("#ff33b5e5"));
+                webPageListView.getChildAt(i).findViewById(R.id.checkBox).setEnabled(true);
+            }*/
+            for (int i = 0; i < adapter.getCount(); i++) {
+                WebPageToBlockItem view =  adapter.getItem(i);
+                view.setReadOnly(false);
+            }
+            webPageListView.invalidateViews();
+        }
+
+        //////////////////////////////
+        /*
         if (isChecked){
             for (int i = 0; i < webPageListView.getCount()-1; i++) {
                 webPageListView.getChildAt(i).findViewById(R.id.checkBox).setEnabled(false);
@@ -179,6 +153,9 @@ public class ControlParentalActivity extends AppCompatActivity {
                 if (v.getBlocked()) {
                     //webpagesBlocked.add(new WebPageToBlockItem(v.getName(), v.getUrl(), v.getResId(), v.getBlocked()));
                     //TODO ACA TEENES QUE GUARDAR LA LISTA DE PAGINAS BLOQUEADAS Y DESPUES BLOQUEARLAS EN EL ROUTER
+                    String j;
+                    j = "Bloquear";
+                    j = j + " la url " + v.getUrl();
                 }else{
                     webPageListView.getChildAt(i).setBackgroundColor(Color.LTGRAY);
                 }
@@ -188,7 +165,7 @@ public class ControlParentalActivity extends AppCompatActivity {
                 webPageListView.getChildAt(i).setBackgroundColor(Color.parseColor("#ff33b5e5"));
                 webPageListView.getChildAt(i).findViewById(R.id.checkBox).setEnabled(true);
             }
-        }
+        }*/
     }
 
     public void newPage(View view){
@@ -199,5 +176,18 @@ public class ControlParentalActivity extends AppCompatActivity {
         startActivityForResult(page, 1);
     }
 
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Intent refresh = new Intent(this, ControlParentalActivity.class);
+        startActivity(refresh);
+        this.finish();
+        /*if(resultCode==RESULT_OK){
+            Intent refresh = new Intent(this, ControlParentalActivity.class);
+            startActivity(refresh);
+            this.finish();
+        }*/
+    }
 
 }

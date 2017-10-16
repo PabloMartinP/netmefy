@@ -88,6 +88,18 @@ public class NMF {
         return list;
     }
 
+    private static String inferirTipoDispositivo(String nombre){
+        String nombreEnMinus = nombre.toLowerCase();
+        if(nombreEnMinus.contains("android"))
+            return "Celular-Android";
+
+        if(nombreEnMinus.contains("iphone"))
+            return "Celular-iPhone";
+
+        return "Desconocido";
+
+    }
+
     public static void updateDevicesConnected(List<Device> devices, Context context) {
         if(NMF.cliente.router.devices == null)
             NMF.cliente.router.devices = new ArrayList<>();
@@ -101,7 +113,7 @@ public class NMF {
                 DeviceModel dm  = dev.toDeviceModel();
                 dm.cliente_sk = NMF.cliente.id;
                 dm.router_sk = NMF.cliente.router.router_sk;
-                dm.dispositivo_tipo = "Desconocido";
+                dm.dispositivo_tipo = inferirTipoDispositivo(dm.dispositivo_apodo);
 
                 dispositivoInfo dispo_info = dm.toDispositivoInfo();
                 dispo_info.set_conectado(true);

@@ -48,6 +48,7 @@ import ar.com.netmefy.netmefy.services.api.entity.usuarioAddModel;
 import ar.com.netmefy.netmefy.services.api.entity.usuarioInfo;
 import ar.com.netmefy.netmefy.services.api.entity.webABloquearModel;
 import ar.com.netmefy.netmefy.services.api.entity.webBloqModel;
+import ar.com.netmefy.netmefy.services.api.entity.webModel;
 import ar.com.netmefy.netmefy.services.api.stringRequests.JsonArrayRequestApi;
 import ar.com.netmefy.netmefy.services.api.stringRequests.JsonRequestApi;
 import ar.com.netmefy.netmefy.services.api.stringRequests.RequestQueueSingletonApi;
@@ -883,6 +884,35 @@ public  class Api {
                     success.onResponse(NMF.tecnico);
                 }else{
                     error.onErrorResponse(new VolleyError("error al traer el tecnico"));
+                }
+
+            }
+        }, error);
+        execute(rq);
+    }
+
+    public void addPageToBlock(String url, String nombre, final Response.Listener success, final Response.ErrorListener error ){
+        String url_api = "http://200.82.0.24/api/web";
+        webModel g = new webModel();
+        g.url = url;
+        g.nombre = nombre;
+        g.ip = "";
+        g.resid_imagen = 2130837714;
+        Map<String, String> data = null;
+        try {
+            data = Utils.toMap(g);
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+
+        JsonRequestApi rq = new JsonRequestApi(Request.Method.POST, url_api, data, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                if(response!=null){
+
+                    success.onResponse("ok");
+                }else{
+                    error.onErrorResponse(new VolleyError("error al guardar la web"));
                 }
 
             }
