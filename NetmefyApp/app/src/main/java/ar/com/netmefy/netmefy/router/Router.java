@@ -257,6 +257,9 @@ public abstract class Router {
             public void onResponse(String response) {
                 try{
                     List<Device> list = parseHtmlListDevices(response);
+
+
+
                     listener.onResponse(list);
                 }catch (Exception ex){
                     listener.onResponse(null);

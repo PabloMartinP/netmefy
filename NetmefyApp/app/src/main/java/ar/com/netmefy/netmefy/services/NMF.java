@@ -65,11 +65,10 @@ public class NMF {
         }
     }
 
-    public static List<dispositivoInfo> getDevicesConnected(){
-        dispositivoInfo d;
+    public static List<dispositivoInfo> getDevicesConnected(boolean includeBlocked){
         List<dispositivoInfo> list = new ArrayList<>();
         for (dispositivoInfo di : cliente.router.devices ) {
-            if(di.is_conectado())
+            if(di.is_conectado() || (includeBlocked && di.bloqueado ))
                 list.add(di);
         }
         return list;
@@ -88,7 +87,7 @@ public class NMF {
                 DeviceModel dm  = dev.toDeviceModel();
                 dm.cliente_sk = NMF.cliente.id;
                 dm.router_sk = NMF.cliente.router.router_sk;
-                dm.dispositivo_tipo = "un tipo 123";
+                dm.dispositivo_tipo = "Desconocido";
 
                 dispositivoInfo dispo_info = dm.toDispositivoInfo();
                 dispo_info.set_conectado(true);

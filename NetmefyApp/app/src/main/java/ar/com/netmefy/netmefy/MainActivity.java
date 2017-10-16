@@ -681,7 +681,7 @@ public class MainActivity extends AppCompatActivity  {
         NMF.updateDevicesConnected(devices, getApplicationContext());
 
         ///////////////////////////////////////////////
-        List<dispositivoInfo> list_connected = NMF.getDevicesConnected();
+        List<dispositivoInfo> list_connected = NMF.getDevicesConnected(false);
 
         int cant_elem = Math.min(4, list_connected.size());//del 0 al cuatro
         int i = 0;
