@@ -22,6 +22,7 @@ import ar.com.netmefy.netmefy.router.RouterConstants;
 import ar.com.netmefy.netmefy.router.UrlRouter;
 import ar.com.netmefy.netmefy.router.eUrl;
 import ar.com.netmefy.netmefy.services.Utils;
+import ar.com.netmefy.netmefy.services.WifiUtils;
 
 
 public class TPLink extends Router {
@@ -102,6 +103,8 @@ public class TPLink extends Router {
     @Override
     protected List<Device> parseHtmlMacListBlocked(String html){
         List<Device> list = new ArrayList<Device>();
+        if(html.isEmpty())
+            return  list;
 
         String[] splitted = html.split("\n");
         Device device;
@@ -164,39 +167,91 @@ public class TPLink extends Router {
     }
 
     @Override
-    public void addBlockByMac(String mac, Response.Listener progress, Response.ErrorListener error, Response.Listener success) {
-        String macWithFormat ;
-        macWithFormat = formatMac(mac);
-        setValueAndReconnect(macWithFormat,
-                _routerConstants.get(eUrl.ADD_BLOCK_BY_MAC),
-                progress,
-                error,
-                success);
+    public void addBlockByMac(final String mac, final Response.Listener progress, final Response.ErrorListener error, final Response.Listener success) {
+        this.getConfigWifi(new Response.Listener<ConfigWifi>() {
+            @Override
+            public void onResponse(final ConfigWifi configWifi) {
+                final String macWithFormat ;
+                macWithFormat = formatMac(mac);
+                getMacListBlocked(new Response.Listener<List<Device>>() {
+                    @Override
+                    public void onResponse(List<Device> listBlocked) {
+                        boolean yaEstaBloqueda = false;
+                        for (Device device : listBlocked) {
+                            if(device.getMac().equalsIgnoreCase(macWithFormat)){
+                                yaEstaBloqueda = true;
+                                break;
+                            }
+                        }
+                        if(!yaEstaBloqueda){
+                            setValueAndReconnect(macWithFormat,
+                                    _routerConstants.get(eUrl.ADD_BLOCK_BY_MAC),
+                                    progress,
+                                    new Response.ErrorListener() {
+                                        @Override
+                                        public void onErrorResponse(VolleyError error) {
+                                            //NOSE PORQUE FALLA AL INSERTAR UNA MAC BLOQUEDA
+                                            //PER AUNQUE FALLE INSERTA OK
+                                            WifiUtils.connectToNetwork(
+                                                    configWifi,
+                                                    _context,
+                                                    progress, success);
+                                        }
+                                    },
+                                    success);
+                        }else{
+                            success.onResponse("ok");
+                        }
+
+                    }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+
+                    }
+                });
+            }
+        }, error);
     }
 
     @Override
     public void removeBlockByMac(String mac,final Response.Listener progress, final Response.ErrorListener error, final Response.Listener success) {
         final String macWithFormat = formatMac(mac);
-        getMacListBlocked(new Response.Listener<List<Device>>() {
+        getConfigWifi(new Response.Listener<ConfigWifi>() {
             @Override
-            public void onResponse(List<Device> devicesBlocked) {
-                Device deviceFound = null   ;
-                for (Device device : devicesBlocked) {
-                    if(device.getMac().equalsIgnoreCase(macWithFormat)){
-                        deviceFound = device;
-                        break;
+            public void onResponse(final ConfigWifi configWifi) {
+                getMacListBlocked(new Response.Listener<List<Device>>() {
+                    @Override
+                    public void onResponse(List<Device> devicesBlocked) {
+                        Device deviceFound = null   ;
+                        for (Device device : devicesBlocked) {
+                            if(device.getMac().equalsIgnoreCase(macWithFormat)){
+                                deviceFound = device;
+                                break;
+                            }
+                        }
+                        ////////////////////////////////////
+                        if(deviceFound !=null){
+                            setValueAndReconnect(String.valueOf(deviceFound.getId()),
+                                    _routerConstants.get(eUrl.REMOVE_BLOCK_BY_MAC),
+                                    progress,
+                                    new Response.ErrorListener() {
+                                        @Override
+                                        public void onErrorResponse(VolleyError error) {
+                                            WifiUtils.connectToNetwork(
+                                                    configWifi,
+                                                    _context,
+                                                    progress, success);
+                                        }
+                                    },
+                                    success);
+                        }else{
+                            success.onResponse("ok");
+                        }
+
+
                     }
-                }
-                ////////////////////////////////////
-                if(deviceFound !=null){
-                    setValueAndReconnect(String.valueOf(deviceFound.getId()) ,
-                            _routerConstants.get(eUrl.REMOVE_BLOCK_BY_MAC),
-                            progress,
-                            error,
-                            success);
-                }
-
-
+                }, error);
             }
         }, error);
     }

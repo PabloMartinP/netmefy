@@ -29,31 +29,20 @@ public class DeviceSetUpActivity extends AppCompatActivity {
     TextView et_tipo;
     TextView tv_mac;
     Button btn_bloquear;
+    boolean cambioElBloqueo;
     Router router;
     dispositivoInfo device_selected;
     ProgressDialog progressBar;
+    public Activity _this;
     Api api;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_device_set_up);
-
+        _this = this;
         router = Router.getInstance(getApplicationContext());
 
         String mac= getIntent().getStringExtra("mac");
-
-        //DeviceItem[] values =router.getDeviceConnectedStored();
-        /*DeviceItem[] values = new DeviceItem[] { new DeviceItem("11:22:33:44:55:66","Pepe",R.drawable.guest_w_128, "TV", Boolean.FALSE),
-                new DeviceItem("11:22:33:44:55:66","Android",R.drawable.download_128, "TV",  Boolean.FALSE),
-                new DeviceItem("11:22:33:44:55:66","iPhone",R.drawable.info_128, "TV",  Boolean.TRUE),
-                new DeviceItem("11:22:33:44:55:66","WindowsMobile",R.drawable.add_link_128, "TV",  Boolean.FALSE),
-                new DeviceItem("11:22:33:44:55:66","Blackberry",R.drawable.eye_128, "TV",  Boolean.TRUE),
-                new DeviceItem("11:22:33:44:55:66","WebOS",R.drawable.help_128, "TV",  Boolean.TRUE),
-                new DeviceItem("11:22:33:44:55:66","Ubuntu",R.drawable.ok_128, "TV",  Boolean.FALSE),
-                new DeviceItem("11:22:33:44:55:66","Windows7",R.drawable.lock_5_128, "TV",  Boolean.TRUE),
-                new DeviceItem("11:22:33:44:55:66","OS/2",R.drawable.save_128, "TV",  Boolean.FALSE),
-                new DeviceItem("11:22:33:44:55:66","Max OS X",R.drawable.search_128, "TV",  Boolean.TRUE)};
-        */
 
         device_selected = NMF.findDeviceByMac(mac);
 
@@ -83,10 +72,6 @@ public class DeviceSetUpActivity extends AppCompatActivity {
             btn_bloquear.setText("Bloquear");
             btn_bloquear.setBackgroundColor(Color.parseColor("#ffff4444"));
         }
-
-
-
-
     }
 
     private boolean esta_bloqueado(){
@@ -94,9 +79,7 @@ public class DeviceSetUpActivity extends AppCompatActivity {
     }
 
     public void block(View view){
-
         _set_blocked(esta_bloqueado());
-
     }
 
     public void saveAndExit(View view){
@@ -113,10 +96,11 @@ public class DeviceSetUpActivity extends AppCompatActivity {
         bloqueado = !esta_bloqueado();
         mac = tv_mac.getText().toString();
 
-        boolean cambio ;
-
         /////////////////////////////////////////////////
         final dispositivoInfo di = NMF.findDeviceByMac(mac);
+
+        //para saber si cambio el bloqueo o no, si cambio tengo que actualiar en el router, sino nop
+        cambioElBloqueo =di.bloqueado != bloqueado;
 
         di.apodo = apodo;
         di.tipo  = tipo;
@@ -128,22 +112,22 @@ public class DeviceSetUpActivity extends AppCompatActivity {
         String myMac = WifiUtils.getMacAddress(getApplicationContext());
 
         if(!myMac.equalsIgnoreCase(mac)){
-            //blockOnRouter(di);
+            blockOnRouter(di);
+            /*
             final DeviceModel dm = di.toDeviceModel();
             dm.cliente_sk = NMF.cliente.id;
             dm.router_sk = NMF.cliente.router.router_sk;
-            saveOnApi(dm, di);
-        /*
+            //saveOnApi(dm, di);
+
             api.updateDevice(dm, new Response.Listener() {
                 @Override
                 public void onResponse(Object response) {
                     if(!response.toString().equals("error")){
                         NMF.setDevice(di);
-                        //_this.finish();
+
                         progressBar.hide();
                         progressBar.dismiss();
                         _this.setResult(RESULT_OK, null);
-
                         _this.finish();
                     }else{
                         progressBar.hide();
@@ -179,8 +163,7 @@ public class DeviceSetUpActivity extends AppCompatActivity {
     }
 
     public void blockOnRouter(final dispositivoInfo di){
-
-        if(di.bloqueado){
+        if(true){
             //final Api api = Api.getInstance(getApplicationContext());
             final DeviceModel dm = di.toDeviceModel();
             dm.cliente_sk = NMF.cliente.id;
@@ -208,17 +191,6 @@ public class DeviceSetUpActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(Object response) {
                         saveOnApi(dm, di);
-                        /*api.updateDevice(dm, new Response.Listener() {
-                            @Override
-                            public void onResponse(Object response) {
-
-                                NMF.setDevice(di);
-                                //_this.finish();
-                                _this.setResult(RESULT_OK, null);
-                                _this.finish();
-
-                            }
-                        });*/
                     }
                 });
             }else{
@@ -242,8 +214,6 @@ public class DeviceSetUpActivity extends AppCompatActivity {
                 });
 
             }
-
-
         }//fin if di.bloquedo
 
     }

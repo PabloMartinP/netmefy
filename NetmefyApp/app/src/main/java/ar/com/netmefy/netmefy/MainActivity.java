@@ -101,6 +101,7 @@ public class MainActivity extends AppCompatActivity  {
 
 
 
+
         tvFacebookStatus  = (TextView)findViewById(R.id.tv_facebookState);
         tvFacebookStatus.setText("?");
 
@@ -239,6 +240,8 @@ public class MainActivity extends AppCompatActivity  {
             pg.hide();
 
         }
+
+
     }
 
     private void loadNotificationCount(){
@@ -572,6 +575,30 @@ public class MainActivity extends AppCompatActivity  {
             router.createTPLink();
             //router.createNucom();
             router = Router.getInstance(getApplicationContext());
+            /*
+            //router.addBlockByMac("aa:bb:cc:11:22:33", new Response.Listener() {
+            //router.addBlockByMac("b4:3a:28:69:2c:f1", new Response.Listener() {
+            router.removeBlockByMac("b4:3a:28:69:2c:f1", new Response.Listener() {
+            //router.removeBlockByMac("aa:bb:cc:11:22:33", new Response.Listener() {
+                @Override
+                public void onResponse(Object response) {
+
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+
+                }
+            }, new Response.Listener() {
+                @Override
+                public void onResponse(Object response) {
+
+                }
+            });*/
+            /////////////////////////////////////////////////////////////////////////////////////
+            /////////////////////////////////////////////////////////////////////////////////////
+            /////////////////////////////////////////////////////////////////////////////////////
+
 
             router.getConfigWifi(new Response.Listener<ConfigWifi>() {
                 @Override
@@ -587,9 +614,12 @@ public class MainActivity extends AppCompatActivity  {
                             router.listDevicesConnected(new Response.Listener<List<Device>>() {
                                 @Override
                                 public void onResponse(List<Device> devices) {
-                                    populate_list_connected(devices);
-
-                                    start_thread_list_connected();
+                                    if(devices!=null){
+                                        populate_list_connected(devices);
+                                        start_thread_list_connected();
+                                    }else{
+                                        Toast.makeText(getApplicationContext(), "Error al traer la lista conectados en el Router"+router.getName(), Toast.LENGTH_SHORT).show();
+                                    }
                                     pg.hide();
 
                                 }
@@ -603,7 +633,6 @@ public class MainActivity extends AppCompatActivity  {
                             });
                         }
                     });
-                    //progress.dismiss();
                 }
             }, new Response.ErrorListener() {
                 @Override
@@ -611,16 +640,8 @@ public class MainActivity extends AppCompatActivity  {
                     Toast.makeText(getApplicationContext(), "Error al conectar con el Router", Toast.LENGTH_LONG).show();
                     changeRouterToRed();
                     pg.hide();
-
-                    //progress.dismiss();
                 }
             });
-
-
-            /////////////////////////////////
-
-
-
         }catch (Exception e){
             Toast.makeText(getApplicationContext(), "Error", Toast.LENGTH_LONG).show();
             pg.hide();

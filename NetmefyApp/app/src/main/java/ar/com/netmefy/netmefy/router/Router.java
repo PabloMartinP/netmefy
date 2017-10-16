@@ -255,8 +255,13 @@ public abstract class Router {
         executeRequest(_routerConstants.get(eUrl.LIST_CONNECTED), new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                List<Device> list = parseHtmlListDevices(response);
-                listener.onResponse(list);
+                try{
+                    List<Device> list = parseHtmlListDevices(response);
+                    listener.onResponse(list);
+                }catch (Exception ex){
+                    listener.onResponse(null);
+                }
+
             }
         }, errorListener);
     }
