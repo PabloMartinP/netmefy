@@ -24,6 +24,7 @@ import ar.com.netmefy.netmefy.R;
 import ar.com.netmefy.netmefy.adapters.MySimpleWebPageArrayAdapter;
 import ar.com.netmefy.netmefy.adapters.elements.WebPageToBlockItem;
 import ar.com.netmefy.netmefy.router.Device;
+import ar.com.netmefy.netmefy.router.Router;
 import ar.com.netmefy.netmefy.services.NMF;
 import ar.com.netmefy.netmefy.services.Utils;
 import ar.com.netmefy.netmefy.services.api.Api;
@@ -36,11 +37,14 @@ public class ControlParentalActivity extends AppCompatActivity {
     Switch switchParentalControl;
     WebPageToBlockItem[] values;
     MySimpleWebPageArrayAdapter adapter;
+    Router router ;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_control_parental);
         webPageListView = (ListView) findViewById(R.id.lv_web_pages_list);
+
+        router = Router.getInstance(getApplicationContext());
 
         final List<paginaControlParentalModel> paginas;// = new ArrayList<paginaControlParentalModel>() ;
         final Activity _this = this;
@@ -117,55 +121,75 @@ public class ControlParentalActivity extends AppCompatActivity {
     }
 
     public void updateList(boolean isChecked){
+        List<WebPageToBlockItem> pagesToAdd = new ArrayList<>();
+        List<WebPageToBlockItem> pagesToRemove = new ArrayList<>();
+
         if(isChecked){
             for (int i = 0; i < adapter.getCount(); i++) {
                 WebPageToBlockItem view =  adapter.getItem(i);
                 if(view.getBlocked()){
-                    Utils.newToast(getApplicationContext(), "aa");
+                    //Utils.newToast(getApplicationContext(), "aa");
                     view.setReadOnly(true);
+                    pagesToAdd.add(view);
                 }else{
-                    Utils.newToast(getApplicationContext(), "bb");
+                    //Utils.newToast(getApplicationContext(), "bb");
                     view.setReadOnly(true);
                 }
             }
             webPageListView.invalidateViews();
 
         }else{
-            //Utils.newToast(getApplicationContext(), "cc");
-
-            /*for (int i = 0; i < webPageListView.getCount()-1; i++) {
-                webPageListView.getChildAt(i).setBackgroundColor(Color.parseColor("#ff33b5e5"));
-                webPageListView.getChildAt(i).findViewById(R.id.checkBox).setEnabled(true);
-            }*/
             for (int i = 0; i < adapter.getCount(); i++) {
                 WebPageToBlockItem view =  adapter.getItem(i);
+                pagesToRemove.add(view);
                 view.setReadOnly(false);
             }
+
             webPageListView.invalidateViews();
         }
+        String url = "";
+        //////////////////////////////////////////////
+        for (WebPageToBlockItem item : pagesToAdd) {
+            url = item.getUrl();
+            router.addBlockByUrl(url, new Response.Listener() {
+                @Override
+                public void onResponse(Object response) {
 
-        //////////////////////////////
-        /*
-        if (isChecked){
-            for (int i = 0; i < webPageListView.getCount()-1; i++) {
-                webPageListView.getChildAt(i).findViewById(R.id.checkBox).setEnabled(false);
-                WebPageToBlockItem v = (WebPageToBlockItem) webPageListView.getItemAtPosition(i);
-                if (v.getBlocked()) {
-                    //webpagesBlocked.add(new WebPageToBlockItem(v.getName(), v.getUrl(), v.getResId(), v.getBlocked()));
-                    //TODO ACA TEENES QUE GUARDAR LA LISTA DE PAGINAS BLOQUEADAS Y DESPUES BLOQUEARLAS EN EL ROUTER
-                    String j;
-                    j = "Bloquear";
-                    j = j + " la url " + v.getUrl();
-                }else{
-                    webPageListView.getChildAt(i).setBackgroundColor(Color.LTGRAY);
                 }
-            }
-        }else{
-            for (int i = 0; i < webPageListView.getCount()-1; i++) {
-                webPageListView.getChildAt(i).setBackgroundColor(Color.parseColor("#ff33b5e5"));
-                webPageListView.getChildAt(i).findViewById(R.id.checkBox).setEnabled(true);
-            }
-        }*/
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+
+                }
+            }, new Response.Listener() {
+                @Override
+                public void onResponse(Object response) {
+
+                }
+            });
+        }
+        ////////////////////////////////////////////////////////////////////
+        //TODO: FALTA AGREGAR QUE SOLO BORRE LAS PAGINAS QUE EXISTAN, LAS QUE NO EXISTAN QUE NO LAS BORRE
+        for (WebPageToBlockItem item : pagesToRemove) {
+            url = item.getUrl();
+            router.removeBlockByUrl(url, new Response.Listener() {
+                @Override
+                public void onResponse(Object response) {
+
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+
+                }
+            }, new Response.Listener() {
+                @Override
+                public void onResponse(Object response) {
+
+                }
+            });
+        }
+        //////////////////////////////////////////////////
     }
 
     public void newPage(View view){

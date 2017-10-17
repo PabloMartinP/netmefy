@@ -119,12 +119,33 @@ public class TPLink extends Router {
     }
 
     @Override
-    public void addBlockByUrl(String url, Response.Listener progress, Response.ErrorListener error, Response.Listener success) {
-        setValueAndReconnect(url,
+    public void addBlockByUrl(final String url_to_block, final Response.Listener progress, final Response.ErrorListener error,final Response.Listener success) {
+        getUrlListBlocked(new Response.Listener<List<String>>() {
+            @Override
+            public void onResponse(List<String> urls) {
+                int number = -1;
+                int i = 0;//EMPIEZA EN UNO EL CONTADOR DE LA TABLA DE LA INTERFAZ WEB
+                for (String url : urls) {
+                    if (url.equalsIgnoreCase(url_to_block)) {
+                        number = i;
+                        break;
+                    }
+                    i++;
+                }
+
+                if(number!=-1)
+                    setValueAndReconnect(String.valueOf(number),
+                            _routerConstants.get(eUrl.ADD_BLOCK_BY_URL_RULE),
+                            progress,
+                            error,
+                            success);
+            }
+        }, error);
+        /*setValueAndReconnect(url,
                 _routerConstants.get(eUrl.ADD_BLOCK_BY_URL_RULE),
                 progress,
                 error,
-                success);
+                success);*/
     }
     @Override
     public void addUrlToTargetListBlocked(String url, Response.Listener progress, Response.ErrorListener error, Response.Listener success) {
@@ -135,15 +156,24 @@ public class TPLink extends Router {
                 success);
     }
 
+    public void getUrlListBlockedFromRule(final  Response.Listener success, final Response.ErrorListener error){
+        getValueFromHtmlResponse(_routerConstants.get(eUrl.GET_URL_LIST_BLOCKED_RULE), new Response.Listener<String>() {
+            @Override
+            public void onResponse(final String htmlListBlocked) {
+                success.onResponse(parseHtmlUrlListBlockedRule(htmlListBlocked));
+            }
+        }, error);
+    }
+
     @Override
-    public void removeBlockByUrl(String url, final Response.Listener progress, final Response.ErrorListener error, final Response.Listener success) {
-        getUrlListBlocked(new Response.Listener<List<String>>() {
+    public void removeBlockByUrl(final String urlToRemove, final Response.Listener progress, final Response.ErrorListener error, final Response.Listener success) {
+        getUrlListBlockedFromRule(new Response.Listener<List<String>>() {
             @Override
             public void onResponse(List<String> urls) {
                 int number = -1;
                 int i = 0;
                 for (String url : urls) {
-                    if (url.equalsIgnoreCase(url)) {
+                    if (url.equalsIgnoreCase(urlToRemove)) {
                         number = i;
                         break;
                     }
@@ -152,15 +182,14 @@ public class TPLink extends Router {
 
                 if(number!=-1)
                     setValueAndReconnect(String.valueOf(number),
-                            _routerConstants.get(eUrl.REMOVE_BLOCK_BY_URL),
+                            _routerConstants.get(eUrl.REMOVE_BLOCK_BY_URL_RULE),
                             progress,
                             error,
                             success);
+                else
+                    success.onResponse("ok");
             }
         }, error);
-
-
-
     }
 
 
@@ -333,6 +362,32 @@ public class TPLink extends Router {
         }, error);
     }
 
+    protected List<String> parseHtmlUrlListBlockedRule(String html){
+        List<String> list = new ArrayList<String>();
+
+        String url ;
+
+        //String[] splitted = html.split(Pattern.quote("1}-"));
+        String[] splitted = html.split("\n");
+
+        //RESTO UNO PORQUE SIEMPRE TRAE EL ULTIMO CON CERO
+        for (int i=0;i<splitted.length;i++){
+            //url  = splitted[i].replace("\"", "").split(",")[3];
+            //url  = splitted[i].split("\"")[1];
+            url  = splitted[i].split("\"")[5].replace("NMF-", "");
+
+            //splitted[i].split("\"")
+
+            if(!url.isEmpty()){
+                list.add(url.trim());
+            }
+
+        }
+
+        return list;
+    }
+
+
     @Override
     protected List<String> parseHtmlUrlListBlocked(String html){
         List<String> list = new ArrayList<String>();
@@ -347,7 +402,7 @@ public class TPLink extends Router {
             url  = splitted[i].replace("\"", "").split(",")[3];
 
             if(!url.isEmpty()){
-                list.add(url);
+                list.add(url.trim());
             }
 
         }

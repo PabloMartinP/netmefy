@@ -153,8 +153,18 @@ public class RouterConstants {
         _urlRouters.put(eUrl.REMOVE_BLOCK_BY_URL, UrlRouter.createWithReplace(URL_REMOVE_BLOCK_BY_URL, "userRpm/MenuRpm.htm", URL_REMOVE_BLOCK_BY_URL_PARAM));
 
         String URL_ADD_BLOCK_BY_URL_RULE_PARAM = "[_URL_]";
-        String URL_ADD_BLOCK_BY_URL_RULE = "/userRpm/AccessCtrlAccessRulesRpm.htm?rule_name=NMF-TARGET-ID-"+URL_ADD_BLOCK_BY_URL_RULE_PARAM+"&hosts_lists=0&targets_lists="+URL_ADD_BLOCK_BY_URL_RULE_PARAM+"&scheds_lists=255&allow=0&enable=1&Changed=0&SelIndex=0&Page=1&Save=Save";
+        String URL_ADD_BLOCK_BY_URL_RULE = "userRpm/AccessCtrlAccessRulesRpm.htm?rule_name=NMF-TARGET-ID-"+URL_ADD_BLOCK_BY_URL_RULE_PARAM+"&hosts_lists=0&targets_lists="+URL_ADD_BLOCK_BY_URL_RULE_PARAM+"&scheds_lists=255&allow=0&enable=1&Changed=0&SelIndex=0&Page=1&Save=Save";
         _urlRouters.put(eUrl.ADD_BLOCK_BY_URL_RULE, UrlRouter.createWithReplace(URL_ADD_BLOCK_BY_URL_RULE, "userRpm/MenuRpm.htm", URL_ADD_BLOCK_BY_URL_RULE_PARAM));
+
+        String URL_REMOVE_BLOCK_BY_URL_PARAM_RULE = "[_URL_]";
+        //String URL_REMOVE_BLOCK_BY_URL_RULE = "userRpm/AccessCtrlAccessTargetsRpm.htm?Del="+URL_REMOVE_BLOCK_BY_URL_PARAM_RULE+"&Page=1";
+        String URL_REMOVE_BLOCK_BY_URL_RULE = "userRpm/AccessCtrlAccessRulesRpm.htm?Del="+URL_REMOVE_BLOCK_BY_URL_PARAM_RULE+"&Page=1";
+        _urlRouters.put(eUrl.REMOVE_BLOCK_BY_URL_RULE, UrlRouter.createWithReplace(URL_REMOVE_BLOCK_BY_URL_RULE, "userRpm/MenuRpm.htm", URL_REMOVE_BLOCK_BY_URL_PARAM_RULE));
+
+
+        String HTML_URL_BEGIN_RULE = "var access_rules_data_param = new Array(\n";
+        _urlRouters.put(eUrl.GET_URL_LIST_BLOCKED_RULE, UrlRouter.createWithFinder("userRpm/AccessCtrlAccessRulesRpm.htm", "userRpm/MenuRpm.htm", HTML_URL_BEGIN_RULE, "0,0 );", "ERROR HTML_URL_BEGIN_RULE"));
+
 
 
     }
