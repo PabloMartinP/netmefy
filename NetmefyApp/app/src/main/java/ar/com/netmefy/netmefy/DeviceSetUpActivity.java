@@ -137,6 +137,7 @@ public class DeviceSetUpActivity extends AppCompatActivity {
             });*/
         }else{
             Toast.makeText(getApplicationContext(), "No puede autobloquearse!", Toast.LENGTH_SHORT ).show();
+            progressBar.hide();
         }
     }
 
