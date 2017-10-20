@@ -1,6 +1,7 @@
 package ar.com.netmefy.netmefy.cliente;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Handler;
@@ -10,6 +11,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.Switch;
 
 import com.android.volley.Response;
@@ -123,7 +125,9 @@ public class ControlParentalActivity extends AppCompatActivity {
     public void updateList(boolean isChecked){
         List<WebPageToBlockItem> pagesToAdd = new ArrayList<>();
         List<WebPageToBlockItem> pagesToRemove = new ArrayList<>();
-
+        final ProgressDialog progressDialogAdd = Utils.getProgressBar(this, "Aplicando cambios el router");
+        final ProgressDialog progressDialogRemove = Utils.getProgressBar(this, "Aplicando cambios el router");
+        progressDialogAdd.show();
         if(isChecked){
             for (int i = 0; i < adapter.getCount(); i++) {
                 WebPageToBlockItem view =  adapter.getItem(i);
@@ -149,46 +153,90 @@ public class ControlParentalActivity extends AppCompatActivity {
         }
         String url = "";
         //////////////////////////////////////////////
-        for (WebPageToBlockItem item : pagesToAdd) {
-            url = item.getUrl();
-            router.addBlockByUrl(url, new Response.Listener() {
-                @Override
-                public void onResponse(Object response) {
+        if(pagesToAdd.size()>0){
+            for (WebPageToBlockItem item : pagesToAdd) {
+                url = item.getUrl();
+                router.addBlockByUrl(url, new Response.Listener() {
+                    @Override
+                    public void onResponse(Object response) {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                progressDialogAdd.hide();
+                            }
+                        });
 
-                }
-            }, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
 
-                }
-            }, new Response.Listener() {
-                @Override
-                public void onResponse(Object response) {
-
-                }
-            });
+                    }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                progressDialogAdd.hide();
+                            }
+                        });
+                    }
+                }, new Response.Listener() {
+                    @Override
+                    public void onResponse(Object response) {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                progressDialogAdd.hide();
+                            }
+                        });
+                    }
+                });
+            }
+        }else{
+            progressDialogAdd.hide();
         }
+
         ////////////////////////////////////////////////////////////////////
-        //TODO: FALTA AGREGAR QUE SOLO BORRE LAS PAGINAS QUE EXISTAN, LAS QUE NO EXISTAN QUE NO LAS BORRE
-        for (WebPageToBlockItem item : pagesToRemove) {
-            url = item.getUrl();
-            router.removeBlockByUrl(url, new Response.Listener() {
-                @Override
-                public void onResponse(Object response) {
+        progressDialogRemove.show();
+        if(pagesToRemove.size()>0){
+            //TODO: FALTA AGREGAR QUE SOLO BORRE LAS PAGINAS QUE EXISTAN, LAS QUE NO EXISTAN QUE NO LAS BORRE
+            for (WebPageToBlockItem item : pagesToRemove) {
+                url = item.getUrl();
+                router.removeBlockByUrl(url, new Response.Listener() {
+                    @Override
+                    public void onResponse(Object response) {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                progressDialogRemove.hide();
+                            }
+                        });
+                    }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                progressDialogRemove.hide();
+                            }
+                        });
+                    }
+                }, new Response.Listener() {
+                    @Override
+                    public void onResponse(Object response) {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                progressDialogRemove.hide();
+                            }
+                        });
 
-                }
-            }, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-
-                }
-            }, new Response.Listener() {
-                @Override
-                public void onResponse(Object response) {
-
-                }
-            });
+                    }
+                });
+            }
+        }else{
+            progressDialogRemove.hide();
         }
+
         //////////////////////////////////////////////////
     }
 

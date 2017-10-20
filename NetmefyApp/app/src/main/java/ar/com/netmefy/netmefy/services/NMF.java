@@ -178,4 +178,16 @@ public class NMF {
         }
         return cant;
     }
+
+    public static void marcarNotificacionComoCalificada(int notificacionId, int calificacion, Context context) {
+        for (notificacionModel nm : NMF.notificaciones) {
+            if(nm.notificacion_sk == notificacionId){
+                nm.leido = true;
+                nm.ot_calificacion = calificacion;
+                break;
+            }
+        }
+        Session session = new Session(context);
+        session.setNotificaciones(NMF.notificaciones);
+    }
 }

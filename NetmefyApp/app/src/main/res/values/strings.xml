@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">Netmefy</string>
-    <string name="slogan">Configurar tu red nunca fue tan facil</string>
+    <string name="slogan">El control de tu lado</string>
 
     <string name="error_login">El cliente no existe.</string>
     <string name="insert_client_number">Ingresar número de cliente:</string>

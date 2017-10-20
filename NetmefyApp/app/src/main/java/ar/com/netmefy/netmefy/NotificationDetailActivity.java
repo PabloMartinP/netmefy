@@ -69,15 +69,19 @@ public class NotificationDetailActivity extends AppCompatActivity {
         calificacion.putExtra("ot_id", ot_id);
         calificacion.putExtra("ir_a_main", false);
 
-        startActivity(calificacion);
+        startActivityForResult(calificacion, 1);
     }
 
-/*
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(resultCode==RESULT_CANCELED){
-            this.finish();
-        }
-    }*/
+        Intent refresh = new Intent(this, NotificationDetailActivity.class);
+        refresh.putExtra("notifcation", notificationId);
+        refresh.putExtra("ot_id", ot_id);
+        startActivity(refresh);
+        this.finish();
+    }
+
+
 }

@@ -237,6 +237,8 @@ public class MainActivity extends AppCompatActivity  {
             }
         }catch (Exception e){
             e.printStackTrace();
+            Utils.newToast(getApplicationContext(), e.getMessage());
+
             pg.hide();
 
         }
@@ -462,8 +464,8 @@ public class MainActivity extends AppCompatActivity  {
                 try {
                     final TimerTask _this = this;
 
-                    if(NMF.tipoUsuarioApp!=null && FirebaseInstanceId.getInstance()!=null && FirebaseInstanceId.getInstance().getToken()!=null){
-                        api.saveFirebaseToken(NMF.tipoUsuarioApp.id, session.getUserType(), FirebaseInstanceId.getInstance().getToken(), new Response.Listener<String>() {
+                    if(NMF.tipoUsuarioApp!=null && NMF.usuario!=null && FirebaseInstanceId.getInstance()!=null && FirebaseInstanceId.getInstance().getToken()!=null){
+                        api.saveFirebaseToken(NMF.tipoUsuarioApp.id, NMF.usuario.usuario_sk, session.getUserType(), FirebaseInstanceId.getInstance().getToken(), new Response.Listener<String>() {
                             @Override
                             public void onResponse(String response) {
                                 response = response.toString();
@@ -656,7 +658,7 @@ public class MainActivity extends AppCompatActivity  {
             }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
-                    Toast.makeText(getApplicationContext(), "Error al conectar con el Router", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), "Error al conectar con el Router " + router.getName(), Toast.LENGTH_LONG).show();
                     changeRouterToRed();
                     pg.hide();
                 }
@@ -664,7 +666,7 @@ public class MainActivity extends AppCompatActivity  {
 
 
         }catch (Exception e){
-            Toast.makeText(getApplicationContext(), "Error", Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), "Error en load info router ", Toast.LENGTH_LONG).show();
             pg.hide();
             //progress.dismiss();
         }
@@ -834,7 +836,7 @@ public class MainActivity extends AppCompatActivity  {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        router.listDevicesConnected(new Response.Listener<List<Device>>() {
+        /*router.listDevicesConnected(new Response.Listener<List<Device>>() {
             @Override
             public void onResponse(List<Device> devices) {
                 populate_list_connected(devices);
@@ -844,8 +846,9 @@ public class MainActivity extends AppCompatActivity  {
             public void onErrorResponse(VolleyError error) {
 
             }
-        });
+        });*/
         loadNotificationCount();
+        //////////////////////////////////
         /*if(resultCode==RESULT_CANCELED){
             //AL VOLVER TIENE QUE RECARGAR LA LISTA DE DISPO CONECTADOS
             //Intent refresh = new Intent(this, MainActivity.class);

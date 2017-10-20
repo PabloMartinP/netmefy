@@ -10,4 +10,5 @@ public class usuarioAddModel {
     public String usuario_nombre;
     public String usuario_sexo;
     public String usuario_email;
+    public int usuario_edad;
 }

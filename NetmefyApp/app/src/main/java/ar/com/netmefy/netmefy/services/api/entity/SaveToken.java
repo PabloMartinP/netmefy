@@ -13,6 +13,8 @@ public class SaveToken {
     public boolean es_cliente ;
     public boolean es_tecnico ;
     public String tokenid;
+    public int usuario_sk;
+
 
     public String getTokenid() {
         return tokenid;

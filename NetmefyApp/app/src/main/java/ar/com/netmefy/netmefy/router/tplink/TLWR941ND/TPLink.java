@@ -363,7 +363,10 @@ public class TPLink extends Router {
     }
 
     protected List<String> parseHtmlUrlListBlockedRule(String html){
+
         List<String> list = new ArrayList<String>();
+        if(html.equalsIgnoreCase("ERROR HTML_URL_BEGIN_RULE"))
+            return  list;
 
         String url ;
 

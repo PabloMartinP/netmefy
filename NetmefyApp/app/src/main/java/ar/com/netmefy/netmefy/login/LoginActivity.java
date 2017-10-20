@@ -3,6 +3,7 @@ package ar.com.netmefy.netmefy.login;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Color;
+import android.icu.text.DateFormat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
@@ -18,6 +19,11 @@ import com.facebook.login.widget.LoginButton;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 
 import ar.com.netmefy.netmefy.MainActivity;
 import ar.com.netmefy.netmefy.R;
@@ -69,7 +75,8 @@ public class LoginActivity extends AppCompatActivity {
                         String fb_sexo = "";
                         String fb_nacimiento = "";
                         String fb_email = "";
-                        String fb_id ;
+                        String fb_id ="";
+                        int edad=0;
                         try {
                             fb_id = object.getString("id");
                             fb_nombre = object.getString("first_name");
@@ -77,6 +84,23 @@ public class LoginActivity extends AppCompatActivity {
                             fb_email = object.getString("email");
                             fb_nacimiento = object.getString("birthday");
                             fb_sexo = object.getString("gender");
+
+                            String dtStart = fb_nacimiento;
+                            SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy");
+                            Date dateBirthDay = null;
+                            try {
+                                dateBirthDay = format.parse(dtStart);
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                            }
+
+                            Date date1 = dateBirthDay;
+                            Date date2 = Calendar.getInstance().getTime();
+                            SimpleDateFormat simpleDateformat=new SimpleDateFormat("yyyy");
+                            Integer.parseInt(simpleDateformat.format(date1));
+
+                            edad = Integer.parseInt(simpleDateformat.format(date2))- Integer.parseInt(simpleDateformat.format(date1));
+
 
 
                         } catch (JSONException e) {
@@ -89,6 +113,7 @@ public class LoginActivity extends AppCompatActivity {
                         user.usuario_email = fb_email;
                         user.usuario_nombre = fb_nombre;
                         user.usuario_sexo = fb_sexo;
+                        user.usuario_edad = edad;
 
                         api.addUser(user, new Response.Listener() {
                             @Override

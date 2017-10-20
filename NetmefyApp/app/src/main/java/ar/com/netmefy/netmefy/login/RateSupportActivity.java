@@ -56,7 +56,7 @@ public class RateSupportActivity extends AppCompatActivity {
         //sendRate();
 
 
-        int calificacion = Math.round(rbRateSupport.getRating());
+        final int calificacion = Math.round(rbRateSupport.getRating());
 
         int ot_id_int =  Integer.parseInt(ot_id);
         Api api = Api.getInstance(getApplicationContext());
@@ -69,6 +69,7 @@ public class RateSupportActivity extends AppCompatActivity {
 
                 }else{
                     NMF.marcarNotificacionComoLeida(notificacionId, getApplicationContext());
+                    NMF.marcarNotificacionComoCalificada(notificacionId,calificacion, getApplicationContext());
                     Toast.makeText(getApplicationContext(), "calificación enviada", Toast.LENGTH_SHORT).show();
                     if(ir_a_main){
                         startActivity(new Intent(RateSupportActivity.this,MainActivity.class));

@@ -57,6 +57,7 @@ public class ControlParentalWebPageSetUp extends AppCompatActivity {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+                Utils.newToast(getApplicationContext(), "Error al conectar con el router " + router.getName());
                 progressDialog.hide();
             }
         }, new Response.Listener() {

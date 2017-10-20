@@ -40,15 +40,14 @@ public class NotificationListActivity extends AppCompatActivity {
                 NMF.notificaciones = notificaciones;
                 for (notificacionModel nm : NMF.notificaciones ) {
                     for (notificacionModel nmg : notificacionesGuardadas) {
-                        if(nm.notificacion_sk == nmg.notificacion_sk){
+                        if(nm.notificacion_sk == nmg.notificacion_sk ){
                             nm.leido = nmg.leido;
                             break;
                         }
                     }
+                    if(nm.ot_calificacion!=0 && !nm.ot_id.isEmpty())
+                        nm.leido = true;
                 }
-
-                //session.setNotificaciones(notificaciones);
-
 
                 //converto la lista en items
                 final NotificationItem[] values ;
