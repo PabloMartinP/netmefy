@@ -53,7 +53,8 @@ public class DeviceSetUpActivity extends AppCompatActivity {
         et_apodo = (EditText) findViewById(R.id.et_device_config_apodo);
         btn_bloquear = (Button) findViewById(R.id.button2);
 
-        circleImageView2.setImageResource(device_selected.resId);
+        int resId = Utils.getResIdFromImageName(this, "guest_w_128");
+        circleImageView2.setImageResource(resId);
         tv_mac.setText(device_selected.mac);
         et_tipo.setText(device_selected.tipo);
         et_apodo.setText(device_selected.apodo);

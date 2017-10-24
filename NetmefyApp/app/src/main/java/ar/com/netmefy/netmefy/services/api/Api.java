@@ -15,6 +15,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -810,7 +811,7 @@ public  class Api {
         execute(rq);
     }
 
-    public void addTest(int cliente_sk, int ot_id, int vel_mb, int ping, int dB, final Response.Listener success){
+    public void addTest(int cliente_sk, int ot_id, double vel_mb, double ping, int dB, final Response.Listener success){
         testModel test = new testModel();
         test.cliente_sk = cliente_sk;
         test.vel_mb_medidos = vel_mb;
@@ -820,7 +821,7 @@ public  class Api {
         test.flag_cableado_nuevo = null;
         test.flag_instalacion = -1;
         test.flag_modem_ok = 1;
-        //test.ping = ping;
+        test.ping = ping;
 
         Map<String, String> data = null;
         try {
@@ -923,4 +924,31 @@ public  class Api {
         execute(rq);
     }
 
+    public void marcarNotificacionComoLeida(int notificationId,final Response.Listener success) {
+        String url = "http://200.82.0.24/api/notificaciones/"+String.valueOf(notificationId) + "?cliente_sk="+ String.valueOf(NMF.usuario.cliente_sk) + "&usuario_sk=" + String.valueOf(NMF.usuario.usuario_sk);
+
+
+        JsonRequestApi rq = new JsonRequestApi(Request.Method.PUT, url, null, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                String status = "";
+                try {
+                    status = response.get("status").toString();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                if(status.equalsIgnoreCase("ok"))
+                    success.onResponse("ok");
+                else
+                    success.onResponse(null);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                success.onResponse(null);
+            }
+        });
+        execute(rq);
+    }
 }

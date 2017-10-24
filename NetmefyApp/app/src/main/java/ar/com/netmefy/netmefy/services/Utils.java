@@ -125,4 +125,9 @@ public class Utils {
     public static void newToast(Context context, String mensaje) {
         Toast.makeText(context, mensaje, Toast.LENGTH_SHORT).show();
     }
+
+    public static int getResIdFromImageName(Activity activity, String drawbleName){
+        int resID =activity.getResources().getIdentifier(drawbleName , "drawable", activity.getPackageName());
+        return resID;
+    }
 }

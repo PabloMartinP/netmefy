@@ -157,8 +157,12 @@ public class PruebasActivity extends AppCompatActivity {
                         tvVelocidad.setText(response.toString());
                         loadingBarTestSpeed.setVisibility(View.INVISIBLE);
 
+
+                        saveTests();
+
                     }
                 });
+
             }
         });
     }
@@ -223,15 +227,21 @@ public class PruebasActivity extends AppCompatActivity {
     }
 
     public void saveTest (View view){
+
+        saveTests();
+
+    }
+
+    private void saveTests(){
         if(tvPingAMostrar.getText().toString().equals("..."))
             return;
         //TODO: PONER ACA PARA GUARDAR EL TEST QUE SE REALIZO
-        double vel_mb_ok  = Double.parseDouble(tvVelocidad.getText().toString().replace("Mbps", ""));
-        double ping_ok = Double.parseDouble(tvPingAMostrar.getText().toString().replace("ms", ""));
+        double vel_mb  = Double.parseDouble(tvVelocidad.getText().toString().replace("Mbps", ""));
+        double ping = Double.parseDouble(tvPingAMostrar.getText().toString().replace("ms", ""));
         double dB_ok = Double.parseDouble(tvSenal.getText().toString().replace("dB", ""));
 
-        int vel_mb = (int)vel_mb_ok;
-        int ping = (int)ping_ok;
+        //int vel_mb = (int)vel_mb_ok;
+        //int ping = (int)ping_ok;
         int dB = (int)dB_ok;
 
         if(cliente_sk == -1)
@@ -246,7 +256,7 @@ public class PruebasActivity extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), "Hubo un error al guardar el test", Toast.LENGTH_SHORT).show();
                 }else{
                     Toast.makeText(getApplicationContext(), "Guardado correctamente", Toast.LENGTH_SHORT).show();
-                    finish();
+                    //finish();
                 }
 
             }

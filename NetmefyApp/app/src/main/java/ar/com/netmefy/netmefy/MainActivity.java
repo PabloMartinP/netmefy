@@ -141,6 +141,8 @@ public class MainActivity extends AppCompatActivity  {
         tv_internet_speed = (TextView) findViewById(R.id.tv_internet_speed);
         tv_client_id= (TextView) findViewById(R.id.tv_client_id);
 
+
+
         tv_deviceConnected[0] =(TextView) findViewById(R.id.tvDeviceConnected1);
         tv_deviceConnected[1] =(TextView) findViewById(R.id.tvDeviceConnected2);
         tv_deviceConnected[2] =(TextView) findViewById(R.id.tvDeviceConnected3);
@@ -150,14 +152,21 @@ public class MainActivity extends AppCompatActivity  {
         iv_deviceConnected[2] =(CircleImageView) findViewById(R.id.ivDeviceConnected3);
         iv_deviceConnected[3] =(CircleImageView) findViewById(R.id.ivDeviceConnected4);
 ////////////////////////////////////////////////////////////
-        tv_deviceConnected[0].setVisibility(View.INVISIBLE);
-        tv_deviceConnected[1].setVisibility(View.INVISIBLE);
-        tv_deviceConnected[2].setVisibility(View.INVISIBLE);
-        tv_deviceConnected[3].setVisibility(View.INVISIBLE);
-        iv_deviceConnected[0].setVisibility(View.INVISIBLE);
-        iv_deviceConnected[1].setVisibility(View.INVISIBLE);
-        iv_deviceConnected[2].setVisibility(View.INVISIBLE);
-        iv_deviceConnected[3].setVisibility(View.INVISIBLE);
+        for (int i = 0; i < 4; i++) {
+            tv_deviceConnected[i].setVisibility(View.INVISIBLE);
+            iv_deviceConnected[i].setVisibility(View.INVISIBLE);
+            iv_deviceConnected[i].setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    String mac = v.getTag(R.id.device_mac).toString();
+                    Intent device = new Intent(MainActivity.this, DeviceSetUpActivity.class).putExtra("mac", mac);
+                    startActivityForResult(device, 1);
+                }
+            });
+        }
+
+
+        ////////////////////////////////////////////////////////////
         cantidadNotificaciones = (CircularTextView) findViewById(R.id.cantidadNotificaciones);
         cantidadNotificaciones.setStrokeWidth(1);
         cantidadNotificaciones.setStrokeColor("#ffffff");
@@ -260,6 +269,8 @@ public class MainActivity extends AppCompatActivity  {
                             break;
                         }
                     }
+                    if(nm.ot_calificacion!=0 && !nm.ot_id.isEmpty())
+                        nm.leido = true;
                 }
 
                 //contar
@@ -689,7 +700,7 @@ public class MainActivity extends AppCompatActivity  {
                 }, new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(getApplicationContext(), "Error al traer la lista conectados", Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(getApplicationContext(), "Error al traer la lista conectados", Toast.LENGTH_SHORT).show();
                     }
                 });
             }
@@ -713,10 +724,12 @@ public class MainActivity extends AppCompatActivity  {
 
             tv_deviceConnected[i].setVisibility(View.VISIBLE);
             iv_deviceConnected[i].setVisibility(View.VISIBLE);
+            iv_deviceConnected[i].setTag(R.id.device_mac, d.mac.toString());
         }
         for (int j = i; j < 4; j++) {
             tv_deviceConnected[j].setVisibility(View.INVISIBLE);
             iv_deviceConnected[j].setVisibility(View.INVISIBLE);
+            iv_deviceConnected[i].setTag(R.id.device_mac, "");
         }
 
     }

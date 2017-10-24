@@ -7,8 +7,11 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.android.volley.Response;
+
 import ar.com.netmefy.netmefy.login.RateSupportActivity;
 import ar.com.netmefy.netmefy.services.NMF;
+import ar.com.netmefy.netmefy.services.api.Api;
 import ar.com.netmefy.netmefy.services.api.entity.notificacionModel;
 import ar.com.netmefy.netmefy.services.login.Session;
 
@@ -20,6 +23,7 @@ public class NotificationDetailActivity extends AppCompatActivity {
     private String ot_id;
     private Session session;
     int notificationId;
+    Api api;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,10 +31,10 @@ public class NotificationDetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_notification_detail);
         session = new Session(getApplicationContext());
 
-
+        api = Api.getInstance(getApplicationContext());
         Bundle inBundle = getIntent().getExtras();
         ot_id =  inBundle.getString("ot_id");
-        notificationId =  inBundle.getInt("notifcation");//TODO: se puede usar para saber el id de la notificacion.
+        notificationId =  inBundle.getInt("notifcation");
         notificacionModel notif = null;
 
         //NMF.marcarNotificacionComoLeida(notificationId, getApplicationContext());
@@ -56,7 +60,15 @@ public class NotificationDetailActivity extends AppCompatActivity {
         if (ot_id.isEmpty()){
             calificar.setVisibility(View.INVISIBLE);
             session.setNotificaciones((NMF.notificaciones));
-            NMF.marcarNotificacionComoLeida(notificationId, getApplicationContext());
+            api.marcarNotificacionComoLeida(notificationId, new Response.Listener() {
+                @Override
+                public void onResponse(Object response) {
+                    if(response!=null)
+                        NMF.marcarNotificacionComoLeida(notificationId, getApplicationContext());
+
+                }
+            });
+
         }else{
             calificar.setVisibility(View.VISIBLE);
             //si no es para calificar no marco como leido
@@ -65,7 +77,7 @@ public class NotificationDetailActivity extends AppCompatActivity {
 
     public void irAClificar (View view){
         Intent calificacion = new Intent(NotificationDetailActivity.this, RateSupportActivity.class);
-        calificacion.putExtra("notificacionId", notificationId ); //TODO: Poner el user que va
+        calificacion.putExtra("notificacionId", notificationId );
         calificacion.putExtra("ot_id", ot_id);
         calificacion.putExtra("ir_a_main", false);
 

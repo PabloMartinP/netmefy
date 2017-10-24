@@ -136,9 +136,10 @@
         android:ems="10"
         android:inputType="textPersonName"
         android:text="elTIpo"
+        android:textAlignment="center"
+        app:layout_constraintHorizontal_bias="0.503"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/et_device_config_apodo"
-        app:layout_constraintHorizontal_bias="0.503" />
+        app:layout_constraintTop_toBottomOf="@+id/et_device_config_apodo" />
 
 </android.support.constraint.ConstraintLayout>

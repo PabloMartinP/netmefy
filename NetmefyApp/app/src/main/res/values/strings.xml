@@ -71,4 +71,8 @@
     <string name="calificar">Calificar</string>
     <string name="gestion">Gestion</string>
 
+    <item
+        type="id"
+        name="device_mac" />
+
 </resources>

@@ -1,5 +1,7 @@
 package ar.com.netmefy.netmefy.services.api.entity;
 
+import java.math.BigDecimal;
+
 /**
  * Created by fiok on 12/10/2017.
  */
@@ -10,9 +12,10 @@ public class testModel {
     public Integer ot_id;
     public int flag_instalacion;
     public String comentario;
-    public int vel_mb_medidos;
+    public double vel_mb_medidos;
     public int potencia_recep;
     public  Integer flag_cableado_nuevo;
     public int flag_modem_ok;
+    public double ping;
 
 }
