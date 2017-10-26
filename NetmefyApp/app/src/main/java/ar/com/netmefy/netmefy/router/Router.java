@@ -9,6 +9,7 @@ import com.android.volley.VolleyError;
 
 import com.android.volley.toolbox.StringRequest;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import ar.com.netmefy.netmefy.adapters.elements.DeviceItem;
@@ -339,11 +340,28 @@ public abstract class Router {
 
     protected abstract List<String> parseHtmlUrlListBlocked(String html);
 
-    public void getUrlListBlocked(final Response.Listener<List<String>> success, Response.ErrorListener error) {
+    public void getUrlListBlocked(final Response.Listener<List<String>> success, final Response.ErrorListener error) {
         getValueFromHtmlResponse(_routerConstants.get(eUrl.GET_URL_LIST_BLOCKED), new Response.Listener<String>() {
             @Override
             public void onResponse(final String htmlListBlocked) {
-                success.onResponse(parseHtmlUrlListBlocked(htmlListBlocked));
+
+                final List<String> listPageOne = parseHtmlUrlListBlocked(htmlListBlocked);
+
+                getValueFromHtmlResponse(_routerConstants.get(eUrl.GET_URL_LIST_BLOCKED_PAGE_TWO), new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String htmlListBlockedPageTwo) {
+                        List<String> listPageTwo = parseHtmlUrlListBlocked(htmlListBlockedPageTwo);
+
+                        List<String> pagesBlocked = new ArrayList<String>();
+                        pagesBlocked.addAll(listPageOne);
+                        pagesBlocked.addAll(listPageTwo);
+
+
+                        success.onResponse(pagesBlocked);
+                    }
+                }, error);
+
+
             }
         }, error);
     }

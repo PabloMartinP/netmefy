@@ -134,11 +134,17 @@ public class TPLink extends Router {
                 }
 
                 if(number!=-1)
-                    setValueAndReconnect(String.valueOf(number),
+                    setValue(String.valueOf(number),
+                            _routerConstants.get(eUrl.ADD_BLOCK_BY_URL_RULE),
+                            success,
+                            error
+                            );
+
+                    /*setValueAndReconnect(String.valueOf(number),
                             _routerConstants.get(eUrl.ADD_BLOCK_BY_URL_RULE),
                             progress,
                             error,
-                            success);
+                            success);*/
             }
         }, error);
         /*setValueAndReconnect(url,
@@ -160,7 +166,10 @@ public class TPLink extends Router {
         getValueFromHtmlResponse(_routerConstants.get(eUrl.GET_URL_LIST_BLOCKED_RULE), new Response.Listener<String>() {
             @Override
             public void onResponse(final String htmlListBlocked) {
-                success.onResponse(parseHtmlUrlListBlockedRule(htmlListBlocked));
+                List<String> listBlockedfinal =parseHtmlUrlListBlockedRule(htmlListBlocked);
+
+
+                success.onResponse(listBlockedfinal);
             }
         }, error);
     }
@@ -181,11 +190,16 @@ public class TPLink extends Router {
                 }
 
                 if(number!=-1)
-                    setValueAndReconnect(String.valueOf(number),
+                    setValue(String.valueOf(number),
+                            _routerConstants.get(eUrl.REMOVE_BLOCK_BY_URL_RULE),
+                            success,
+                            error
+                    );
+                    /*setValueAndReconnect(String.valueOf(number),
                             _routerConstants.get(eUrl.REMOVE_BLOCK_BY_URL_RULE),
                             progress,
                             error,
-                            success);
+                            success);*/
                 else
                     success.onResponse("ok");
             }
@@ -377,7 +391,8 @@ public class TPLink extends Router {
         for (int i=0;i<splitted.length;i++){
             //url  = splitted[i].replace("\"", "").split(",")[3];
             //url  = splitted[i].split("\"")[1];
-            url  = splitted[i].split("\"")[5].replace("NMF-", "");
+            //url  = splitted[i].split("\"")[5].replace("NMF-", "");
+            url  = splitted[i].split("\"")[5];//nombre
 
             //splitted[i].split("\"")
 
@@ -402,7 +417,8 @@ public class TPLink extends Router {
 
         //RESTO UNO PORQUE SIEMPRE TRAE EL ULTIMO CON CERO
         for (int i=0;i<splitted.length-1;i++){
-            url  = splitted[i].replace("\"", "").split(",")[3];
+            //url  = splitted[i].replace("\"", "").split(",")[3];
+            url  = splitted[i].replace("\"", "").split(",")[1];
 
             if(!url.isEmpty()){
                 list.add(url.trim());

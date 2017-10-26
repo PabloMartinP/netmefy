@@ -145,20 +145,30 @@ public class ControlParentalActivity extends AppCompatActivity {
         }else{
             for (int i = 0; i < adapter.getCount(); i++) {
                 WebPageToBlockItem view =  adapter.getItem(i);
-                pagesToRemove.add(view);
+                if(view.getBlocked())
+                    pagesToRemove.add(view);
+
                 view.setReadOnly(false);
             }
 
             webPageListView.invalidateViews();
         }
         String url = "";
-        //////////////////////////////////////////////
-        if(pagesToAdd.size()>0){
+        ////////////////////////////////////////////////////////////////////////////////////////////
+        ////////////////////////////////////////////////////////////////////////////////////////////
+
+        final int cantPagesToAdd  =pagesToAdd.size();
+        if(cantPagesToAdd>0){
+
             for (WebPageToBlockItem item : pagesToAdd) {
-                url = item.getUrl();
+                //url = item.getUrl();
+                url = item.getName();
+
+
                 router.addBlockByUrl(url, new Response.Listener() {
                     @Override
                     public void onResponse(Object response) {
+
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
@@ -199,7 +209,8 @@ public class ControlParentalActivity extends AppCompatActivity {
         if(pagesToRemove.size()>0){
             //TODO: FALTA AGREGAR QUE SOLO BORRE LAS PAGINAS QUE EXISTAN, LAS QUE NO EXISTAN QUE NO LAS BORRE
             for (WebPageToBlockItem item : pagesToRemove) {
-                url = item.getUrl();
+                //url = item.getUrl();
+                url = item.getName();
                 router.removeBlockByUrl(url, new Response.Listener() {
                     @Override
                     public void onResponse(Object response) {
