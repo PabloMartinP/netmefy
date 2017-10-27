@@ -49,6 +49,11 @@ public class Nucom extends Router {
     }
 
     @Override
+    public void addUrlToTargetListBlocked2(String url, String nombre, Response.Listener progress, Response.ErrorListener error, Response.Listener success) {
+
+    }
+
+    @Override
     public StringRequest newStringRequest(UrlRouter urlRouter, Response.Listener listener, Response.ErrorListener errorListener) {
         return new StringRequestRouterNucom(urlRouter, listener, errorListener);
     }
@@ -349,5 +354,10 @@ public class Nucom extends Router {
                 progress,
                 error,
                 success);
+    }
+
+    @Override
+    public void removeBlockByUrlAll(Response.ErrorListener error, Response.Listener success) {
+
     }
 }

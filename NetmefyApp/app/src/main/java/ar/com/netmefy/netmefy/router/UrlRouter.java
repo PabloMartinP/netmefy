@@ -12,6 +12,7 @@ public class UrlRouter {
     private String _htmlBefore;
     private String _htmlAfter;
     private String _valueToReplace;
+    private String _valueToReplace2 = "";
 
     private String _textOnError;
 
@@ -33,15 +34,29 @@ public class UrlRouter {
         this._newValue = _newValue;
     }
 
+    public void set_newValue2(String _newValue) {
+        this._newValue2 = _newValue;
+    }
+    public String get_newValue2() {
+        return _newValue2;
+    }
+
     private String _newValue;
+    private String _newValue2 = "";
 
 
     public String get_valueToReplace() {
         return _valueToReplace;
     }
+    public String get_valueToReplace2() {
+        return _valueToReplace2;
+    }
 
     public void set_valueToReplace(String _valueToReplace) {
         this._valueToReplace = _valueToReplace;
+    }
+    public void set_valueToReplace2(String _valueToReplace) {
+        this._valueToReplace2 = _valueToReplace;
     }
 
     public String get_htmlBefore() {
@@ -93,6 +108,13 @@ public class UrlRouter {
         //aThis.set_newValue(newValue);
         return aThis;
     }
+    public static UrlRouter createWithReplace2(String url, String referrer, String valueToReplace, String valueToReplace2){
+        UrlRouter aThis = UrlRouter.create(url, referrer);
+        aThis.set_valueToReplace(valueToReplace);
+        aThis.set_valueToReplace2(valueToReplace2);
+        //aThis.set_newValue(newValue);
+        return aThis;
+    }
 
     private  boolean needReplace(){
         return _valueToReplace !=null && !_valueToReplace.isEmpty() && this._newValue!=null && !this._newValue.isEmpty();
@@ -119,6 +141,7 @@ public class UrlRouter {
         else{
             String url;
             url = _url.replace(this.get_valueToReplace(), this.get_newValue() );
+            url = url.replace(this.get_valueToReplace2(), this.get_newValue2() );
             String url1 = "";
 
             if(needSessionKey()){

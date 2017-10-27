@@ -161,6 +161,14 @@ public class TPLink extends Router {
                 error,
                 success);
     }
+    @Override
+    public void addUrlToTargetListBlocked2(String url, String value, Response.Listener progress, Response.ErrorListener error, Response.Listener success) {
+        setValueAndReconnect2(url,value,
+                _routerConstants.get(eUrl.ADD_BLOCK_BY_URL),
+                progress,
+                error,
+                success);
+    }
 
     public void getUrlListBlockedFromRule(final  Response.Listener success, final Response.ErrorListener error){
         getValueFromHtmlResponse(_routerConstants.get(eUrl.GET_URL_LIST_BLOCKED_RULE), new Response.Listener<String>() {
@@ -174,6 +182,17 @@ public class TPLink extends Router {
         }, error);
     }
 
+    @Override
+    public void removeBlockByUrlAll(final Response.ErrorListener error, final Response.Listener success){
+        UrlRouter urlRouter = _routerConstants.get(eUrl.REMOVE_BLOCK_BY_URL_ALL);
+        executeRequest(urlRouter, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+
+                success.onResponse("ok");
+            }
+        }, error);
+    }
     @Override
     public void removeBlockByUrl(final String urlToRemove, final Response.Listener progress, final Response.ErrorListener error, final Response.Listener success) {
         getUrlListBlockedFromRule(new Response.Listener<List<String>>() {

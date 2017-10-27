@@ -147,12 +147,18 @@ public class RouterConstants {
         _urlRouters.put(eUrl.GET_URL_LIST_BLOCKED_PAGE_TWO, UrlRouter.createWithFinder("userRpm/AccessCtrlAccessTargetsRpm.htm?Page=2", "userRpm/MenuRpm.htm", HTML_URL_BEGIN, ",0 );", "ERROR GET_URL_LIST_BLOCKED_PAGE_TWO"));
 
         String URL_ADD_BLOCK_BY_URL_PARAM = "[_URL_]";
-        String URL_ADD_BLOCK_BY_URL = "userRpm/AccessCtrlAccessTargetsRpm.htm?target_type=0&targets_lists_name="+URL_ADD_BLOCK_BY_URL_PARAM+"&dst_ip_start=&dst_ip_end=&dst_port_start=&dst_port_end=&proto=0&Commonport=0&url_0="+URL_ADD_BLOCK_BY_URL_PARAM+"&url_1=&url_2=&url_3=&Changed=0&SelIndex=0&fromAdd=0&Page=1&Save=Save";
-        _urlRouters.put(eUrl.ADD_BLOCK_BY_URL, UrlRouter.createWithReplace(URL_ADD_BLOCK_BY_URL, "userRpm/MenuRpm.htm", URL_ADD_BLOCK_BY_URL_PARAM));
+        String URL_ADD_BLOCK_BY_URL_PARAM_2 = "[_NOMBRE_]";
+        String URL_ADD_BLOCK_BY_URL = "userRpm/AccessCtrlAccessTargetsRpm.htm?target_type=0&targets_lists_name="+URL_ADD_BLOCK_BY_URL_PARAM_2+"&dst_ip_start=&dst_ip_end=&dst_port_start=&dst_port_end=&proto=0&Commonport=0&url_0="+URL_ADD_BLOCK_BY_URL_PARAM+"&url_1=&url_2=&url_3=&Changed=0&SelIndex=0&fromAdd=0&Page=1&Save=Save";
+        _urlRouters.put(eUrl.ADD_BLOCK_BY_URL, UrlRouter.createWithReplace2(URL_ADD_BLOCK_BY_URL,"userRpm/MenuRpm.htm", URL_ADD_BLOCK_BY_URL_PARAM, URL_ADD_BLOCK_BY_URL_PARAM_2));
 
         String URL_REMOVE_BLOCK_BY_URL_PARAM = "[_URL_]";
         String URL_REMOVE_BLOCK_BY_URL = "userRpm/AccessCtrlAccessTargetsRpm.htm?Del="+URL_REMOVE_BLOCK_BY_URL_PARAM+"&Page=1";
         _urlRouters.put(eUrl.REMOVE_BLOCK_BY_URL, UrlRouter.createWithReplace(URL_REMOVE_BLOCK_BY_URL, "userRpm/MenuRpm.htm", URL_REMOVE_BLOCK_BY_URL_PARAM));
+
+
+        _urlRouters.put(eUrl.REMOVE_BLOCK_BY_URL_ALL, UrlRouter.createWithFinder("userRpm/AccessCtrlAccessRulesRpm.htm?doAll=DelAll&Page=1", "userRpm/MenuRpm.htm", HTML_URL_BEGIN, ",0 );", "ERROR REMOVE_BLOCK_BY_URL_ALL"));
+
+
 
         String URL_ADD_BLOCK_BY_URL_RULE_PARAM = "[_URL_]";
         String URL_ADD_BLOCK_BY_URL_RULE = "userRpm/AccessCtrlAccessRulesRpm.htm?rule_name=NMF-TARGET-ID-"+URL_ADD_BLOCK_BY_URL_RULE_PARAM+"&hosts_lists=0&targets_lists="+URL_ADD_BLOCK_BY_URL_RULE_PARAM+"&scheds_lists=255&allow=0&enable=1&Changed=0&SelIndex=0&Page=1&Save=Save";

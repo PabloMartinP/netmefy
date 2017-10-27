@@ -178,6 +178,17 @@ public abstract class Router {
         }, errorListener);
     }
 
+    protected void setValue2(String newValue, String newValue2, final UrlRouter urlRouter, final Response.Listener listener, final Response.ErrorListener errorListener){
+        urlRouter.set_newValue(newValue);
+        urlRouter.set_newValue2(newValue2);
+        executeRequest(urlRouter, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                listener.onResponse("ok-"+response);
+            }
+        }, errorListener);
+    }
+
 
 
     public abstract void _setWifiSsid(final ConfigWifi configWifi, final Response.Listener progressListener, final Response.ErrorListener errorListener, final Response.Listener successListener) ;
@@ -322,6 +333,23 @@ public abstract class Router {
         }, error);
 
     }
+    protected void setValueAndReconnect2(final String newValue, final String newValue2, final UrlRouter urlRouter, final Response.Listener progress, final Response.ErrorListener error, final Response.Listener success){
+        getConfigWifi(new Response.Listener<ConfigWifi>() {
+            @Override
+            public void onResponse(final ConfigWifi configWifi) {
+                setValue2(newValue, newValue2, urlRouter, new Response.Listener() {
+                    @Override
+                    public void onResponse(Object response) {
+                        WifiUtils.connectToNetwork(
+                                configWifi,
+                                _context,
+                                progress, success);
+                    }
+                }, error);
+            }
+        }, error);
+
+    }
 
     public void getMacListBlocked(final Response.Listener<List<Device>> success, final Response.ErrorListener error){
         getValueFromHtmlResponse(_routerConstants.get(eUrl.GET_MAC_LIST_BLOCKED), new Response.Listener<String>() {
@@ -367,8 +395,10 @@ public abstract class Router {
     }
 
     public abstract void addUrlToTargetListBlocked(String url, Response.Listener progress, Response.ErrorListener error, Response.Listener success);
+    public abstract void addUrlToTargetListBlocked2(String url, String nombre, Response.Listener progress, Response.ErrorListener error, Response.Listener success);
 
     public abstract void addBlockByUrl(String url, Response.Listener progress, Response.ErrorListener error, Response.Listener success);
 
     public abstract void removeBlockByUrl(String url, Response.Listener progress, Response.ErrorListener error, Response.Listener success);
+    public abstract void removeBlockByUrlAll(Response.ErrorListener error, Response.Listener success);
 }

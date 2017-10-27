@@ -19,6 +19,7 @@ import com.android.volley.VolleyError;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import ar.com.netmefy.netmefy.ControlParentalWebPageSetUp;
 import ar.com.netmefy.netmefy.DeviceListActivity;
@@ -84,7 +85,7 @@ public class ControlParentalActivity extends AppCompatActivity {
                                 updateList(isChecked);
                                 ///////////////////////////////////////////////////////////////////
                                 final List<paginaControlParentalModel> paginasModel= new ArrayList<paginaControlParentalModel>();
-                                for (int i = 0; i < webPageListView.getCount()-1; i++) {
+                                for (int i = 0; i < webPageListView.getCount(); i++) {
                                     WebPageToBlockItem v = (WebPageToBlockItem) webPageListView.getItemAtPosition(i);
                                     paginaControlParentalModel p = v.toPaginaControlParentalModel();
 
@@ -123,6 +124,7 @@ public class ControlParentalActivity extends AppCompatActivity {
     }
 
     public void updateList(boolean isChecked){
+
         List<WebPageToBlockItem> pagesToAdd = new ArrayList<>();
         List<WebPageToBlockItem> pagesToRemove = new ArrayList<>();
         final ProgressDialog progressDialogAdd = Utils.getProgressBar(this, "Aplicando cambios el router");
@@ -156,47 +158,44 @@ public class ControlParentalActivity extends AppCompatActivity {
         String url = "";
         ////////////////////////////////////////////////////////////////////////////////////////////
         ////////////////////////////////////////////////////////////////////////////////////////////
+        final AtomicInteger cantPagesToAdd  =new AtomicInteger(pagesToAdd.size());
 
-        final int cantPagesToAdd  =pagesToAdd.size();
-        if(cantPagesToAdd>0){
+        if(cantPagesToAdd.get()>0){
 
             for (WebPageToBlockItem item : pagesToAdd) {
                 //url = item.getUrl();
                 url = item.getName();
 
-
                 router.addBlockByUrl(url, new Response.Listener() {
                     @Override
                     public void onResponse(Object response) {
-
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                progressDialogAdd.hide();
-                            }
-                        });
-
 
                     }
                 }, new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                progressDialogAdd.hide();
-                            }
-                        });
+                        int cant = cantPagesToAdd.decrementAndGet();
+                        if(cant==0){
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    progressDialogAdd.hide();
+                                }
+                            });
+                        }
                     }
                 }, new Response.Listener() {
                     @Override
                     public void onResponse(Object response) {
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                progressDialogAdd.hide();
-                            }
-                        });
+                        int cant = cantPagesToAdd.decrementAndGet();
+                        if(cant==0){
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    progressDialogAdd.hide();
+                                }
+                            });
+                        }
                     }
                 });
             }
@@ -206,44 +205,68 @@ public class ControlParentalActivity extends AppCompatActivity {
 
         ////////////////////////////////////////////////////////////////////
         progressDialogRemove.show();
-        if(pagesToRemove.size()>0){
+
+        final AtomicInteger cantPagesToRemove  =new AtomicInteger(pagesToRemove.size());
+
+        if(cantPagesToRemove.get()>0){
             //TODO: FALTA AGREGAR QUE SOLO BORRE LAS PAGINAS QUE EXISTAN, LAS QUE NO EXISTAN QUE NO LAS BORRE
-            for (WebPageToBlockItem item : pagesToRemove) {
+            router.removeBlockByUrlAll(new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            progressDialogRemove.hide();
+                        }
+                    });
+                }
+            }, new Response.Listener() {
+                @Override
+                public void onResponse(Object response) {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            progressDialogRemove.hide();
+                        }
+                    });
+                }
+            });
+            /*for (WebPageToBlockItem item : pagesToRemove) {
                 //url = item.getUrl();
                 url = item.getName();
                 router.removeBlockByUrl(url, new Response.Listener() {
                     @Override
                     public void onResponse(Object response) {
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                progressDialogRemove.hide();
-                            }
-                        });
+
                     }
                 }, new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                progressDialogRemove.hide();
-                            }
-                        });
+                        int cant = cantPagesToRemove.decrementAndGet();
+                        if(cant==0){
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    progressDialogRemove.hide();
+                                }
+                            });
+                        }
                     }
                 }, new Response.Listener() {
                     @Override
                     public void onResponse(Object response) {
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                progressDialogRemove.hide();
-                            }
-                        });
-
+                        int cant = cantPagesToRemove.decrementAndGet();
+                        if(cant==0){
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    progressDialogRemove.hide();
+                                }
+                            });
+                        }
                     }
                 });
-            }
+            }*/
         }else{
             progressDialogRemove.hide();
         }

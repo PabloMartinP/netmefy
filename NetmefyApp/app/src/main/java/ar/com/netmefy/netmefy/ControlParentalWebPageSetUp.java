@@ -49,7 +49,7 @@ public class ControlParentalWebPageSetUp extends AppCompatActivity {
         final ProgressDialog progressDialog = Utils.getProgressBar(this, "Agregando nueva página ...");
 
         progressDialog.show();
-        router.addUrlToTargetListBlocked(url, new Response.Listener() {
+        router.addUrlToTargetListBlocked2(url, nombre, new Response.Listener() {
             @Override
             public void onResponse(Object response) {
 
