@@ -1,5 +1,6 @@
 package ar.com.netmefy.netmefy.adapters;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
 import android.view.LayoutInflater;
@@ -10,6 +11,7 @@ import android.widget.TextView;
 
 import ar.com.netmefy.netmefy.R;
 import ar.com.netmefy.netmefy.adapters.elements.DeviceItem;
+import ar.com.netmefy.netmefy.services.Utils;
 
 /**
  * Created by ignac on 21/9/2017.
@@ -18,11 +20,13 @@ import ar.com.netmefy.netmefy.adapters.elements.DeviceItem;
 public class MySimpleArrayAdapter extends ArrayAdapter<DeviceItem> {
     private final Context context;
     private final DeviceItem[] values;
+    private Activity activity;
 
-    public MySimpleArrayAdapter(Context context, DeviceItem[] values) {
+    public MySimpleArrayAdapter(Context context, DeviceItem[] values, Activity activity) {
         super(context, R.layout.user_layout, values);
         this.context = context;
         this.values = values;
+        this.activity = activity;
     }
 
     @Override
@@ -33,9 +37,16 @@ public class MySimpleArrayAdapter extends ArrayAdapter<DeviceItem> {
         TextView textView1 = (TextView) rowView.findViewById(R.id.firstLine);
         TextView textView2 = (TextView) rowView.findViewById(R.id.secondLine);
         de.hdodenhof.circleimageview.CircleImageView imageView = (de.hdodenhof.circleimageview.CircleImageView) rowView.findViewById(R.id.tvDeviceConnected2);
+
+
+
         textView1.setText(values[position].getName());
         textView2.setText(values[position].getMac());
-        imageView.setImageResource(values[position].getResId());
+        //imageView.setImageResource(values[position].getResId());
+
+        int resId = Utils.getResIdFromImageName(activity, "guest_w_128");
+        imageView.setImageResource(resId);
+
         Boolean blocked = values[position].getBlocked();
         if (blocked) {
             rowView.setBackgroundColor(Color.parseColor("#ffff4444"));

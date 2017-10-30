@@ -41,6 +41,6 @@ public class RestartTry {
         if(is_success())
             return "OK - Intento " + String.valueOf(get_tryNumber());
         else
-            return "Error - Intento " + String.valueOf(get_tryNumber()) + ": " + get_description();
+            return "Intento " + String.valueOf(get_tryNumber()) + ": " + get_description();
     }
 }

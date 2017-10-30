@@ -14,6 +14,7 @@ import com.facebook.Profile;
 import ar.com.netmefy.netmefy.login.LoginActivity;
 import ar.com.netmefy.netmefy.login.UserIdActivity;
 import ar.com.netmefy.netmefy.services.NMF;
+import ar.com.netmefy.netmefy.services.WifiUtils;
 import ar.com.netmefy.netmefy.services.api.Api;
 import ar.com.netmefy.netmefy.services.api.entity.tipoUsuarioApp;
 import ar.com.netmefy.netmefy.services.login.Session;
@@ -29,6 +30,7 @@ public class SplashScreen extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_screen);
         session = new Session(getApplicationContext());
+
 
         api = Api.getInstance(getApplicationContext());
 

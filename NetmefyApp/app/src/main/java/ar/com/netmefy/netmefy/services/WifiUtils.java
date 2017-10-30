@@ -103,6 +103,7 @@ public class WifiUtils {
         } catch (IOException e) {
             // body.append("Error\n");
             e.printStackTrace();
+            return  "";
         }
         return str;
     }
@@ -358,9 +359,16 @@ public class WifiUtils {
                         actualSsid = getWifiName(context);
 
                         if(actualSsid !="") {
-                            this.cancel();
-                            termino = true;
-                            listenerSuccess.onResponse("ok");
+                            String resultPing =  WifiUtils.ping("www.google.com.ar", 1);
+                            if(resultPing.isEmpty()){
+                                restartTry  = new RestartTry(false, i, "El ssid actual ["+actualSsid+"] no tiene internet");
+
+                            }else{
+                                this.cancel();
+                                termino = true;
+                                listenerSuccess.onResponse("ok");
+                            }
+
                         }
                         else
                             restartTry  = new RestartTry(false, i, "El ssid actual ["+actualSsid+"] no es igual al configurado ["+ssidtoconnect+"]");

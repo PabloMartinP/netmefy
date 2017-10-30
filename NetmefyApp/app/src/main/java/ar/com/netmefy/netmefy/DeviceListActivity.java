@@ -1,6 +1,7 @@
 package ar.com.netmefy.netmefy;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -32,6 +33,7 @@ public class DeviceListActivity extends AppCompatActivity {
         router = Router.getInstance(getApplicationContext());
 
         final Activity _this = this;
+        final Context _ctx= this.getApplicationContext();
         router.listDevicesConnected(new Response.Listener<List<Device>>() {
             @Override
             public void onResponse(List<Device> devices) {
@@ -48,7 +50,7 @@ public class DeviceListActivity extends AppCompatActivity {
                 }
 
 
-                MySimpleArrayAdapter adapter = new MySimpleArrayAdapter(_this, values);
+                MySimpleArrayAdapter adapter = new MySimpleArrayAdapter(_ctx, values, _this);
                 devicesListView.setAdapter(adapter);
                 devicesListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 

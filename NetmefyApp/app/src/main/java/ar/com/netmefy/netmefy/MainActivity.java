@@ -84,10 +84,12 @@ public class MainActivity extends AppCompatActivity  {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
 
+        try {
         final MainActivity _this = this;
 
         pg = Utils.getProgressBar(_this,"Inicializando ...");
@@ -175,10 +177,11 @@ public class MainActivity extends AppCompatActivity  {
         ////////////////////////////////////////////////////////////
         //api = Api.getInstance(getApplicationContext());
 
-        if(NMF.usuario == null)//
-            session.getUsuarioInfo();
 
-        try {
+
+            if(NMF.usuario == null)//
+                session.getUsuarioInfo();
+
             if(NMF.tipoUsuarioApp !=null){
 
 
@@ -249,6 +252,7 @@ public class MainActivity extends AppCompatActivity  {
             Utils.newToast(getApplicationContext(), e.getMessage());
 
             pg.hide();
+
 
         }
 
@@ -650,7 +654,7 @@ public class MainActivity extends AppCompatActivity  {
                                         populate_list_connected(devices);
                                         start_thread_list_connected();
                                     }else{
-                                        Toast.makeText(getApplicationContext(), "Error al traer la lista conectados en el Router"+router.getName(), Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(getApplicationContext(), "No se pudo obtener los  conectados en el Router"+router.getName(), Toast.LENGTH_SHORT).show();
                                     }
                                     pg.hide();
 
@@ -669,7 +673,7 @@ public class MainActivity extends AppCompatActivity  {
             }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
-                    Toast.makeText(getApplicationContext(), "Error al conectar con el Router " + router.getName(), Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), "No se encontró el Router asociado", Toast.LENGTH_LONG).show();
                     changeRouterToRed();
                     pg.hide();
                 }
@@ -803,11 +807,13 @@ public class MainActivity extends AppCompatActivity  {
     }
 
     public void reset(View view){
+
         final ProgressDialog progressBar = Utils.getProgressBar(this, "Restarteando ...");
         progressBar.show();
         changeRouterToRed();
+        try {
 
-        router.restartAndWaitUntilConnected(new Response.Listener() {
+            router.restartAndWaitUntilConnected(new Response.Listener() {
                 @Override
                 public void onResponse(Object response) {
 
@@ -840,6 +846,13 @@ public class MainActivity extends AppCompatActivity  {
                     });
                 }
             });
+        }catch (Exception e){
+            Utils.newToast(getApplicationContext(), e.getMessage());
+            api.log(900, e.toString());
+        }
+
+
+
 
 
 

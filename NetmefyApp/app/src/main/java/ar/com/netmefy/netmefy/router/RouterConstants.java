@@ -102,7 +102,7 @@ public class RouterConstants {
     }
 
     private void InitTPLink(){
-        UrlRouter.set_urlRoot("http://192.168.2.1/");
+        UrlRouter.set_urlRoot("http://192.168.100.1/");
         //UrlRouter.set_urlRoot("http://192.168.55.1/");
 
         _urlRouters.put(eUrl.WIFI_GET_SSID, UrlRouter.createWithFinder("userRpm/WlanNetworkRpm.htm", "userRpm/MenuRpm.htm", "0, 8, 0, \"", "\", 108, ", "Error SSID!!"));

@@ -63,6 +63,9 @@ public class DeviceSetUpActivity extends AppCompatActivity {
 
         api = Api.getInstance(getApplicationContext());
 
+        if(device_selected.mac.replace("-", ":").equalsIgnoreCase(WifiUtils.getMacAddress(getApplicationContext())))
+            btn_bloquear.setVisibility(View.INVISIBLE);
+
     }
 
     private void _set_blocked(boolean blocked){
@@ -151,14 +154,28 @@ public class DeviceSetUpActivity extends AppCompatActivity {
                 if(!response.toString().equals("error")){
                     NMF.setDevice(di);
                     //_this.finish();
-                    progressBar.hide();
-                    progressBar.dismiss();
-                    _this.setResult(RESULT_OK, null);
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            progressBar.hide();
+                            _this.setResult(RESULT_OK, null);
 
-                    _this.finish();
+                            _this.finish();
+                        }
+                    });
+
+
+
                 }else{
-                    progressBar.hide();
-                    progressBar.dismiss();
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            progressBar.hide();
+
+                        }
+                    });
+
+
                 }
             }
         });
@@ -198,13 +215,26 @@ public class DeviceSetUpActivity extends AppCompatActivity {
             }else{
                 router.removeBlockByMac(di.mac, new Response.Listener() {
                     @Override
-                    public void onResponse(Object response) {
+                    public void onResponse(final Object response) {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                progressBar.setMessage(response.toString());
+                            }
+                        });
 
                     }
                 }, new Response.ErrorListener() {
                     @Override
-                    public void onErrorResponse(VolleyError error) {
+                    public void onErrorResponse(final VolleyError error) {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
 
+                                progressBar.dismiss();
+                                Toast.makeText(getApplicationContext(), "Err: "+error.getMessage(), Toast.LENGTH_SHORT).show();
+                            }
+                        });
                     }
                 }, new Response.Listener() {
                     @Override

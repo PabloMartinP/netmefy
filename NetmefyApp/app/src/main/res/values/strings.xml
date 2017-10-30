@@ -4,8 +4,8 @@
 
     <string name="error_login">El cliente no existe.</string>
     <string name="insert_client_number">Ingresar número de cliente:</string>
-    <string name="insert_client_dni">Ingresar el DNI del titular:</string>
-    <string name="error_dni">El número de usuario y/o DNI no son correctos.</string>
+    <string name="insert_client_dni">Ingresar clave:</string>
+    <string name="error_dni">El número de usuario y/o clave no son correctos.</string>
     <string name="accept">Aceptar</string>
     <string name="signin">Ingresar</string>
 
