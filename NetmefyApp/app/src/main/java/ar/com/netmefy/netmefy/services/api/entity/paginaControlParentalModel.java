@@ -11,7 +11,7 @@ public class paginaControlParentalModel {
     public int id;
     public String nombre;
     public String url;
-    public int resId;
+    public int resid_imagen;
     public boolean bloqueado;
 
     public WebPageToBlockItem toWebPageToBlockItem() {
@@ -19,7 +19,7 @@ public class paginaControlParentalModel {
         res.setId(this.id);
         res.setName(this.nombre);
         res.setBlocked(this.bloqueado);
-        res.setResId(this.resId);
+        res.setResId(this.resid_imagen);
         res.setUrl(this.url);
         res.setReadOnly(false);
 

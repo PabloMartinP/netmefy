@@ -52,16 +52,17 @@ public class TecnicoActivity extends AppCompatActivity {
         legajoTecnico = (TextView) findViewById(R.id.legajoTecnico);
         mailTecnico = (TextView) findViewById(R.id.mailTecnico);
         nombreDeTecnico = (TextView) findViewById(R.id.nombreDeTecnico);
-        calificacionTecnico = (RatingBar) findViewById(R.id.calificacionTecnico);
+        calificacionTecnico = (RatingBar) findViewById(R.id.calificacionTecnicoOk);
         lvOrdenesDeTrabajo = (ListView) findViewById(R.id.lvOrdenesDeTrabajo);
 
-
+        calificacionTecnico.setIsIndicator(true);
         session = new Session(getApplicationContext());
 
         api = Api.getInstance(getApplicationContext());
         _this = this;
 
         getTecnicoFromApi();
+
 
     }
     private void getTecnicoFromApi(){

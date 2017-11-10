@@ -113,7 +113,7 @@ public class ControlParentalActivity extends AppCompatActivity {
                         return false;
                     }
                 });
-                adapter = new MySimpleWebPageArrayAdapter(_this, values, onCompleteHandler);
+                adapter = new MySimpleWebPageArrayAdapter(_this, values, onCompleteHandler, _this);
                 webPageListView.setAdapter(adapter);
 
                 onCompleteHandler.sendEmptyMessage(0);

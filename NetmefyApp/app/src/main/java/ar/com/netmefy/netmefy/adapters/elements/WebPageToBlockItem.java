@@ -70,7 +70,7 @@ public class WebPageToBlockItem {
         res.id = this.getId();
         res.nombre = this.getName();
         res.bloqueado = this.getBlocked();
-        res.resId = this.getResId();
+        res.resid_imagen = this.getResId();
         res.url = this.getUrl();
         return res;
     }

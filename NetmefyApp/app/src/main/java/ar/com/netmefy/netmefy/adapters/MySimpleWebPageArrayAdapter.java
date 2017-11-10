@@ -1,5 +1,6 @@
 package ar.com.netmefy.netmefy.adapters;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Handler;
@@ -14,6 +15,7 @@ import android.widget.TextView;
 import ar.com.netmefy.netmefy.R;
 import ar.com.netmefy.netmefy.adapters.elements.DeviceItem;
 import ar.com.netmefy.netmefy.adapters.elements.WebPageToBlockItem;
+import ar.com.netmefy.netmefy.services.Utils;
 
 /**
  * Created by ignac on 21/9/2017.
@@ -24,12 +26,14 @@ public class MySimpleWebPageArrayAdapter extends ArrayAdapter<WebPageToBlockItem
     private final WebPageToBlockItem[] values;
     private Handler _onCompleteFinish;
     private boolean _primeraVez;
-    public MySimpleWebPageArrayAdapter(Context context, WebPageToBlockItem[] values, Handler onComplete) {
+    private  final Activity activity;
+    public MySimpleWebPageArrayAdapter(Context context, WebPageToBlockItem[] values, Handler onComplete, Activity activity) {
         super(context, R.layout.user_layout, values);
         this.context = context;
         this.values = values;
         _onCompleteFinish = onComplete;
         _primeraVez = true;
+        this.activity = activity;
     }
 
     public void toOnlyRead(){
@@ -48,7 +52,51 @@ public class MySimpleWebPageArrayAdapter extends ArrayAdapter<WebPageToBlockItem
         de.hdodenhof.circleimageview.CircleImageView imageView = (de.hdodenhof.circleimageview.CircleImageView) rowView.findViewById(R.id.circleImageView2);
         textView1.setText(values[position].getName());
         textView2.setText(values[position].getUrl());
-        imageView.setImageResource(values[position].getResId());
+
+        int resIdImage = values[position].getResId();
+        String nombreImagen = "";
+
+        switch (resIdImage){
+            case 2130837716:
+                nombreImagen = "whatsapp";
+                break;
+            case 2130837669:
+                nombreImagen = "facebook";
+                break;
+            case 2130837675:
+                nombreImagen = "instagram";
+                break;
+            case 2130837691:
+                nombreImagen = "netflix";
+                break;
+            case 2130837715:
+                nombreImagen = "twitter";
+                break;
+            case 2130837718:
+                nombreImagen = "youtube";
+                break;
+            case 2130837711:
+                nombreImagen = "snapchat";
+                break;
+            case 2130837712:
+                nombreImagen = "spotify";
+                break;
+            case 2130837670:
+                nombreImagen = "gmail";
+                break;
+            case 2130837714:
+                nombreImagen = "telegram";
+                break;
+
+
+        }
+
+
+
+
+        int newResIdImage = Utils.getResIdFromImageName(activity, nombreImagen);
+
+        imageView.setImageResource(newResIdImage);
         Boolean blocked = values[position].getBlocked();
         checkBox.setChecked(blocked);
 
