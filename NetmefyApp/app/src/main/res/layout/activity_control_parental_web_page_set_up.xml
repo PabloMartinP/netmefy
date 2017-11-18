@@ -59,17 +59,6 @@
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/ok_128" />
 
-    <ImageView
-        android:id="@+id/imageView7"
-        android:layout_width="37dp"
-        android:layout_height="33dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        app:layout_constraintLeft_toLeftOf="@+id/toolbar"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/eye_128" />
-
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/tvPageImage"
         android:layout_width="140dp"
