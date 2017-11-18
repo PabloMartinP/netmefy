@@ -123,7 +123,7 @@ public class PasosOTActivity extends AppCompatActivity {
             };
         }else{
             return new PasoItem[]{
-                    new PasoItem("1 Consultar falla o síntomas al cliente", "", "", Boolean.FALSE, Boolean.FALSE, R.drawable.cliente_hablar_128),
+                    new PasoItem("1 Consultar falla o síntomas \n al cliente", "", "", Boolean.FALSE, Boolean.FALSE, R.drawable.cliente_hablar_128),
                     new PasoItem("2 Revisar cable de bajada hasta el router", "", "", Boolean.FALSE, Boolean.FALSE, R.drawable.flecha_128),
                     new PasoItem("3 Revisar cableados a dispositivos", "(tv, consolas, desktops)", "", Boolean.FALSE, Boolean.FALSE, R.drawable.utp_128),
                     new PasoItem("4 Verificar configuraciones de acceso", "(DSL o DOCSIS)", "", Boolean.FALSE, Boolean.FALSE, R.drawable.access_128),

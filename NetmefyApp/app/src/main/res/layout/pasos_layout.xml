@@ -21,22 +21,21 @@
         android:id="@+id/secondLine"
         android:layout_width="wrap_content"
         android:layout_height="26dip"
-        android:layout_centerVertical="true"
-        android:layout_marginLeft="10dp"
-        android:layout_marginStart="10dp"
-        android:layout_toEndOf="@+id/circleImageView2"
-        android:layout_toRightOf="@+id/circleImageView2"
+        android:layout_marginLeft="11dp"
+        android:layout_marginStart="11dp"
         android:ellipsize="marquee"
         android:maxLines="1"
         android:text="Description"
         android:textColor="@android:color/background_light"
-        android:textSize="14sp" />
+        android:textSize="14sp"
+        android:layout_alignParentBottom="true"
+        android:layout_toRightOf="@+id/circleImageView2"
+        android:layout_toEndOf="@+id/circleImageView2" />
 
     <TextView
         android:id="@+id/firstLine"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/secondLine"
         android:layout_alignLeft="@+id/secondLine"
         android:layout_alignParentTop="true"
         android:layout_alignStart="@+id/secondLine"
@@ -47,16 +46,22 @@
         android:text="Example application"
         android:textColor="@android:color/background_light"
         android:textSize="18sp"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        android:lines="2"
+        android:maxLines="2"
+        android:layout_above="@+id/secondLine" />
 
     <TextView
         android:id="@+id/thirdLine"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/secondLine"
+        android:layout_alignStart="@+id/secondLine"
+        android:layout_below="@+id/secondLine"
+        android:lines="2"
+        android:maxLines="2"
         android:text="TextView"
         android:textColor="@android:color/white"
-        android:layout_below="@+id/secondLine"
-        android:layout_alignLeft="@+id/secondLine"
-        android:layout_alignStart="@+id/secondLine" />
+        android:visibility="invisible" />
 
 </RelativeLayout>

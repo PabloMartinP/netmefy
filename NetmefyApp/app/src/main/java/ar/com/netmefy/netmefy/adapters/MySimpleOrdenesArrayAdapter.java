@@ -34,6 +34,7 @@ public class MySimpleOrdenesArrayAdapter extends ArrayAdapter<OtItem> {
         TextView textView1 = (TextView) rowView.findViewById(R.id.firstLine);
         TextView textView2 = (TextView) rowView.findViewById(R.id.secondLine);
         TextView textView3 = (TextView) rowView.findViewById(R.id.thirdLine);
+        TextView textView4 = (TextView) rowView.findViewById(R.id.fourthLine);
         ImageView imageView = (ImageView) rowView.findViewById(R.id.circleImageView2);
         textView1.setText(values[position].getCliente_desc());
         textView2.setText(values[position].getCliente_direccion());
@@ -48,13 +49,28 @@ public class MySimpleOrdenesArrayAdapter extends ArrayAdapter<OtItem> {
         }
 
         if (statusOt == 1) { //ESTADO ABIERTO
-            rowView.setBackgroundColor(Color.parseColor("#aaaaaa00"));
+            rowView.setBackgroundColor(Color.LTGRAY);
+            textView1.setTextColor(Color.BLACK);
+            textView2.setTextColor(Color.BLACK);
+            textView3.setTextColor(Color.BLACK);
+            textView4.setTextColor(Color.BLACK);
+            textView4.setText("PENDIENTE");
             //rowView.setBackgroundColor(Color.BLUE);
         } else if (statusOt == 2) { //ESTADO EN CURSO
-            rowView.setBackgroundColor(Color.parseColor("#ffff8800"));
+            rowView.setBackgroundColor(Color.parseColor("#ff8c1a"));
+            textView1.setTextColor(Color.WHITE);
+            textView2.setTextColor(Color.WHITE);
+            textView3.setTextColor(Color.WHITE);
+            textView4.setTextColor(Color.WHITE);
+            textView4.setText("EN CURSO");
             //rowView.setBackgroundColor(Color.YELLOW);
         } else if (statusOt==3){//ESTADO CERRADO
-            rowView.setBackgroundColor(Color.parseColor("#ff99cc00"));
+            rowView.setBackgroundColor(Color.parseColor("#00b300"));
+            textView1.setTextColor(Color.WHITE);
+            textView2.setTextColor(Color.WHITE);
+            textView3.setTextColor(Color.WHITE);
+            textView4.setTextColor(Color.WHITE);
+            textView4.setText("CERRADA");
             //rowView.setBackgroundColor(Color.GREEN);
         }
 
