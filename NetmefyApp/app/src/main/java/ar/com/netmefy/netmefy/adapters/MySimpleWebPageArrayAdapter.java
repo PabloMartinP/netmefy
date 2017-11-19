@@ -45,7 +45,7 @@ public class MySimpleWebPageArrayAdapter extends ArrayAdapter<WebPageToBlockItem
     public View getView(final int position, View convertView, ViewGroup parent) {
         LayoutInflater inflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View rowView = inflater.inflate(R.layout.webpage_layout, parent, false);
+        final View rowView = inflater.inflate(R.layout.webpage_layout, parent, false);
         TextView textView1 = (TextView) rowView.findViewById(R.id.firstLine);
         TextView textView2 = (TextView) rowView.findViewById(R.id.secondLine);
         CheckBox checkBox = (CheckBox) rowView.findViewById(R.id.checkBox);
@@ -95,6 +95,8 @@ public class MySimpleWebPageArrayAdapter extends ArrayAdapter<WebPageToBlockItem
 
 
         int newResIdImage = Utils.getResIdFromImageName(activity, nombreImagen);
+        if(newResIdImage == 0)
+            newResIdImage = Utils.getResIdFromImageName(activity, "lock_5_128");
 
         imageView.setImageResource(newResIdImage);
         Boolean blocked = values[position].getBlocked();
@@ -106,6 +108,13 @@ public class MySimpleWebPageArrayAdapter extends ArrayAdapter<WebPageToBlockItem
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 values[position].setBlocked(isChecked);
+
+                if(isChecked)
+                    //rowView.setBackgroundColor(Color.LTGRAY);
+                    rowView.setBackgroundColor(Color.parseColor("#ff33b5e5"));
+                else
+                    //rowView.setBackgroundColor(Color.parseColor("#ff33b5e5"));
+                    rowView.setBackgroundColor(Color.LTGRAY);
             }
         });
 
@@ -122,6 +131,15 @@ public class MySimpleWebPageArrayAdapter extends ArrayAdapter<WebPageToBlockItem
             rowView.setBackgroundColor(Color.parseColor("#ff33b5e5"));
             rowView.findViewById(R.id.checkBox).setEnabled(true);
         }
+
+        if(blocked)
+            //rowView.setBackgroundColor(Color.LTGRAY);
+            rowView.setBackgroundColor(Color.parseColor("#ff33b5e5"));
+        else
+            //rowView.setBackgroundColor(Color.parseColor("#ff33b5e5"));
+            rowView.setBackgroundColor(Color.LTGRAY);
+
+
 
 
         return rowView;

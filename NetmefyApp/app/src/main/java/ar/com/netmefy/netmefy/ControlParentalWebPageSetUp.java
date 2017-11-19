@@ -40,6 +40,7 @@ public class ControlParentalWebPageSetUp extends AppCompatActivity {
 
     public void deletePage(View view){
 
+        //Utils.newToast(getApplicationContext(), "JJ");
     }
 
     public void saveAndExit(View view){

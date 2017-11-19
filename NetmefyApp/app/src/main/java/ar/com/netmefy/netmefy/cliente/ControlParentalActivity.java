@@ -55,7 +55,8 @@ public class ControlParentalActivity extends AppCompatActivity {
         api.getListBlockedPage(new Response.Listener<List<paginaControlParentalModel>>() {
             @Override
             public void onResponse(List<paginaControlParentalModel> paginas) {
-
+                if(paginas == null)
+                    return;
                 //setteo las paginasbloqueadas
                 for (paginaControlParentalModel p : paginas) {
                     for (webModel webBloqueada: NMF.cliente.router.webs_bloqueadas ) {
@@ -133,14 +134,17 @@ public class ControlParentalActivity extends AppCompatActivity {
         if(isChecked){
             for (int i = 0; i < adapter.getCount(); i++) {
                 WebPageToBlockItem view =  adapter.getItem(i);
+                view.setReadOnly(true);
                 if(view.getBlocked()){
                     //Utils.newToast(getApplicationContext(), "aa");
-                    view.setReadOnly(true);
+                    //view.setColorOk(Color.LTGRAY);
+
                     pagesToAdd.add(view);
                 }else{
                     //Utils.newToast(getApplicationContext(), "bb");
-                    view.setReadOnly(true);
+                    //view.setColorOk(Color.parseColor("#ff33b5e5"));
                 }
+
             }
             webPageListView.invalidateViews();
 

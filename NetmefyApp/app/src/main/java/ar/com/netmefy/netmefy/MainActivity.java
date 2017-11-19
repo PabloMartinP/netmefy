@@ -88,6 +88,7 @@ public class MainActivity extends AppCompatActivity  {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        //int newResIdImage = Utils.getResIdFromImageName(this, "lock_5_128");
 
         try {
         final MainActivity _this = this;
@@ -510,6 +511,12 @@ public class MainActivity extends AppCompatActivity  {
 
     public void changeWifiSsid(View v){
         final String newSsid = et_wifi_name.getText().toString();
+        if(newSsid.length()<4){
+            Utils.newToast(getApplicationContext(), "El nombre debe tener al menos 4 caracteres");
+            return;
+        }
+
+
         final ProgressDialog progressBar = Utils.getProgressBar(this, "Cambiando nombre  ...");
         progressBar.show();
         changeRouterToRed();
@@ -548,6 +555,12 @@ public class MainActivity extends AppCompatActivity  {
     }
     public void changeWifiPassword(View v){
         final String newSsid = et_wifi_password.getText().toString();
+        if(newSsid.length()<8){
+            Utils.newToast(getApplicationContext(), "La contraseña debe tener al menos 8 caracteres");
+            return;
+        }
+
+
         final ProgressDialog progressBar = Utils.getProgressBar(this, "Cambiando password ...");
         progressBar.show();
         changeRouterToRed();

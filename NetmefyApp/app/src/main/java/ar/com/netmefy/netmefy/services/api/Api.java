@@ -564,7 +564,7 @@ public  class Api {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                success.onResponse(null);
+                success.onResponse(new ArrayList<notificacionModel>());
             }
         }) ;
         execute(sr);
@@ -901,7 +901,7 @@ public  class Api {
         g.url = url;
         g.nombre = nombre;
         g.ip = "";
-        g.resid_imagen = 2130837714;
+        g.resid_imagen = 2130837686;
         Map<String, String> data = null;
         try {
             data = Utils.toMap(g);

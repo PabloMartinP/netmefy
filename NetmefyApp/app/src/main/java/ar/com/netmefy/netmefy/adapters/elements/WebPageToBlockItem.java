@@ -13,6 +13,7 @@ public class WebPageToBlockItem {
     private int resId;
     private int id;
     private boolean readOnly = false;
+    private int colorOk;
 
     public WebPageToBlockItem() {
     }
@@ -81,5 +82,13 @@ public class WebPageToBlockItem {
 
     public void setReadOnly(boolean value) {
         readOnly = value;
+    }
+
+    public void setColorOk(int colorOk) {
+        this.colorOk = colorOk;
+    }
+
+    public int getColorOk() {
+        return colorOk;
     }
 }
