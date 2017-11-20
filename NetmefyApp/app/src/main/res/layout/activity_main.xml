@@ -455,7 +455,8 @@
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                android:src="@drawable/lock_5_128" />
+                android:src="@drawable/lock_5_128"
+                app:layout_constraintHorizontal_bias="0.505" />
 
             <TextView
                 android:id="@+id/textView1"
