@@ -57,7 +57,7 @@ public class NotificationDetailActivity extends AppCompatActivity {
         tv_notif_texto.setText(notif.notificacion_texto);
 
         calificar = (Button) findViewById(R.id.botonCalificar);
-        if (ot_id.isEmpty()){
+        if (ot_id.isEmpty() || notif.notificacion_desc.contains("en curso") ){
             calificar.setVisibility(View.INVISIBLE);
             session.setNotificaciones((NMF.notificaciones));
             api.marcarNotificacionComoLeida(notificationId, new Response.Listener() {

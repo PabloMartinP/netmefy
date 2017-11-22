@@ -142,6 +142,7 @@ public class UserIdActivity extends AppCompatActivity {
     private void redirectToTech() {
         Intent userPass = new Intent(UserIdActivity.this,TecnicoActivity.class);
         startActivity(userPass);
+        finish();
     }
 
     private void redirectToUser(String supportNumber) {

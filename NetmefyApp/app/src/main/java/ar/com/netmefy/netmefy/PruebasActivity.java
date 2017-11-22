@@ -203,20 +203,31 @@ public class PruebasActivity extends AppCompatActivity {
                             break;
                         }
                     }
-                    ping_in_ms = results[3];//3 es el mdev
+
+                    if(results != null){
+                        ping_in_ms = results[3];//3 es el mdev
+                    }else{
+                        ping_in_ms = "-1 ";//IMPORTANTE EL ESPACIO ULTIMO t_t
+                    }
+
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
                             tvPingAMostrar.setText(ping_in_ms.substring(0, ping_in_ms.length()-1) + "ms");
                         }
                     });
-
                     this.interrupt();
+
                 } catch (IOException e) {
                     e.printStackTrace();
-                    tvPingAMostrar.setText("Err");
+                    tvPingAMostrar.setText("-2");
                     this.interrupt();
 
+                }
+                catch (Exception e){
+                    e.printStackTrace();
+                    tvPingAMostrar.setText("-3");
+                    this.interrupt();
                 }
 
 
