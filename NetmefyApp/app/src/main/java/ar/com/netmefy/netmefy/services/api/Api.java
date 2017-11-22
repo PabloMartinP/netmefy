@@ -548,7 +548,7 @@ public  class Api {
                         nm.ot_calificacion = explrObject.getDouble("ot_calificacion");
 
                         String aux = explrObject.getString("ot_id");
-                        if(aux.equalsIgnoreCase("null"))
+                        if(aux.equalsIgnoreCase("null") || aux.equals("0"))
                             nm.ot_id = "";
                         else
                             nm.ot_id = explrObject.getString("ot_id");
