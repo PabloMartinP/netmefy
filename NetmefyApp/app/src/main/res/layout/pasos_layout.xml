@@ -1,7 +1,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="fill_parent"
-    android:layout_height="80dp"
+    android:layout_height="100dp"
     android:layout_marginTop="1dp"
     android:background="@android:color/holo_orange_light"
     android:padding="6dip">
@@ -21,8 +21,6 @@
         android:id="@+id/secondLine"
         android:layout_width="wrap_content"
         android:layout_height="26dip"
-        android:layout_marginLeft="11dp"
-        android:layout_marginStart="11dp"
         android:ellipsize="marquee"
         android:maxLines="1"
         android:text="Description"
@@ -36,6 +34,7 @@
         android:id="@+id/firstLine"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_above="@+id/secondLine"
         android:layout_alignLeft="@+id/secondLine"
         android:layout_alignParentTop="true"
         android:layout_alignStart="@+id/secondLine"
@@ -43,13 +42,12 @@
         android:layout_toLeftOf="@+id/checkBox"
         android:layout_toStartOf="@+id/checkBox"
         android:gravity="center_vertical"
+        android:lines="2"
+        android:maxLines="2"
         android:text="Example application"
         android:textColor="@android:color/background_light"
         android:textSize="18sp"
-        android:textStyle="bold"
-        android:lines="2"
-        android:maxLines="2"
-        android:layout_above="@+id/secondLine" />
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/thirdLine"
