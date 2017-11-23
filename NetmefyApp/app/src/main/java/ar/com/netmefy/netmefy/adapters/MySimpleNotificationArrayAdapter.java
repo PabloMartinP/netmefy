@@ -44,6 +44,8 @@ public class MySimpleNotificationArrayAdapter extends ArrayAdapter<NotificationI
             textView2.setTextColor(Color.BLACK);
         } else {
             rowView.setBackgroundColor(Color.parseColor("#ffd600"));
+            textView1.setTextColor(Color.BLACK);
+            textView2.setTextColor(Color.BLACK);
         }
 
         return rowView;
