@@ -113,9 +113,9 @@ public class PasosOTActivity extends AppCompatActivity {
         if (tipoGestion.equalsIgnoreCase("instalacion")) {
             return new PasoItem[]{
                     new PasoItem("1 Definir lugar para el Router WIFI", "", "", Boolean.FALSE, Boolean.FALSE, R.drawable.location_128),
-                    new PasoItem("2 Realizar conexión de bajada hasta el router", "(tv, consolas, desktops)", "", Boolean.FALSE, Boolean.FALSE, R.drawable.flecha_128),
-                    new PasoItem("3 Cablear con UTP dispositivos cercanos", "(DSL o DOCSIS)", "", Boolean.FALSE, Boolean.FALSE, R.drawable.utp_128),
-                    new PasoItem("4 Realizar configuraciones de acceso", "", "", Boolean.FALSE, Boolean.FALSE, R.drawable.access_128),
+                    new PasoItem("2 Realizar conexión de bajada hasta el router", "", "", Boolean.FALSE, Boolean.FALSE, R.drawable.flecha_128),
+                    new PasoItem("3 Cablear con UTP dispositivos cercanos", "(tv, consolas, desktops)", "", Boolean.FALSE, Boolean.FALSE, R.drawable.utp_128),
+                    new PasoItem("4 Realizar configuraciones de acceso", "(DSL o DOCSIS)", "", Boolean.FALSE, Boolean.FALSE, R.drawable.access_128),
                     new PasoItem("5 Configuración de parámetros wifi", "", "", Boolean.FALSE, Boolean.FALSE, R.drawable.data_configuration_128),
                     new PasoItem("6 Realizar pruebas de velocidad, potencia y navegación", "", "", Boolean.FALSE, Boolean.TRUE, R.drawable.wrench_128),
                     new PasoItem("7 Cerificar navegación por parte del cliente", "", "", Boolean.FALSE, Boolean.FALSE, R.drawable.aceptar_128)
