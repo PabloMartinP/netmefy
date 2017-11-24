@@ -93,10 +93,14 @@ public class NotificationListActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(resultCode==RESULT_CANCELED){
+
+        Intent refresh = new Intent(this, NotificationListActivity.class);
+        startActivity(refresh);
+        this.finish();
+        /*if(resultCode==RESULT_CANCELED){
             Intent refresh = new Intent(this, NotificationListActivity.class);
             startActivity(refresh);
             this.finish();
-        }
+        }*/
     }
 }

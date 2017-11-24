@@ -57,7 +57,7 @@ public class PasosOTActivity extends AppCompatActivity {
                     pruebas.putExtra("ot_id", ot.getOt_id());
                     pruebas.putExtra("ot_cliente_sk", ot.getCliente_sk());
                     startActivity(pruebas);
-                    //TODO: CUANDO VUELVE DE LAS PRUEVAS DEBERIA PONERSE EN DONE ESTA ACTIVIDAD
+
                 }
 
                 pasosARealizar[position].setDone(Boolean.TRUE);

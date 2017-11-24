@@ -30,6 +30,7 @@ import ar.com.netmefy.netmefy.router.Device;
 import ar.com.netmefy.netmefy.router.Router;
 import ar.com.netmefy.netmefy.services.NMF;
 import ar.com.netmefy.netmefy.services.Utils;
+import ar.com.netmefy.netmefy.services.WifiUtils;
 import ar.com.netmefy.netmefy.services.api.Api;
 import ar.com.netmefy.netmefy.services.api.entity.paginaControlParentalModel;
 import ar.com.netmefy.netmefy.services.api.entity.webModel;
@@ -184,6 +185,9 @@ public class ControlParentalActivity extends AppCompatActivity {
                                 @Override
                                 public void run() {
                                     progressDialogAdd.hide();
+
+                                    restartOk();
+
                                 }
                             });
                         }
@@ -197,6 +201,8 @@ public class ControlParentalActivity extends AppCompatActivity {
                                 @Override
                                 public void run() {
                                     progressDialogAdd.hide();
+                                    restartOk();
+
                                 }
                             });
                         }
@@ -278,6 +284,45 @@ public class ControlParentalActivity extends AppCompatActivity {
         //////////////////////////////////////////////////
     }
 
+    private void restartOk(){
+        final ProgressDialog progressBar = Utils.getProgressBar(this, "Restarteando ...");
+        progressBar.show();
+        try {
+
+            router.restartAndWaitUntilConnected(new Response.Listener() {
+                @Override
+                public void onResponse(Object response) {
+
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+
+                        }
+                    });
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    progressBar.hide();
+                    progressBar.dismiss();
+                }
+            }, new Response.Listener() {
+                @Override
+                public void onResponse(Object response) {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            progressBar.hide();
+                            progressBar.dismiss();
+                        }
+                    });
+                }
+            });
+        }catch (Exception e){
+            Utils.newToast(getApplicationContext(), e.getMessage());
+            //api.log(900, e.toString());
+        }
+    }
     public void newPage(View view){
         Intent page = new Intent(ControlParentalActivity.this, ControlParentalWebPageSetUp.class).putExtra("url", "");
         //startActivity(device);

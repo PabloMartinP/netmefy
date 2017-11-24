@@ -255,23 +255,26 @@ public class PruebasActivity extends AppCompatActivity {
         //int ping = (int)ping_ok;
         int dB = (int)dB_ok;
 
-        if(cliente_sk == -1)
-            cliente_sk = NMF.cliente.id;
+        //if(cliente_sk == -1)
+        //    cliente_sk = NMF.cliente.id;
 
 
+        if(cliente_sk != -1){
+            api.addTest(cliente_sk, ot_id, vel_mb, ping, dB, new Response.Listener() {
+                @Override
+                public void onResponse(Object response) {
+                    if(response==null){
+                        Toast.makeText(getApplicationContext(), "Hubo un error al guardar el test", Toast.LENGTH_SHORT).show();
+                    }else{
+                        Toast.makeText(getApplicationContext(), "Guardado correctamente", Toast.LENGTH_SHORT).show();
+                        //finish();
+                    }
 
-        api.addTest(cliente_sk, ot_id, vel_mb, ping, dB, new Response.Listener() {
-            @Override
-            public void onResponse(Object response) {
-                if(response==null){
-                    Toast.makeText(getApplicationContext(), "Hubo un error al guardar el test", Toast.LENGTH_SHORT).show();
-                }else{
-                    Toast.makeText(getApplicationContext(), "Guardado correctamente", Toast.LENGTH_SHORT).show();
-                    //finish();
                 }
+            });
+        }
 
-            }
-        });
+
     }
 
 }
