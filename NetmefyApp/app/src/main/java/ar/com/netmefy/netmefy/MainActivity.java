@@ -823,7 +823,7 @@ public class MainActivity extends AppCompatActivity  {
 
     public void reset(View view){
 
-        final ProgressDialog progressBar = Utils.getProgressBar(this, "Restarteando ...");
+        final ProgressDialog progressBar = Utils.getProgressBar(this, "Aguarde un momento ...");
         progressBar.show();
         changeRouterToRed();
         try {
@@ -847,6 +847,7 @@ public class MainActivity extends AppCompatActivity  {
                 public void onErrorResponse(VolleyError error) {
                     progressBar.hide();
                     progressBar.dismiss();
+
                 }
             }, new Response.Listener() {
                 @Override

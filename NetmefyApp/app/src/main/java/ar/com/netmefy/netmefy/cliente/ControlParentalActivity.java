@@ -50,6 +50,7 @@ public class ControlParentalActivity extends AppCompatActivity {
 
         router = Router.getInstance(getApplicationContext());
 
+
         final List<paginaControlParentalModel> paginas;// = new ArrayList<paginaControlParentalModel>() ;
         final Activity _this = this;
         final Api api = Api.getInstance(getApplicationContext());
@@ -163,6 +164,7 @@ public class ControlParentalActivity extends AppCompatActivity {
         String url = "";
         ////////////////////////////////////////////////////////////////////////////////////////////
         ////////////////////////////////////////////////////////////////////////////////////////////
+
         final AtomicInteger cantPagesToAdd  =new AtomicInteger(pagesToAdd.size());
 
         if(cantPagesToAdd.get()>0){
@@ -186,7 +188,7 @@ public class ControlParentalActivity extends AppCompatActivity {
                                 public void run() {
                                     progressDialogAdd.hide();
 
-                                    restartOk();
+                                    //restartOk();
 
                                 }
                             });
@@ -201,7 +203,7 @@ public class ControlParentalActivity extends AppCompatActivity {
                                 @Override
                                 public void run() {
                                     progressDialogAdd.hide();
-                                    restartOk();
+                                    //restartOk();
 
                                 }
                             });
@@ -227,6 +229,7 @@ public class ControlParentalActivity extends AppCompatActivity {
                         @Override
                         public void run() {
                             progressDialogRemove.hide();
+                            Utils.newToastLarge(getApplicationContext(), "Si la página no se bloquea automaticamente por favor reinicie su modem desde la app");
                         }
                     });
                 }
@@ -237,46 +240,12 @@ public class ControlParentalActivity extends AppCompatActivity {
                         @Override
                         public void run() {
                             progressDialogRemove.hide();
+                            Utils.newToastLarge(getApplicationContext(), "Si la página no se bloquea automaticamente por favor reinicie su modem desde la app");
                         }
                     });
                 }
             });
-            /*for (WebPageToBlockItem item : pagesToRemove) {
-                //url = item.getUrl();
-                url = item.getName();
-                router.removeBlockByUrl(url, new Response.Listener() {
-                    @Override
-                    public void onResponse(Object response) {
 
-                    }
-                }, new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        int cant = cantPagesToRemove.decrementAndGet();
-                        if(cant==0){
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    progressDialogRemove.hide();
-                                }
-                            });
-                        }
-                    }
-                }, new Response.Listener() {
-                    @Override
-                    public void onResponse(Object response) {
-                        int cant = cantPagesToRemove.decrementAndGet();
-                        if(cant==0){
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    progressDialogRemove.hide();
-                                }
-                            });
-                        }
-                    }
-                });
-            }*/
         }else{
             progressDialogRemove.hide();
         }
@@ -285,7 +254,7 @@ public class ControlParentalActivity extends AppCompatActivity {
     }
 
     private void restartOk(){
-        final ProgressDialog progressBar = Utils.getProgressBar(this, "Restarteando ...");
+        final ProgressDialog progressBar = Utils.getProgressBar(this, "Aguarde un momento  ...");
         progressBar.show();
         try {
 

@@ -30,6 +30,8 @@ public class NMF {
     public static List<solicitudListItemModel> solicitudes;
     public static List<reclamoListItemModel> reclamos;
 
+    public static boolean needRestartToControlParental = false;
+
     public static Tecnico tecnico;
 
     public static void setDevice_sk(String mac, int sk){

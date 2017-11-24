@@ -334,7 +334,7 @@ public class WifiUtils {
 
         addWifiConfig(configWifi.getSsid(), configWifi.getPassword(), context);
 
-        final int DELAY_RESTART_SECS = 5;
+        final int DELAY_RESTART_SECS = 10;
         final int DELAY_BETWEEN_INTENT_TO_RECONNCET_SECS = 2;
 
         Timer timer = new Timer();

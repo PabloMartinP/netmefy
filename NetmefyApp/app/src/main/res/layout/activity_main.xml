@@ -313,7 +313,7 @@
             <TextView
                 android:id="@+id/tvDeviceConnected1"
                 android:layout_width="56dp"
-                android:layout_height="20dp"
+                android:layout_height="45dp"
                 android:layout_marginLeft="8dp"
                 android:layout_marginRight="8dp"
                 android:layout_marginTop="0dp"
@@ -328,7 +328,7 @@
             <TextView
                 android:id="@+id/tvDeviceConnected2"
                 android:layout_width="56dp"
-                android:layout_height="20dp"
+                android:layout_height="45dp"
                 android:layout_marginRight="23dp"
                 android:layout_marginTop="-1dp"
                 android:gravity="center"
@@ -340,7 +340,7 @@
             <TextView
                 android:id="@+id/tvDeviceConnected3"
                 android:layout_width="56dp"
-                android:layout_height="20dp"
+                android:layout_height="45dp"
                 android:layout_marginLeft="8dp"
                 android:layout_marginRight="8dp"
                 android:layout_marginTop="0dp"
@@ -354,7 +354,7 @@
             <TextView
                 android:id="@+id/tvDeviceConnected4"
                 android:layout_width="56dp"
-                android:layout_height="24dp"
+                android:layout_height="45dp"
                 android:layout_marginLeft="8dp"
                 android:layout_marginRight="0dp"
                 android:layout_marginTop="-1dp"

@@ -119,7 +119,7 @@ public class PruebasActivity extends AppCompatActivity {
             ivSenal.setImageResource(R.drawable.wifi_2_128);
         if(betweenExclusive(db, 56, 65))
             ivSenal.setImageResource(R.drawable.wifi_3_128);
-        if(betweenExclusive(db, 40, 55))
+        if(betweenExclusive(db, 5, 55))
             ivSenal.setImageResource(R.drawable.wifi_4_128);
 
         tvSenal.setText(dB.get_dBWithUnit());
