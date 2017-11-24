@@ -190,6 +190,8 @@ public class ControlParentalActivity extends AppCompatActivity {
 
                                     //restartOk();
 
+                                    Utils.newToastLarge(getApplicationContext(), "Si la página no se bloquea automaticamente por favor reinicie su modem desde la app");
+
                                 }
                             });
                         }
@@ -204,6 +206,8 @@ public class ControlParentalActivity extends AppCompatActivity {
                                 public void run() {
                                     progressDialogAdd.hide();
                                     //restartOk();
+
+                                    Utils.newToastLarge(getApplicationContext(), "Si la página no se bloquea automaticamente por favor reinicie su modem desde la app");
 
                                 }
                             });
@@ -229,7 +233,7 @@ public class ControlParentalActivity extends AppCompatActivity {
                         @Override
                         public void run() {
                             progressDialogRemove.hide();
-                            Utils.newToastLarge(getApplicationContext(), "Si la página no se bloquea automaticamente por favor reinicie su modem desde la app");
+
                         }
                     });
                 }
@@ -240,7 +244,6 @@ public class ControlParentalActivity extends AppCompatActivity {
                         @Override
                         public void run() {
                             progressDialogRemove.hide();
-                            Utils.newToastLarge(getApplicationContext(), "Si la página no se bloquea automaticamente por favor reinicie su modem desde la app");
                         }
                     });
                 }
